@@ -1,0 +1,71 @@
+\documentclass[a4paper, 12pt]{article}
+%%%%%%%%%%%%%%%%%%%%%%%
+% Packages %%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[style = authoryear]{biblatex}\addbibresource{references.bib}
+\usepackage{geometry, tikz, pgfplots, graphicx, amsmath, amsthm, setspace, hyperref, booktabs, xcolor, array, amsfonts, subfiles}
+\usetikzlibrary{positioning, fit, backgrounds, patterns}
+ 
+%%%%%%%%%%%%%%%%%%%%%%%
+% Formatting %%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%
+\onehalfspacing
+\geometry{margin=3cm}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    filecolor=magenta,
+    citecolor=black,
+    urlcolor=black,
+    pdftitle={Overleaf Example},
+    pdfpagemode=FullScreen,
+    }
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}} % array package
+\frenchspacing
+ 
+%%%%%%%%%%%%%%%%%%%%%%%
+% Defining Objects %%%%
+%%%%%%%%%%%%%%%%%%%%%%%
+\newtheoremstyle{break}%e
+    {}{}%
+    {\itshape}{}%
+    {\bfseries}{}% % Note that final punctuation is omitted.
+    {\newline}{}
+\theoremstyle{break}
+\newtheorem{proposition}{Proposition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{conjecture}{Conjecture}
+\newtheorem{corollary}{Corollary}
+ 
+%--------------------
+\newcommand{\bparam}{b}
+\newcommand{\cparam}{c}
+ 
+%b->\tempx
+%c-> \bparam
+%\tempx ->\cparam
+%\bparam| ->c|
+ 
+%%%%%%%%%%%%%%%%%%%%%%%
+% Head %%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%
+\title{Commitment Can Be Bad}
+\author{Candidate Number: 1078150
+\thanks{I thank Alexei Parakhonyak for his guidance, as well as Eric Olav Chen, Peter Eso, James Faville, Loren Fryxell, Alexis Ghersengorin, Gaurav Khatri, Yidian Meng, Paul Metzler, Margaret Meyer, Manos Perdikakis, Sami Petersen, Francis Priestlandt and Ludvig Sinander for helpful comments.}}
+\date{\today}
+ 
+%%%%%%%%%%%%%%%%%%%%%%%
+% Document %%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+\maketitle
+\subfile{Chapters/1_Introduction.tex}
+\subfile{Chapters/2_Commitment in 2x2.tex}
+\subfile{Chapters/3_Multiple Commitment Periods.tex}
+\subfile{Chapters/4_Incomplete Information.tex}
+\subfile{Chapters/5_Beyond 2x2.tex}
+\subfile{Chapters/6_Conclusion.tex}
+\subfile{Chapters/Appendix.tex}
+
+\end{document}

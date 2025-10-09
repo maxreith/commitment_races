@@ -1,0 +1,82 @@
+\documentclass[main.tex]{subfiles}
+\begin{document}
+\section{Multiple Commitment Periods}\label{sec:convergence}
+So far, I have assumed a single commitment period before the base game, during which players can simultaneously commit. In this section, I extend the model to allow for multiple commitment periods, denoted by $T$. If players can credibly commit to a strategy for a game they will play in the future, it seems natural that they might be able to do so at several points in time leading up to the game. This is particularly relevant if one thinks of these players as AI agents. Fast computational speed could imply that agents have many, even effectively infinite, opportunities to commit.
+ 
+%Multiple commitment periods give rise to what can be described as a \textit{commitment~race}. Imagine player $i$ commits at some point. Rather than best responding to this commitment, player $-i$ would have preferred to commit at an earlier point, thereby forcing $i$ to respond instead. As a result, both players have an incentive to commit as early as possible.
+ 
+From this point forward, let $T$ represent the number of discrete commitment periods. If one player commits in the first commitment period, this commitment is irreversible and the other player will best respond to it. Should both players not commit in the first period, they observe each other’s inaction and then in the second period simultaneously decide again whether to commit. The base game is played only if neither player commits in any of the $T$ commitment periods. 
+
+Let $A_{1t}$ denote the strategy whereby a player waits until period $t$ to commit to $A_1$, unless the other player has already committed in an earlier period. In that case, the player best responds. Waiting ($W$) is the strategy of not committing in any commitment period, best-responding to any commitment made by the other player, and if the base game is reached playing the MSNE strategy of the base game. 
+Let $p_{t}$ denote the probability of a player playing $A_{1t}$ and let $q_t$ denote the probability of a player playing $A_{2t}$. The probability of waiting is denoted as $\sigma(W)=1-\sum_{\tau=1}^{T}(p_\tau+q_\tau)$.  
+ 
+\begin{proposition}\label{theo:convergence}
+    As $T\to\infty$, the expected payoff in the unique mixed subgame perfect equilibrium for both players
+    \begin{enumerate}
+        \item decreases in the Game of Chicken and converges to $\cparam$
+        \item increases in the Battle of Sexes and converges to $\min\{\bparam,\cparam\}$
+    \end{enumerate}
+\end{proposition}
+\noindent 
+The full proof of proposition \ref{theo:convergence} can be found in the  appendix in section \ref{sec:prooftheo2}. I prove three lemmas to establish that this is indeed the unique mixed subgame perfect equilibrium for all $T$, and to characterize the equilibrium as $T \to \infty$, including closed-form expressions for all $p_t$, $q_t$, and $\sigma(W)$ in terms of $\bparam$, $\cparam$, and $T$. Table \ref{tab:convergence} describes the probabilities of committing in the first period and waiting as $T\to\infty$, as well as the equilibrium payoffs.
+\begin{table}[h!]
+\centering
+\begin{tabular}{C{3.5cm} C{7cm} C{2cm}}  % adjust widths as needed
+\toprule
+\textbf{Condition} & \textbf{Asymptotic Behavior} & \textbf{Payoff} \\ \midrule
+$0<\cparam \leq 1 < \bparam$ & $p_1\to\dfrac{\bparam-\cparam}{\,\bparam},\quad \sigma(W) \to 0$ & $\to \cparam$ \\[2ex]
+$1< \cparam < \bparam$ & 
+$p_1 \to \dfrac{\bparam-\cparam}{\,\bparam},\quad q_1 \to 0,\quad \sigma(W) \to 0$ & $\to \cparam$ \\[2ex]
+$1< \bparam < \cparam$ &
+$p_1 \to 0,\quad q_1 \to \dfrac{\cparam-\bparam}{\,\cparam-1},\quad \sigma(W) \to 0$ & $\to \bparam$ \\ \bottomrule
+\end{tabular}
+\caption{Asymptotic convergence of probabilities as $T \to \infty$.}
+\label{tab:convergence}
+\end{table}
+\newline
+To illustrate Proposition \ref{theo:convergence}, recall the example commitment Game of Chicken from the introduction. With a single commitment period, $T = 1$, the mixed-strategy equilibrium involves both players committing to Straight with probability $\tfrac{8}{11}$, waiting with probability $\tfrac{3}{11}$, and receiving an expected payoff of $-\tfrac{5}{11}$. When the number of commitment periods increases to $T = 2$, the mixed equilibrium changes: each player commits to Straight in the first period with probability $\tfrac{96}{129}$, in the second period with probability $\tfrac{24}{129}$ (conditional on no one having committed in the first period), and waits in both periods with probability $\tfrac{9}{129}$. The resulting expected payoff is $-\tfrac{21}{43}$, which is strictly lower than under $T = 1$. As $T$ increases further, the mixed equilibrium payoff further decreases. The probability of committing Straight in the first period increases and converges to $\tfrac{3}{4}$. The expected payoff converges to $-\tfrac{1}{2}$ for both players, which is the payoff of `losing' the Game of Chicken.
+
+This convergence occurs because each additional commitment period hurts both players. As previously argued, introducing one period of commitment transforms the base Game of Chicken into a game with lower payoffs, as illustrated in Table~\ref{tab:prop1-intuition}. Adding another commitment period to this game transforms it into a game with even lower payoffs. In the first commitment period, players choose whether to commit Straight or wait. If both wait, the game proceeds. Under $T = 1$, this would lead to the MSNE of the base game. Under $T = 2$, however, it leads to the $T = 1$ commitment game, which has a lower expected payoff. As a result, the equilibrium payoff is lower when $T=2$. Each additional commitment period worsens outcomes in the Game of Chicken. As $T\to\infty$, both players effectively lose the Game of Chicken—no one wins.\footnote{However, for similar reasons commitment improves the Battle of Sexes.}
+ 
+The dynamic described above can be characterized as a \textit{commitment race}: players have strong incentives to commit early, leading to frequent miscoordination and low expected payoffs. Of course, both players committing to Straight in the first period is not an equilibrium, but in the mixed-strategy equilibrium this outcome occurs with probability $(\tfrac{3}{4})^2 \approx 56\%$ in the Game of Chicken as $T\to\infty$. The term commitment race was originally introduced by \textcite{kokotajlo_commitment_2019} in the context of AI agents potentially extorting one another. While his treatment is highly informal, my contribution here is to formalize this idea within a game-theoretic framework. To explore the implications for extortion, I now introduce a new game.
+ 
+\subsection*{\centering Extortion Game}\label{sec:extortion}
+Consider two players, each with a monetary endowment $M$. They simultaneously decide whether to keep their endowment or yield it to the other player. After observing each other's choices, each player can punish a refusal to yield by inflicting harm $h$ on the other at a personal cost $c(h)>0$, where $c(h)$ increases with $h$. Importantly, punishment decisions can depend on the other player's action.
+ 
+Without commitment, threats of punishment are not credible because punishment involves a costly action decided upon only after the other player decided to keep or yield her endowment. 
+Consequently, in the subgame-perfect equilibrium without commitment, both players keep their endowment and choose not to punish. With commitment, however, players can make credible threats. Players can commit in advance to punishing the other player if they refuse to yield. If punishment is severe enough ($h \geq M$), yielding becomes the best response. For simplicity, assume committing to a punishment level $h = M$ ensures yielding.
+ 
+Table~\ref{tab:commitment_wait} shows the game's normal form with one period of commitment. Players can commit to all normal form strategies of the game, which consist of a choice between yielding or keeping, combined with a decision to punish or not punish. Players can also wait, in which case they best respond to any made commitment. If both wait, they play the subgame-perfect equilibrium of the base game.
+\begin{table}[h!]
+    \centering
+    \renewcommand{\arraystretch}{0.7}
+    \begin{tabular}{c|ccccc}
+                    & Yield, Punish & Yield & Keep, Punish & Keep & W \\ \hline
+        Yield, Punish   & $(M,M)$         & $(M,M)$         & $(-c,\;M)$       & $(-c,\;M)$ & $(M,M)$ \\[2pt]
+        Yield           & $(M,M)$         & $(M,M)$         & $(0,\;2M)$       & $(0,\;2M)$ & $(0,\;2M)$ \\[2pt]
+        Keep, Punish    & $(M,\;-c)$       & $(2M,\;0)$       & $(-c,\;-c)$      & $(M-c,\;0)$  & $(2M,\;0)$ \\[2pt]
+        Keep            & $(M,\;-c)$       & $(2M,\;0)$       & $(0,\;M-c)$      & $(M,M)$     & $(M,M)$ \\[2pt]
+        W               & $(M,M)$         & $(2M,0)$        & $(0,\;2M)$       & $(M,M)$     & $(M,M)$
+    \end{tabular}
+    \caption{Extortion Game with \( h = M \) and punishment cost \( c \).}
+    \label{tab:commitment_wait}
+\end{table}
+\newline
+Note that in Table~\ref{tab:commitment_wait}, most strategies are weakly dominated by waiting\footnote{Notably, Keep is also weakly dominated by waiting, because I assume that a punishment of $h=M$ is enough for a player to prefer yielding to keeping.}, and will thus not feature in the mixed subgame perfect equilibrium. The game simplifies to the reduced form shown in Table~\ref{tab:commitment_reduced}. This simplified structure corresponds to a Game of Chicken, allowing direct application of results derived in this and the previous Section. It follows from Proposition~\ref{theo:GamePayoffs} that commitment makes the mixed equilibrium payoff of this game worse.  
+Additionally, Proposition~\ref{theo:convergence} shows that as the number of commitment periods $T$ grows, the probability that both players commit to \textit{(Keep, Punish)} in the first period converges to $\frac{2M}{2M+c}$, and the expected equilibrium payoff approaches $0$.
+\begin{table}[h!]
+    \centering
+    \renewcommand{\arraystretch}{0.7}
+    \begin{tabular}{c|cc}
+                    & $\text{Keep, Punish}$ & $W$ \\ \hline
+        $\text{Keep, Punish}$ & $(-c,\;-c)$      & $(2M,\;0)$ \\[2pt]
+        $W$                       & $(0,\;2M)$       & $(M,M)$
+    \end{tabular}
+    \caption{Reduced form Extortion Game}
+    \label{tab:commitment_reduced}
+\end{table}
+\newline
+Thus, in the resulting mixed-strategy equilibrium, players become increasingly likely to adopt incompatible extortionate commitments so that each commits to keeping her endowment and punishing the other for doing the same. As $T\to\infty$, the expected payoff from this mutual extortion scenario collapses to the point where both players effectively lose their entire endowment. This demonstrates how commitment can give rise to extortion and severely inefficient outcomes.
+ 
+
+\end{document}

@@ -1,0 +1,136 @@
+\documentclass[Output/main.tex]{subfiles}
+\begin{document}
+\section{Introduction}
+ 
+As Artificial Intelligence (AI) technology continues to evolve, AI agents are becoming an increasingly prominent topic. In the future, we may see capable AI agents operating under minimal oversight engaging in strategic interactions. It has been suggested that such AI agents could have the ability to make credible commitments \parencite{hammond_multi-agent_2025}. There are concerns that if AI agents possess such an ability to make commitments, they might use this power for extortion. For example, one AI agent might commit to an aggressive action that then forces another AI agent to accommodate. But if both AI agents possess this capability, each may attempt to commit to the aggressive action first. This dynamic gives rise to what has been coined a commitment race \parencite{kokotajlo_commitment_2019}, in which AI agents rush to commit before the other. If both commit simultaneously to incompatible strategies, the outcome could be harmful to both.
+ 
+In this thesis, I develop a formal model of simultaneous commitment to study such dynamics. Two players play a simple game, referred to hereafter as the base game. Before playing the base game, players have the opportunity to simultaneously commit to any normal-form strategy of this game. Commitment is voluntary; players can choose not to commit and wait until the base game. When players play a base game with the option to commit, I refer to this as commitment game. My main result is that in commitment games equilibria can emerge that are worse in payoffs for all players than the corresponding equilibria in the base game. This arises because the non-aggressive strategy of waiting in the commitment game becomes less attractive than non-aggressive behavior in the base game, and thus aggressive behavior rises. I will illustrate this with an example.
+\subsection*{\centering Example}
+Consider the well-known Game of Chicken depicted in \autoref{tab:gameofchicken}, where two players simultaneously decide whether to go Straight or Move (out of the way). Besides two pure-strategy Nash equilibria, this game has one mixed-strategy Nash equilibrium (MSNE), in which both players choose Straight with probability $\frac{2}{3}$ and Move with probability $\frac{1}{3}$, resulting in an equilibrium payoff of $-\frac{1}{3}$. Importantly, this MSNE is the unique symmetric equilibrium for this symmetric game.
+\begin{table}[h!]
+\centering
+\begin{tabular}{c|cc}
+    & Straight & Move \\[0.2em]
+    \hline
+    Straight & $-1,-1$ & $1,-0.5$ \\[0.2em]
+    Move & $-0.5,1$ & $0,0$ \\[0.2em]
+\end{tabular}
+\caption{A Simple Game of Chicken}
+\label{tab:gameofchicken}
+\end{table}
+\newline
+How would equilibrium outcomes change if players could simultaneously commit to their strategies beforehand? \autoref{fig:game-tree} presents a commitment variant of this game, with an initial commitment period.  Initially, both players simultaneously decide either to commit to Straight (S) or Move (M), but they can also decide to wait (W). After this commitment period, the made commitments are observed and the base game is played. If both players commit, their chosen strategies are executed, concluding the game. If only one player commits, the other observes this commitment and selects their strategy accordingly. Should both players choose to wait, they proceed to play the base Game of Chicken.
+\begin{figure}[ht]
+    \centering
+    \resizebox{0.9\linewidth}{!}{
+    \begin{tikzpicture}
+        %--- Macros with Updated Labels ---
+        \newcommand{\firststage}[2]{%
+            % Nodes for Player 2 at period 1 (following Player 1's move)
+            \node (#11) [circle, draw, below of=#1, xshift=-#2, yshift=\yshift]{};
+            \node (#12) [circle, draw, below of=#1, xshift=0, yshift=\yshift]{};
+            \node (#13) [circle, draw, below of=#1, xshift=#2, yshift=\yshift]{};
+            % Branches: left branch is Wait (W); the others are S and M.
+            \draw (#1) -- (#11) node[midway, left] {W};
+            \draw (#1) -- (#12) node[midway, left] {S};
+            \draw (#1) -- (#13) node[midway, right] {M};
+        }
+        
+        \newcommand{\aftercommit}[2]{%
+            % Node following a committed strategy (only one possible continuation)
+            \node (#11) [circle, draw, below of=#1, xshift=0, yshift=\yshift]{};
+            \draw (#1) -- (#11) node[midway, right] {#2};
+        }
+        
+        \newcommand{\afternocommit}[4]{%
+            % Node for the noncommitted branch (with two possible moves)
+            \node (#11) [circle, draw, below of=#1, xshift=-#2, yshift=\yshift]{};
+            \node (#12) [circle, draw, below of=#1, xshift=#2, yshift=\yshift]{};
+            \draw (#1) -- (#11) node[midway, left] {#3};
+            \draw (#1) -- (#12) node[midway, right] {#4};
+        }
+        
+        %--- Define Shift Variables ---
+        \newcommand{\xshiftA}{5cm}           % For first stage    
+        \newcommand{\xshiftfollowone}{0.25cm}  % For third stage (single branch)
+        \newcommand{\xshiftC}{0.5cm}          % For fourth stage
+        \newcommand{\xshiftlabel}{-10cm}      % For labels
+        \newcommand{\yshift}{-0.5cm}
+        
+        %--- Root Node (Player 1) ---
+        \node (root) at (0,0) [circle, draw] {};
+        
+        % Player 1’s initial decision: Wait, commit to S, or commit to M
+        \node (child1) [circle, draw, below of=root, xshift=-\xshiftA-1cm, yshift=\yshift]{};
+        \node (child2) [circle, draw, below of=root, xshift=0cm, yshift=\yshift]{};
+        \node (child3) [circle, draw, below of=root, xshift=\xshiftA-1cm, yshift=\yshift]{};
+        
+        \draw (root) -- (child1) node[midway, above left] {W};
+        \draw (root) -- (child2) node[midway, left] {S};
+        \draw (root) -- (child3) node[midway, right] {M};
+        
+        %--- Player 2’s First Stage Decisions ---
+        \firststage{child1}{2cm}
+        \firststage{child2}{1cm}
+        \firststage{child3}{1cm}
+        
+        %--- t = 2, Player 1's Decisions after Not Committing ---
+        \afternocommit{child11}{0.8cm}{S}{M}
+        \afternocommit{child12}{\xshiftfollowone}{S}{M}
+        \afternocommit{child13}{\xshiftfollowone}{S}{M}
+        
+        %--- t = 2, Player 1's Decisions after Having Committed ---
+        \aftercommit{child21}{S}
+        \aftercommit{child22}{S}
+        \aftercommit{child23}{S}
+        \aftercommit{child31}{M}
+        \aftercommit{child32}{M}
+        \aftercommit{child33}{M}
+        
+        %--- t = 2, Player 2's Subsequent Decisions ---
+        \afternocommit{child111}{\xshiftC}{S}{M}
+        \afternocommit{child112}{\xshiftC}{S}{M}
+        \aftercommit{child121}{S}
+        \aftercommit{child122}{S}
+        \aftercommit{child131}{M}
+        \aftercommit{child132}{M}
+        
+        \afternocommit{child211}{0.5cm}{S}{M}
+        \aftercommit{child221}{S}
+        \aftercommit{child231}{M}
+        
+        \afternocommit{child311}{0.5cm}{S}{M}
+        \aftercommit{child321}{S}
+        \aftercommit{child331}{M}
+        
+        %--- Define Information Sets and Labels ---
+        \begin{pgfonlayer}{background}
+            \node [draw=black, dashed, fit=(child1)(child3), inner sep=2pt] {};
+            \node [draw=black, dashed, fit=(child111)(child112), inner sep=2pt] {};
+            \node [draw=black, dashed, fit=(child121)(child122), inner sep=2pt] {};
+            \node [draw=black, dashed, fit=(child131)(child132), inner sep=2pt] {};
+            
+            \node (P1label1) [draw=none, left of=root, xshift=\xshiftlabel] {Player 1};
+            \node (P2label1) [draw=none, below of=P1label1, yshift=\yshift] {Player 2};
+            \node (P1label2) [draw=none, below of=P2label1, yshift=\yshift] {Player 1};
+            \node (P2label2) [draw=none, below of=P1label2, yshift=\yshift] {Player 2};
+        \end{pgfonlayer}
+    \end{tikzpicture}
+    }
+    \caption{The Game Tree for the Commitment Game of Chicken}
+    \label{fig:game-tree}
+\end{figure}
+\newline
+In this commitment game, there are multiple subgame‐perfect Nash equilibria (SPNE) in pure strategies: in one, a player commits straight while the other waits and then moves out of the way; in another, one player commits straight and the other commits to moving out of the way. Importantly, no equilibrium can involve both players waiting before choosing a pure‐strategy equilibrium, since in that case one player would end up in her less‐preferred equilibrium and could profitably deviate by committing straight. Next to these pure strategy equilibria, there exists an interesting mixed subgame perfect equilibrium with probabilistic commitment. Here, each player commits to the aggressive strategy (Straight) with probability $\frac{8}{11}$ and waits with probability $\frac{3}{11}$. If both players opt to wait, they play the base game and the original MSNE strategies there. This mixed equilibrium is the unique equilibrium with probabilistic commitment, and it is also the unique symmetric equilibrium. Strikingly, this equilibrium has expected payoffs of $-\frac{5}{11}$ per player, representing a lower expected payoff than the original game's mixed-strategy equilibrium with $-\frac{1}{3}$.\footnote{For clarity, in this thesis, only equilibria involving both-sided probabilistic commitment are referred to as mixed equilibria in commitment games, even though pure strategy equilibria are technically also mixed strategy equilibria.} The reason is that players are more likely to behave aggressively. While players move with probability $\tfrac{1}{3}$ in the base game's MSNE, they only wait with probability $\tfrac{3}{11}$ in the commitment game.
+Introducing commitment leads to more aggressive behavior, increased miscoordination, and lower payoffs for both players.
+ 
+\subsection*{\centering Literature}
+In economic theory, commitment is often associated with welfare-enhancing outcomes, at least for the player making the commitment. Commitment features prominently across a wide range of models, such as principals committing to mechanisms, players delegating decision-making to agents, and first movers in Stackelberg games earning a higher profit \parencite[see the discussion in][]{kalai_commitment_2010}. This thesis, however, turns to the question of whether the ability to make commitments can \textit{harm} players. 
+ 
+Existing economic theory literature has largely focused on one-sided commitment, leaving two-sided commitment relatively understudied. \textcite{harrenstein_commitment_2007} analyze two- and three-player games in which all players have the ability to commit. However, the authors assume a predetermined order of commitment and do not allow for simultaneous commitment.
+ 
+\textcite{kalai_commitment_2010} present a model of simultaneous conditional commitment, expanding on earlier work by \textcite{tennenholtz_program_2004}. In their framework, players select commitment devices $d$ before the base game. A commitment device specifies a base game strategy as a function of the other's chosen commitment device, $d_i(d_{-i})=S_i$. The authors' main result is a commitment folk theorem, stating that the Nash equilibria in such commitment games span all individually-rational correlated strategy payoffs of the game. Naturally, this result relies on the availability of a complete space of conditional commitment devices. In contrast, my model limits players to committing exclusively to normal form strategies. This still allows for some conditionality in sequential base games. For example in an entrant-incumbent game, the incumbent's normal form strategies allow commitment that conditions on the entrant’s initial decision whether to enter the market or not.
+\newline
+\newline
+The remainder of this thesis is organized as follows. Section \ref{sec:GamePayoffs} shows that, in addition to cases where payoffs decline, there are also base games in which commitment raises payoffs for both players. Here, Proposition \ref{theo:GamePayoffs} characterizes symmetric $2\times2$ games in which commitment is either beneficial or detrimental. Section \ref{sec:convergence} considers games with multiple commitment periods $T$. Here I present Proposition \ref{theo:convergence}, which establishes a convergence result as $T \to \infty$. I also introduce a game where commitment leads to mutual extortion. Section \ref{sec:incomplete_info} considers an extension where, instead of simultaneous commitment, there is uncertainty over the order of commitment. Section \ref{sec:beyond2x2} briefly considers commitment outside of $2\times2$ games. Section \ref{sec:conclusion} concludes.
+\end{document}

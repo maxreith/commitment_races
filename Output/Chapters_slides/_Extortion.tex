@@ -1,0 +1,58 @@
+\documentclass[Output/slides.tex]{subfiles}
+\begin{document}
+\section{Extortion}
+\begin{frame}{Extortion Game}
+  \begin{itemize}
+    \item Two players each start with an endowment of \(M\).
+    \item Stage 1: Simultaneously choose
+      \begin{itemize}
+        \item \emph{Keep}: retain endowment
+        \item \emph{Yield}: give endowment to the other player
+      \end{itemize}
+    \item Stage 2: After observing both choices, each may punish a non–yielding opponent by inflicting harm \(h\) at personal cost \(c(h)>0\).
+    \item Without commitment, punishment threats are non-credible .
+    \item With commitment, players can commit to punishing at level \(h=M\), making “yield” the best response 
+  \end{itemize}
+\end{frame}
+\begin{frame}{Extortion Game (Full Normal Form)}
+  \centering
+  % Shrink entire table to fit slide width
+  \resizebox{\textwidth}{!}{%
+    \renewcommand{\arraystretch}{0.7}%
+    \begin{tabular}{c|ccccc}
+                    & Yield, Punish & Yield       & Keep, Punish  & Keep         & W           \\ \hline
+      Yield, Punish   & $(M,M)$       & $(M,M)$     & $(-c,\;M)$     & $(-c,\;M)$   & $(M,M)$     \\[2pt]
+      Yield           & $(M,M)$       & $(M,M)$     & $(0,\;2M)$     & $(0,\;2M)$   & $(0,\;2M)$  \\[2pt]
+      Keep, Punish    & $(M,\;-c)$    & $(2M,\;0)$  & $(-c,\;-c)$    & $(M-c,\;0)$  & $(2M,\;0)$  \\[2pt]
+      Keep            & $(M,\;-c)$    & $(2M,\;0)$  & $(0,\;M-c)$    & $(M,M)$      & $(M,M)$     \\[2pt]
+      W               & $(M,M)$       & $(2M,0)$    & $(0,\;2M)$     & $(M,M)$      & $(M,M)$     
+    \end{tabular}%
+  }
+  \vspace{1ex}
+
+  {\small Here $h = M$ and punishment cost is $c(h)=c$.}
+\end{frame}
+
+\begin{frame}{Extortion Game (Reduced Form)}
+  \centering
+  \renewcommand{\arraystretch}{0.7}
+  \begin{tabular}{c|cc}
+                  & Keep, Punish    & W           \\ \hline
+    Keep, Punish   & $(-c,\;-c)$     & $(2M,\;0)$  \\[2pt]
+    W               & $(0,\;2M)$      & $(M,M)$     
+  \end{tabular}
+
+  \vspace{1ex}
+
+  \begin{itemize}
+    \item This is a Game of Chicken!
+    \item As $T \to \infty$, each player commits to “Keep, Punish” in period 1 with probability
+      \[
+        \frac{2M}{2M + c}\,.
+      \]
+    \item The expected payoff for each player converges to $0$.
+  \end{itemize}
+\end{frame}
+
+
+\end{document}
