@@ -2,6 +2,7 @@ import numpy as np
 import nashpy as nash
 
 def transform_game(game):
+    "Transforms a base game into a commitment game"
     # Extract original payoff matrices
     P1, P2 = game.payoff_matrices
 
