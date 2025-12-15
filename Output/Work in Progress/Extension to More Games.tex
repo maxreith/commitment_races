@@ -1,13 +1,217 @@
 \documentclass{article}
-\usepackage{paper, subfiles} 
+\usepackage{paper, subfiles, tikz} 
 \begin{document}
-\section*{Extension to More Games}
-\begin{definition}[New Equilibrium Outcome]
-A New Equilibrium Outcome (NEO) is an equilibrium outcome in the commitment game that does not correspond to any equilibrium outcome in the base game. Outcomes are understood as distributions over strategies, not necessarily payoffs.
+
+
+\begin{definition}[Commitment Game]    
+A commitment game extends a standard strategic interaction, referred to as the "base game," by adding a preliminary stage. In this initial period, players can simultaneously and credibly commit to a strategy for the base game. Alternatively, they can choose to "wait," retaining strategic flexibility. The choices made during this commitment stage determine the structure of the subsequent interaction when the base game is played.
 \end{definition}
 
-\begin{conjecture}[No weakly dominated strategies]
-    A weakly dominated strategy in the commitment game will not be part of a NEO.
+To illustrate the transformation, consider a 2x2 base game where each player has two strategies, $S_1$ and $S_2$. The introduction of a commitment stage expands the strategy space. A player can commit to $S_1$, commit to $S_2$, or wait. If a player chooses to wait, they do not select their base-game action until after observing the other player's commitment-stage choice. This means a player's full strategy must specify what to do in case they wait.
+
+For a 2x2 base game, a player has two possible actions if they wait: play $S_1$ or play $S_2$. Since the waiting player moves after observing the other's commitment, their action can be conditioned on it. For instance, if Player 1 commits to $S_1$, Player 2 (if they waited) can choose their best response.
+
+A complete strategy for a player in the commitment game is a plan that covers all contingencies. This includes the choice at the commitment stage, and the action to take for every possible action of the opponent if one chooses to wait. This expands the game to a 4x4 strategic form, where the strategies are:
+\begin{itemize}
+    \item \textbf{C1}: Commit to $S_1$.
+    \item \textbf{C2}: Commit to $S_2$.
+    \item \textbf{W1}: Wait, and play $S_1$ if the opponent commits, otherwise play an equilibrium strategy if the opponent also waits.
+    \item \textbf{W2}: Wait, and play $S_2$ if the opponent commits, etc.
+\end{itemize}
+
+However, for equilibrium analysis, this 4x4 game can be simplified. The "wait" strategies (W1, W2) are suboptimal if they do not prescribe playing a best response to the opponent's committed action. Therefore, we can consolidate all waiting strategies into a single, rational "Wait" strategy (W). This strategy consists of playing the best response to any committed strategy of the opponent. If both players wait, they play a pre-specified Nash Equilibrium of the base game.
+
+
+This reduces the game to a more manageable 3x3 structure. The transformation is visualized below with a concrete numerical example:
+
+\begin{table}[h!]
+\centering
+\caption{Transformation of a 2x2 Base Game to a 3x3 Commitment Game (Numerical Example)}
+\begin{tabular}{ccc}
+  % Base game (2x2)
+  \begin{tabular}{c|cc}
+         & \textbf{$S_1$} & \textbf{$S_2$} \\ \hline
+    \textbf{$S_1$} & $-1,\,-1$ & $1,\,-\tfrac{1}{2}$ \\[2pt]
+    \textbf{$S_2$}     & $-\tfrac{1}{2},\,1$ & $0,\,0$
+  \end{tabular}
+  &
+  % arrow
+  \begin{tikzpicture}[baseline=(current bounding box.center)]
+    \draw[thick,->] (0,0) -- (1.5,0);
+  \end{tikzpicture}
+  &
+  % Commitment game (3x3)
+  \begin{tabular}{c|ccc}
+         & \textbf{C1} & \textbf{C2} & \textbf{W} \\ \hline
+    \textbf{C1} & $-1,\,-1$ & $1,\,-\tfrac{1}{2}$ & $1,\,-\tfrac{1}{2}$ \\[2pt]
+    \textbf{C2}     & $-\tfrac{1}{2},\,1$ & $0,\,0$ & $-\tfrac{1}{2},\,1$ \\[2pt]
+    \textbf{W}     & $-\tfrac{1}{2},\,1$ & $1,\,-\tfrac{1}{2}$ & $-\tfrac{1}{3},\,-\tfrac{1}{3}$
+  \end{tabular}
+\end{tabular}
+\label{tab:game_transformation}
+\end{table}
+
+In the 3x3 table, $C1$ and $C2$ represent commitments to $S_1$ and $S_2$, respectively. $W$ represents the strategy of waiting. 
+
+\begin{definition}[New Equilibrium Outcome]
+    A new equilibrium outcome (NEO) is an equilibrium outcome of a commitment game that does not correspond to any equilibrium outcome of the base game.
+\end{definition}
+
+\section{Which games have NEOs when you introduce commitment?}
+
+
+In a commitment game strategy profile, there are 3 options.
+
+\begin{enumerate}[label=\arabic*)]
+    \item Both players only commit.
+    \item Both players only wait.
+    \item The strategy profile entails both commitment strategies and waiting.
+\end{enumerate}
+
+\subsection*{1.1 and 1.2}
+\begin{lemma}
+    Commitment game equilibria that involve a) or b) do not lead to NEOs.
+\end{lemma}
+
+The proof is easy and can be found in OneNote. So the interesting case is c). 
+
+\subsection*{1.3 NEOs with Commitment and Waiting }
+
+Again, there are multiple cases.
+\begin{enumerate}[label=\arabic*)]
+    \item One player commits and the other waits.
+    \item One player commits and the other mixes between committing and waiting.
+    \item Both players mix over commitment and waiting.
+\end{enumerate}
+
+\subsubsection*{1.3.1 and 1.3.2}
+I will skip 1.3.1 for now. I think 1.3.2 would not lead to any NEOs that 1.3.1 doesn't capture already (but see notes in OneNote). So the interesting case is 1.3.3
+
+
+
+\subsubsection*{1.3.3: NEOs when both players mix over commitment and waiting}
+Let's try to find a general result identifying NEOs.
+Here, I will make use of the reduced commitment game idea, that is I will look at games where there is only one waiting strategy with a basegame-NE payoff in the W,W column. Of course, this means that I need to iterate over all basegame-NE if I want to find all NEOs. 
+
+\paragraph{Necessary Conditions}
+
+First, let me state some necessary conditions I have identified for a game to have an equilibrium where both players mix over committing to at least one strategy and waiting?
+
+\paragraph{1)} Committing to some strategy s is not weakly dominated: $\exists s\ :\ u(s,BR_{-i}(s))>u(NE)$.
+
+\paragraph{2)} It must also be that committing cannot weakly dominate waiting either. Otherwise, you'd never wait with positive probability. Note that this also implies that in the equilibrium producing a NEO, there must be strategies played with positive probability for which waiting is a strictly better response than committing.
+
+\paragraph{3)} There must be a third condition, and I don't quite know how to pin it down. Let's say that of all strategies $s$, the subset $s*$ satisfies conditions 1 and 2. But then, it is still unclear whether a) there exists a mixed strategy over some $s*$ and $W$ s.t. the other player is indifferent over some $s*$ and $W$ and b) whether the other player would not prefer to deviate to another strategy in $s \setminus s*$. \newline
+
+
+\paragraph{Some Conjectures}
+
+\begin{conjecture}
+    If conditions 1-3 hold, the commitment game has an equilibrium where both player mix over committing to at least one strategy and waiting.
 \end{conjecture}
+I think I disproved this one once.
+
+\begin{conjecture}
+    In an MSNE, each strategy played with positive probability must be a worst response for a strategy played by the opponent with positive probability.
+\end{conjecture}
+Wrong! In the following example, all strategies are played with positive probability in equilibrium. A is not a worst response for any strategy of player 2.
+\begin{table}[h!]
+\centering
+\begin{tabular}{c|ccc}
+       & \textbf{X} & \textbf{Y} & \textbf{Z} \\ \hline
+  \textbf{A} & $3,\,1$ & $-1,\,-3$ & $-1,\,0$ \\[2pt]
+  \textbf{B} & $1,\,2$ & $-2,\,1$ & $1,\,0$ \\[2pt]
+  \textbf{C} & $1,\,2$ & $2,\,3$ & $-2,\,3$
+\end{tabular}
+\end{table}
+
+\begin{conjecture}
+    This algorithm:
+    For a given base-game NE, pick all strategies $s$ where $u(s,BR_{-i}(s))>u(NE)$.
+    Of these strategies s, discard all which aren't a BS to some strategy of the other player.
+\end{conjecture}
+
+\newpage
+\section{Trying out some specific games}
+\subsection{Bargaining Games}
+A buyer has valuation $1$ for a good, a seller has valuation $0$. They must simultaneously make a price offer. If the sellers offer is higher than the buyers, both get $0$.
+
+For definiteness, we adopt the standard midpoint rule: if the buyer offers $b$ and the seller asks $s$ with $b\ge s$, trade occurs at price $p=(b+s)/2$; otherwise, no trade (payoffs $0,0$). Ties $b=s$ trade at price $p=b$.
+
+\begin{conjecture}
+    In the commitment version of the bargaining game, there exists a MSNE where players mix over committing to all $p\in[0,1]$ and waiting with positive probability.
+\end{conjecture}
+
+\begin{proposition}[Disproof under midpoint pricing]
+In the above one-shot bargaining game and its commitment extension (with $W$ best-responding to any commitment and $W$--$W$ yielding a fixed base-game Nash equilibrium), there is no mixed-strategy Nash equilibrium in which each player assigns positive probability to $W$ and has full support over committing to every price in $[0,1]$.
+\end{proposition}
+
+\begin{proof}
+By symmetry it suffices to analyze the buyer's problem against a seller who (i) plays $W$ with probability $\alpha>0$ and (ii) otherwise commits to an ask $s$ drawn from a distribution $F$ with density $f$ that has full support on $[0,1]$.
+
+If the buyer commits to $b$, then:
+\begin{itemize}
+    \item against $W$ the seller best-responds by setting $s=b$, so the outcome is price $p=b$ and buyer payoff $1-b$;
+    \item against a committed $s$, trade occurs iff $s\le b$, with price $(b+s)/2$ and buyer payoff $1-(b+s)/2$; otherwise payoff $0$.
+\end{itemize}
+Hence the buyer's expected payoff from committing to $b$ is
+\[
+U(b)=\alpha(1-b)+\int_{0}^{b}\Big(1-\tfrac{b+s}{2}\Big)\,dF(s).
+\]
+If the buyer were to mix with full support on $[0,1]$, indifference requires $U(b)$ to be constant on $[0,1]$, so (a.e.) $U'(b)=0$. Differentiating yields
+\[
+U'(b)=-\alpha+(1-b)f(b)-\tfrac{1}{2}F(b)=0,
+\]
+that is,
+\[
+(1-b)F'(b)-\tfrac{1}{2}F(b)=\alpha.
+\]
+We now solve this linear ODE step by step. First, write it in standard form by dividing by $(1-b)$:
+\[
+F'(b)-\frac{1}{2(1-b)}\,F(b)=\frac{\alpha}{1-b}.
+\]
+This has the form $y'+p(b)y=q(b)$ with $p(b)=-\dfrac{1}{2(1-b)}$ and $q(b)=\dfrac{\alpha}{1-b}$. The integrating factor is
+\[
+\mu(b)=\exp\Big(\int p(b)\,db\Big)=\exp\Big(\int -\tfrac{1}{2(1-b)}\,db\Big).
+\]
+Let $u=1-b$ so $du=-db$. Then
+\[
+\int -\frac{1}{2(1-b)}\,db=\int -\frac{1}{2u}\,db=\int -\frac{1}{2u}(-du)=\int \frac{1}{2u}\,du=\tfrac{1}{2}\ln u=\tfrac{1}{2}\ln(1-b),
+\]
+and therefore
+\[
+\mu(b)=\exp\big(\tfrac{1}{2}\ln(1-b)\big)=(1-b)^{1/2}.
+\]
+Check that $\mu'(b)=p(b)\mu(b)$: indeed, $\mu'(b)=\tfrac{1}{2}(1-b)^{-1/2}(-1)=-\tfrac{1}{2(1-b)}\mu(b)=p(b)\mu(b)$. Multiply the ODE by $\mu(b)$ to get
+\[
+\mu(b)F'(b)+\mu(b)p(b)F(b)=\mu(b)q(b)\quad\Longrightarrow\quad \frac{d}{db}\big(\mu(b)F(b)\big)=\mu(b)\,\frac{\alpha}{1-b}=\alpha(1-b)^{-1/2}.
+\]
+Integrate both sides with respect to $b$:
+\[
+\mu(b)F(b)=\int \alpha(1-b)^{-1/2}\,db+C=\alpha\int (1-b)^{-1/2}\,db+C.
+\]
+Compute the integral via $u=1-b$, $du=-db$:
+\[
+\int (1-b)^{-1/2}\,db=\int u^{-1/2}(-du)=-2u^{1/2}+\text{const}=-2(1-b)^{1/2}.
+\]
+Hence
+\[
+(1-b)^{1/2}F(b)=-2\alpha(1-b)^{1/2}+C\quad\Longrightarrow\quad F(b)=-2\alpha+C(1-b)^{-1/2}.
+\]
+Impose the boundary condition $F(0)=0$:
+\[
+0=-2\alpha+C(1-0)^{-1/2}\quad\Longrightarrow\quad C=2\alpha.
+\]
+Therefore
+\[
+F(b)=2\alpha\Big((1-b)^{-1/2}-1\Big).
+\]
+As $b\to1^{-}$, $F(b)\to\infty$ unless $\alpha=0$, contradicting that $F$ is a CDF. Thus $\alpha=0$ must hold, i.e., no positive probability on $W$.
+
+With $\alpha=0$, the ODE reduces to $(1-b)F'(b)-\tfrac{1}{2}F(b)=0$, whose nonnegative solution satisfying $F(0)=0$ is $F\equiv0$, which is degenerate and does not have full support. Therefore there is no equilibrium with full support over committed prices (and a fortiori none with positive probability on $W$).
+\end{proof}
+
+
+
 
 \end{document}
