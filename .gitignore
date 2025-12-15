@@ -20,3 +20,6 @@
 *.swp
 *.bak
 ~*
+
+# Notebooks folder
+notebooks/
