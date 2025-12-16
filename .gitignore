@@ -26,3 +26,7 @@ notebooks/
 
 # LaTeX output folder
 **/out/
+
+# pixi environments
+.pixi/*
+!.pixi/config.toml
