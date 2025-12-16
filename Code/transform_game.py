@@ -3,36 +3,63 @@ import nashpy as nash
 
 def transform_game(game):
     "Transforms a base game into a commitment game"
-    # Extract original payoff matrices
+    
+    if not isinstance(game, nash.Game):
+        raise TypeError("Input is not a nash.Game object, but of type {}".format(type(game)))
+
+    _check_for_unique_best_responses(game)
+
     payoff_p1, payoff_p2 = game.payoff_matrices
 
-    # Get dimensions of the original game
-    m, n = payoff_p1.shape
+    num_strategies_p1, num_strategies_p2 = payoff_p1.shape
 
-    # Create new larger payoff matrices, initialized with zeros
-    payoff_p1_new = np.zeros((m * 2, n * 2))
-    payoff_p2_new = np.zeros((m * 2, n * 2))
+    commitment_matrix_p1 = np.zeros((num_strategies_p1 * 2, num_strategies_p2 * 2))
+    commitment_matrix_p2 = np.zeros((num_strategies_p1 * 2, num_strategies_p2 * 2))
 
-    # Copy the original game's payoffs
-    payoff_p1_new[:m, :n] = payoff_p1
-    payoff_p2_new[:m, :n] = payoff_p2
+    commitment_matrix_p1[:num_strategies_p1, :num_strategies_p2] = payoff_p1
+    commitment_matrix_p2[:num_strategies_p1, :num_strategies_p2] = payoff_p2
 
-    # Calculate payoffs for Player 1's new strategy (the new last row)
-    for j in range(n):  # For each of Player 2's original strategies
+    for j in range(num_strategies_p2): 
         best_response_payoff_p1_idx = np.argmax(payoff_p1[:, j])
-        payoff_p1_new[m:2*m, j] = payoff_p1[best_response_payoff_p1_idx, j]
-        payoff_p2_new[m:2*m, j] = payoff_p2[best_response_payoff_p1_idx, j]
+        commitment_matrix_p1[num_strategies_p1:2*num_strategies_p1, j] = payoff_p1[best_response_payoff_p1_idx, j]
+        commitment_matrix_p2[num_strategies_p1:2*num_strategies_p1, j] = payoff_p2[best_response_payoff_p1_idx, j]
 
-    # Calculate payoffs for Player 2's new strategy (the new last column)
-    for i in range(m):  # For each of Player 1's original strategies
+    for i in range(num_strategies_p1):
         best_response_payoff_p2_idx = np.argmax(payoff_p2[i, :])
-        payoff_p2_new[i, n:2*n] = payoff_p2[i, best_response_payoff_p2_idx]
-        payoff_p1_new[i, n:2*n] = payoff_p1[i, best_response_payoff_p2_idx]
+        commitment_matrix_p2[i, num_strategies_p2:2*num_strategies_p2] = payoff_p2[i, best_response_payoff_p2_idx]
+        commitment_matrix_p1[i, num_strategies_p2:2*num_strategies_p2] = payoff_p1[i, best_response_payoff_p2_idx]
     
-    # The bottom right corner
-    # Bottom right corner: copy the original game's payoffs
-    payoff_p1_new[m:2*m, n:2*n] = payoff_p1
-    payoff_p2_new[m:2*m, n:2*n] = payoff_p2
+    commitment_matrix_p1[num_strategies_p1:2*num_strategies_p1, num_strategies_p2:2*num_strategies_p2] = payoff_p1
+    commitment_matrix_p2[num_strategies_p1:2*num_strategies_p1, num_strategies_p2:2*num_strategies_p2] = payoff_p2
 
-    # Create and return the new game
-    return nash.Game(payoff_p1_new, payoff_p2_new)
+    return nash.Game(commitment_matrix_p1, commitment_matrix_p2)
+
+def _check_for_unique_best_responses(game):
+    payoff_p1, payoff_p2 = game.payoff_matrices
+    num_strategies_p1, num_strategies_p2 = payoff_p1.shape
+
+    multiple_br_dict = {}
+    #import pdbp; breakpoint()
+    for j in range(num_strategies_p2):
+        best_responses = np.where(payoff_p1[:, j] == np.max(payoff_p1[:, j]))[0]
+        if len(best_responses) > 1 and not _all_equal(payoff_p2[best_responses, j]):
+            multiple_br_dict[f"1 has multiple best responses for P2_strategy_{j}"] = best_responses.tolist()
+        
+    for i in range(num_strategies_p1):
+        best_responses = np.where(payoff_p2[i, :] == np.max(payoff_p2[i, :]))[0]
+        if len(best_responses) > 1 and not _all_equal(payoff_p1[i, best_responses]):
+            multiple_br_dict[f"2 has multiple best responses for P1_strategy_{i}"] = best_responses.tolist()
+    
+    if multiple_br_dict:
+        raise ValueError(f"Multiple best responses which are payoff relevant: {multiple_br_dict}")
+    
+def _all_equal(array):
+    return np.all(array == array[0])
+
+
+# Example usage:
+base_game = nash.Game([[0, 0], [0, 1]], [[3, 5], [3, 1]])
+commitment_game = transform_game(base_game)
+print("Commitment Game Payoff Matrices:")
+print("Player 1:\n", commitment_game.payoff_matrices[0])
+print("Player 2:\n", commitment_game.payoff_matrices[1])

@@ -22,7 +22,7 @@
 ~*
 
 # Notebooks folder
-notebooks/
+Code/notebooks/
 
 # LaTeX output folder
 **/out/
@@ -30,3 +30,6 @@ notebooks/
 # pixi environments
 .pixi/*
 !.pixi/config.toml
+
+# Other
+.vscode/
