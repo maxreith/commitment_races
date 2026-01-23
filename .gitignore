@@ -1,0 +1,32 @@
+# Editỏr files
+*.swp
+*.bak
+
+~*
+
+
+# Notebooks folder
+
+code/notebooks/
+
+
+# LaTeX output folder
+
+**/out/
+
+
+# pixi environments
+
+.pixi/*
+
+!.pixi/config.toml
+
+
+# Other
+
+.vscode/
+
+CLAUDE.md
+
+
+
