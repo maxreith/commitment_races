@@ -3,7 +3,7 @@
 % Packages %%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%
 \usepackage[style = authoryear]{biblatex}\addbibresource{references.bib}
-\usepackage{geometry, tikz, pgfplots, graphicx, amsmath, amsthm, setspace, hyperref, booktabs, xcolor, array, amsfonts}
+\usepackage{geometry, tikz, pgfplots, graphicx, amsmath, amsthm, setspace, hyperref, booktabs, xcolor, array, amsfonts, forest}
 \usetikzlibrary{positioning, fit, backgrounds, patterns}
 
 %%%%%%%%%%%%%%%%%%%%%%%
@@ -74,103 +74,49 @@ Consider the well-known Game of Chicken depicted in \autoref{tab:gameofchicken},
 \label{tab:gameofchicken}
 \end{table}
 \newline
-How would equilibrium outcomes change if players could simultaneously commit to their strategies beforehand? \autoref{fig:game-tree} presents a commitment variant of this game, with an initial commitment period.  Initially, both players simultaneously decide either to commit to Straight (S) or Move (M), but they can also decide to wait (W). After this commitment period, the made commitments are observed and the base game is played. If both players commit, their chosen strategies are executed, concluding the game. If only one player commits, the other observes this commitment and selects their strategy accordingly. Should both players choose to wait, they proceed to play the base Game of Chicken.
+How would equilibrium outcomes change if players could simultaneously commit to their strategies beforehand? \autoref{fig:game-tree} presents a commitment variant of this game, with an initial commitment period.  Initially, both players simultaneously decide either to commit to Straight (S) or Move (M), but they can also decide to wait (W). After this commitment period, the made commitments are observed and the base game is played. If both players commit, their chosen strategies are executed, concluding the game. If only one player commits, the other observes this commitment and best responds accordingly. Should both players choose to wait, they proceed to play the base Game of Chicken.
 \begin{figure}[ht]
     \centering
-    \resizebox{0.9\linewidth}{!}{
-    \begin{tikzpicture}
-        %--- Macros with Updated Labels ---
-        \newcommand{\firststage}[2]{%
-            % Nodes for Player 2 at period 1 (following Player 1's move)
-            \node (#11) [circle, draw, below of=#1, xshift=-#2, yshift=\yshift]{};
-            \node (#12) [circle, draw, below of=#1, xshift=0, yshift=\yshift]{};
-            \node (#13) [circle, draw, below of=#1, xshift=#2, yshift=\yshift]{};
-            % Branches: left branch is Wait (W); the others are S and M.
-            \draw (#1) -- (#11) node[midway, left] {W};
-            \draw (#1) -- (#12) node[midway, left] {S};
-            \draw (#1) -- (#13) node[midway, right] {M};
-        }
-
-        \newcommand{\aftercommit}[2]{%
-            % Node following a committed strategy (only one possible continuation)
-            \node (#11) [circle, draw, below of=#1, xshift=0, yshift=\yshift]{};
-            \draw (#1) -- (#11) node[midway, right] {#2};
-        }
-
-        \newcommand{\afternocommit}[4]{%
-            % Node for the noncommitted branch (with two possible moves)
-            \node (#11) [circle, draw, below of=#1, xshift=-#2, yshift=\yshift]{};
-            \node (#12) [circle, draw, below of=#1, xshift=#2, yshift=\yshift]{};
-            \draw (#1) -- (#11) node[midway, left] {#3};
-            \draw (#1) -- (#12) node[midway, right] {#4};
-        }
-
-        %--- Define Shift Variables ---
-        \newcommand{\xshiftA}{5cm}           % For first stage
-        \newcommand{\xshiftfollowone}{0.25cm}  % For third stage (single branch)
-        \newcommand{\xshiftC}{0.5cm}          % For fourth stage
-        \newcommand{\xshiftlabel}{-10cm}      % For labels
-        \newcommand{\yshift}{-0.5cm}
-
-        %--- Root Node (Player 1) ---
-        \node (root) at (0,0) [circle, draw] {};
-
-        % Player 1's initial decision: Wait, commit to S, or commit to M
-        \node (child1) [circle, draw, below of=root, xshift=-\xshiftA-1cm, yshift=\yshift]{};
-        \node (child2) [circle, draw, below of=root, xshift=0cm, yshift=\yshift]{};
-        \node (child3) [circle, draw, below of=root, xshift=\xshiftA-1cm, yshift=\yshift]{};
-
-        \draw (root) -- (child1) node[midway, above left] {W};
-        \draw (root) -- (child2) node[midway, left] {S};
-        \draw (root) -- (child3) node[midway, right] {M};
-
-        %--- Player 2's First Stage Decisions ---
-        \firststage{child1}{2cm}
-        \firststage{child2}{1cm}
-        \firststage{child3}{1cm}
-
-        %--- t = 2, Player 1's Decisions after Not Committing ---
-        \afternocommit{child11}{0.8cm}{S}{M}
-        \afternocommit{child12}{\xshiftfollowone}{S}{M}
-        \afternocommit{child13}{\xshiftfollowone}{S}{M}
-
-        %--- t = 2, Player 1's Decisions after Having Committed ---
-        \aftercommit{child21}{S}
-        \aftercommit{child22}{S}
-        \aftercommit{child23}{S}
-        \aftercommit{child31}{M}
-        \aftercommit{child32}{M}
-        \aftercommit{child33}{M}
-
-        %--- t = 2, Player 2's Subsequent Decisions ---
-        \afternocommit{child111}{\xshiftC}{S}{M}
-        \afternocommit{child112}{\xshiftC}{S}{M}
-        \aftercommit{child121}{S}
-        \aftercommit{child122}{S}
-        \aftercommit{child131}{M}
-        \aftercommit{child132}{M}
-
-        \afternocommit{child211}{0.5cm}{S}{M}
-        \aftercommit{child221}{S}
-        \aftercommit{child231}{M}
-
-        \afternocommit{child311}{0.5cm}{S}{M}
-        \aftercommit{child321}{S}
-        \aftercommit{child331}{M}
-
-        %--- Define Information Sets and Labels ---
-        \begin{pgfonlayer}{background}
-            \node [draw=black, dashed, fit=(child1)(child3), inner sep=2pt] {};
-            \node [draw=black, dashed, fit=(child111)(child112), inner sep=2pt] {};
-            \node [draw=black, dashed, fit=(child121)(child122), inner sep=2pt] {};
-            \node [draw=black, dashed, fit=(child131)(child132), inner sep=2pt] {};
-
-            \node (P1label1) [draw=none, left of=root, xshift=\xshiftlabel] {Player 1};
-            \node (P2label1) [draw=none, below of=P1label1, yshift=\yshift] {Player 2};
-            \node (P1label2) [draw=none, below of=P2label1, yshift=\yshift] {Player 1};
-            \node (P2label2) [draw=none, below of=P1label2, yshift=\yshift] {Player 2};
-        \end{pgfonlayer}
-    \end{tikzpicture}
+    \resizebox{1\linewidth}{!}{
+        \begin{forest}
+            for tree={
+                %minimum size=2em,
+                inner sep=1pt,  % Reduce padding inside circles
+                where n children=0{}{circle, draw},
+                s sep=12pt,
+                l sep=25pt,
+                font=\footnotesize 
+            }
+            [P1
+                [P2, name=p2_first_period_W, edge label={node[midway,left]{$W$}}
+                    [P1, edge label={node[midway,left]{$W$}}
+                        [P2, name=p2_second_period_S, edge label={node[midway,left]{$S$}}
+                            [{$-1,-1$}, edge label={node[midway,left]{$S$}}]
+                            [{$1,-0.5$}, edge label={node[midway,right]{$M$}}]
+                        ]
+                        [P2, name=p2_second_period_M, edge label={node[midway,right]{$M$}}
+                            [{$-0.5,1$}, edge label={node[midway,left]{$S$}}]
+                            [{$0,0$}, edge label={node[midway,right]{$M$}}]
+                        ]
+                    ]
+                    [{$1,-0.5$}, edge label={node[midway,left]{$S$}}]
+                    [{$-0.5,1$}, edge label={node[midway,right]{$M$}}]
+                ]
+                [P2, name=p2_first_period_S, edge label={node[midway,left]{$S$}}
+                    [{$-0.5,1$},edge label={node[midway,left]{$W$}}]
+                    [{$-1,-1$},edge label={node[midway,left]{$S$}}]
+                    [{$-0.5,1$},edge label={node[midway,right]{$M$}}]
+                ]
+                [P2, name=p2_first_period_M, edge label={node[midway,right=5pt]{$M$}}
+                    [{$1,-0.5$},edge label={node[midway,left]{$W$}}]
+                    [{$1,-0.5$},edge label={node[midway,left]{$S$}}]
+                    [{$0,0$},edge label={node[midway,right]{$M$}}]
+                ]
+            ]
+            \draw[dashed, thick] (p2_first_period_W) -- (p2_first_period_S);
+            \draw[dashed, thick] (p2_first_period_M) -- (p2_first_period_S);
+            \draw[dashed, thick] (p2_second_period_M) -- (p2_second_period_S);
+        \end{forest}
     }
     \caption{The Game Tree for the Commitment Game of Chicken}
     \label{fig:game-tree}
