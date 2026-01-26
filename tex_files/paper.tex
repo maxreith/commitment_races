@@ -316,6 +316,36 @@ To see why, consider the Game of Chicken first. We argue that commitment transfo
 \end{table}
 \newline
 In the Battle of the Sexes, this dynamic is reversed. Since $b>1$ and $c>1$, the Wait-Wait payoff $\frac{\bparam\cparam}{\cparam+\bparam-1}$ exceeds 1, so commitment improves payoffs relative to the base game.
+\begin{table}[h!]
+\centering
+\begin{tabular}{ccc}
+    % First table - Base game
+    \begin{tabular}{c|cc}
+        & $A_1$ & $A_2$ \\[0.2em]
+        \hline
+        $A_1$ & $(0,0)$ & $(\bparam,\cparam)$ \\[0.2em]
+        $A_2$ & $(\cparam,\bparam)$ & $(1,1)$ \\[0.2em]
+    \end{tabular}
+    &
+    % Arrow
+    \hspace{1em}
+    \begin{tikzpicture}[baseline=(current bounding box.center)]
+        \draw[thick, ->] (0,0)--(1.5,0);
+    \end{tikzpicture}
+    \hspace{1em}
+    &
+    % Second table - Commitment game
+    \begin{tabular}{c|ccc}
+        & $A_1$ & $A_2$ & $W$\\[0.2em]
+        \hline
+        $A_1$ & $0,0$ & $\bparam,\cparam$ & $\bparam,\cparam$\\[0.2em]
+        $A_2$ & $\cparam,\bparam$ & $1,1$ & $\cparam,\bparam$\\[0.2em]
+        $W$   & $\cparam,\bparam$ & $\bparam,\cparam$ & $\tfrac{\bparam\cparam}{\cparam+\bparam-1},\tfrac{\bparam\cparam}{\cparam+\bparam-1}$\\[0.2em]
+    \end{tabular}
+\end{tabular}
+\caption{Base Battle of Sexes (left) and its Normal Form with Commitment (right)}
+\label{tab:prop1-intuition}
+\end{table}
 \newline
 While initially stated that all symmetric $2\times2$ games would be considered, Proposition~\ref{theo:GamePayoffs} focuses only on the Game of Chicken and the Battle of the Sexes. Corollary~\ref{cor:staghunt-coord}, derived in Appendix~\ref{sec:prooftheo1}, extends the analysis to the Stag Hunt and Coordination Game.
 \begin{corollary}
