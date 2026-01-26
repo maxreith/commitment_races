@@ -18,15 +18,11 @@ code/notebooks/
 # pixi environments
 
 .pixi/*
-
-!.pixi/config.toml
-
+.pixi/config.toml
+pixi.lock
+pixi.toml
 
 # Other
 
 .vscode/
-
 CLAUDE.md
-
-
-
