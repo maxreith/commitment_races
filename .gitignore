@@ -23,7 +23,7 @@ pixi.lock
 pixi.toml
 
 # Other
-
+old/
 .vscode/
 CLAUDE.md
 
