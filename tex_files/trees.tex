@@ -1,0 +1,154 @@
+\documentclass[format=sigconf]{acmart}
+
+%%%%%%%%%%%%%%%%%%%%%%%
+% Packages %%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{tikz, graphicx, amsmath, xcolor}
+\usetikzlibrary{positioning, fit, backgrounds, patterns}
+\usepackage{forest}
+
+%%%%%%%%%%%%%%%%%%%%%%%
+% Document %%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+\section{Commitment Game Tree}
+\subsection{Reduced Commitment Game Tree with Numerical Payoffs}
+\begin{forest}
+    for tree={
+        %minimum size=2em,
+        inner sep=1pt,  % Reduce padding inside circles
+        where n children=0{}{circle, draw},
+        s sep=12pt,
+        l sep=25pt,
+        font=\footnotesize 
+    }
+    [P1
+        [P2, name=p2_first_period_W, edge label={node[midway,left]{$W$}}
+            [P1, edge label={node[midway,left]{$W$}}
+                [P2, name=p2_second_period_S, edge label={node[midway,left]{$S$}}
+                    [{$-1,-1$}, edge label={node[midway,left]{$S$}}]
+                    [{$1,-0.5$}, edge label={node[midway,right]{$M$}}]
+                ]
+                [P2, name=p2_second_period_M, edge label={node[midway,right]{$M$}}
+                    [{$-0.5,1$}, edge label={node[midway,left]{$S$}}]
+                    [{$0,0$}, edge label={node[midway,right]{$M$}}]
+                ]
+            ]
+            [{$1,-0.5$}, edge label={node[midway,left]{$S$}}]
+            [{$-0.5,1$}, edge label={node[midway,right]{$M$}}]
+        ]
+        [P2, name=p2_first_period_S, edge label={node[midway,left]{$S$}}
+            [{$-0.5,1$},edge label={node[midway,left]{$W$}}]
+            [{$-1,-1$},edge label={node[midway,left]{$S$}}]
+            [{$-0.5,1$},edge label={node[midway,right]{$M$}}]
+        ]
+        [P2, name=p2_first_period_M, edge label={node[midway,right=5pt]{$M$}}
+            [{$1,-0.5$},edge label={node[midway,left]{$W$}}]
+            [{$1,-0.5$},edge label={node[midway,left]{$S$}}]
+            [{$0,0$},edge label={node[midway,right]{$M$}}]
+        ]
+    ]
+    \draw[dashed, thick] (p2_first_period_W) -- (p2_first_period_S);
+    \draw[dashed, thick] (p2_first_period_M) -- (p2_first_period_S);
+    \draw[dashed, thick] (p2_second_period_M) -- (p2_second_period_S);
+\end{forest}
+\subsection{Reduced Commitment Game Tree with Parametrized Payoffs}
+\begin{forest}
+    for tree={
+        %minimum size=2em,
+        inner sep=1pt,  % Reduce padding inside circles
+        where n children=0{}{circle, draw},
+        s sep=12pt,
+        l sep=25pt,
+        font=\footnotesize 
+    }
+    [P1
+        [P2, name=p2_first_period_W, edge label={node[midway,left]{$W$}}
+            [P1, edge label={node[midway,left]{$W$}}
+                [P2, name=p2_second_period_S, edge label={node[midway,left]{$S$}}
+                    [{$-c,-c$}, edge label={node[midway,left]{$S$}}]
+                    [{$1,-l$}, edge label={node[midway,right]{$M$}}]
+                ]
+                [P2, name=p2_second_period_M, edge label={node[midway,right]{$M$}}
+                    [{$-l,1$}, edge label={node[midway,left]{$S$}}]
+                    [{$0,0$}, edge label={node[midway,right]{$M$}}]
+                ]
+            ]
+            [{$1,-l$}, edge label={node[midway,left]{$S$}}]
+            [{$-l,1$}, edge label={node[midway,right]{$M$}}]
+        ]
+        [P2, name=p2_first_period_S, edge label={node[midway,left]{$S$}}
+            [{$-l,1$},edge label={node[midway,left]{$W$}}]
+            [{$-c,-c$},edge label={node[midway,left]{$S$}}]
+            [{$-l,1$},edge label={node[midway,right]{$M$}}]
+        ]
+        [P2, name=p2_first_period_M, edge label={node[midway,right=5pt]{$M$}}
+            [{$1,-l$},edge label={node[midway,left]{$W$}}]
+            [{$1,-l$},edge label={node[midway,left]{$S$}}]
+            [{$0,0$},edge label={node[midway,right]{$M$}}]
+        ]
+    ]
+    \draw[dashed, thick] (p2_first_period_W) -- (p2_first_period_S);
+    \draw[dashed, thick] (p2_first_period_M) -- (p2_first_period_S);
+    \draw[dashed, thick] (p2_second_period_M) -- (p2_second_period_S);
+\end{forest}
+\subsection{Sketch Full Tree}
+\begin{forest}
+    [
+        [, name=p2_first_period_W, edge label={node[midway,left]{$W$}}
+            [, edge label={node[midway,left]{$W$}}
+                [
+                    []
+                    []]
+                [
+                    []
+                    []]]
+            [, edge label={node[midway,left]{$S$}}
+                [
+                    []
+                ]
+                [
+                    []
+                ]]
+            [, edge label={node[midway,right]{$M$}}
+                [
+                    []
+                ]
+                [
+                    []
+                ]]
+        ]
+        [,name=p2_first_period_S, edge label={node[midway,left]{$S$}}
+            [,edge label={node[midway,left]{$W$}}
+                [
+                    []
+                    []]]
+            [,edge label={node[midway,left]{$S$}}
+                [
+                    []]]
+            [,edge label={node[midway,right]{$M$}}
+                [
+                    []
+                ]]
+        ]
+        [, name=p2_first_period_M, edge label={node[midway,right]{$M$}}
+            [,edge label={node[midway,left]{$W$}}
+                [
+                    []
+                    []
+                ]]
+            [,edge label={node[midway,left]{$S$}}
+                [
+                    []
+                ]]
+            [,edge label={node[midway,right]{$M$}}
+                [
+                    []]]
+        ]
+    ]
+    \draw[dashed, thick] (p2_first_period_W) -- (p2_first_period_S);
+    \draw[dashed, thick] (p2_first_period_M) -- (p2_first_period_S);
+\end{forest}
+
+\end{document}

@@ -61,7 +61,7 @@ As Artificial Intelligence (AI) technology continues to evolve, AI agents are be
 
 In this paper, we develop a formal model of simultaneous commitment to study such dynamics. Two players play a simple game, referred to hereafter as the base game. Before playing the base game, players have the opportunity to simultaneously commit to any normal-form strategy of this game. Commitment is voluntary; players can choose not to commit and wait until the base game. When players play a base game with the option to commit, we refer to this as commitment game. Our main result is that in commitment games equilibria can emerge that are worse in payoffs for all players than the corresponding equilibria in the base game. This arises because the non-aggressive strategy of waiting in the commitment game becomes less attractive than non-aggressive behavior in the base game, and thus aggressive behavior rises. We will illustrate this with an example.
 \subsection*{\centering Example}
-Consider the well-known Game of Chicken depicted in \autoref{tab:gameofchicken}, where two players simultaneously decide whether to go Straight or Move (out of the way). Besides two pure-strategy Nash equilibria, this game has one mixed-strategy Nash equilibrium (MSNE), in which both players choose Straight with probability $\frac{2}{3}$ and Move with probability $\frac{1}{3}$, resulting in an equilibrium payoff of $-\frac{1}{3}$. Importantly, this MSNE is the unique symmetric equilibrium for this symmetric game.
+Consider the well-known Game of Chicken depicted in \autoref{tab:gameofchicken}, where two players simultaneously decide whether to go Straight or Move (out of the way). Besides two pure-strategy Nash equilibria, this game has one mixed-strategy Nash equilibrium (MSNE), in which both players choose Straight with probability $\tfrac{2}{3}$ and Move with probability $\tfrac{1}{3}$, resulting in an equilibrium payoff of $-\tfrac{1}{3}$. Importantly, this MSNE is the unique symmetric equilibrium for this symmetric game.
 \begin{table}[h!]
 \centering
 \begin{tabular}{c|cc}
@@ -344,7 +344,7 @@ In the Battle of the Sexes, this dynamic is reversed. Since $b>1$ and $c>1$, the
     \end{tabular}
 \end{tabular}
 \caption{Base Battle of Sexes (left) and its Normal Form with Commitment (right)}
-\label{tab:prop1-intuition}
+\label{tab:prop1-intuition-battle-of-sexes}
 \end{table}
 \newline
 While initially stated that all symmetric $2\times2$ games would be considered, Proposition~\ref{theo:GamePayoffs} focuses only on the Game of Chicken and the Battle of the Sexes. Corollary~\ref{cor:staghunt-coord}, derived in Appendix~\ref{sec:prooftheo1}, extends the analysis to the Stag Hunt and Coordination Game.
@@ -420,7 +420,7 @@ Finally, while motivated by concerns over AI agents capable of making commitment
 \setcounter{subsection}{0}
 \renewcommand\thesubsection{\Alph{subsection}}
 \subsection{Commitment Game Equilibria in Pure Strategies}\label{sec:proof1}
-In Section~\ref{sec:GamePayoffs}, I noted that pure strategy equilibria of the base game carry over to the commitment game. In this section, I formally establish this connection by proving two supporting lemmas. Lemma~\ref{lem:SPNE_characterization} shows that any pure strategy equilibrium of the base game, such as (Straight, Straight) in the Game of Chicken, also constitutes an equilibrium outcome in the commitment game. In contrast, Lemma~\ref{lem:SPNE_characterization_2} demonstrates that strategy profiles not corresponding to any pure strategy equilibrium in the base game, such as (Move, Move), cannot arise as pure strategy equilibrium outcomes in the commitment game. Notably, this second result holds only for symmetric $2\times2$ games, and Section~\ref{sec:beyond2x2} presents a $3\times3$ game where this is violated.
+In Section~\ref{sec:GamePayoffs}, I noted that pure strategy equilibria of the base game carry over to the commitment game. In this section, I formally establish this connection by proving two supporting lemmas. Lemma~\ref{lem:SPNE_characterization} shows that any pure strategy equilibrium of the base game, such as (Straight, Straight) in the Game of Chicken, also constitutes an equilibrium outcome in the commitment game. In contrast, Lemma~\ref{lem:SPNE_characterization_2} demonstrates that strategy profiles not corresponding to any pure strategy equilibrium in the base game, such as (Move, Move), cannot arise as pure strategy equilibrium outcomes in the commitment game.
 \begin{lemma}[]\label{lem:SPNE_characterization}
     Consider a two player normal form game where each player has strategies $A=\{A_1,\dots,A_n\}$. Let $\{A_i, A_{-i}\}$ be a Nash equilibrium in this game. When this normal form game is played with commitment,
     \begin{enumerate}
