@@ -53,6 +53,48 @@
     \draw[dashed, thick] (p2_first_period_M) -- (p2_first_period_S);
     \draw[dashed, thick] (p2_second_period_M) -- (p2_second_period_S);
 \end{forest}
+
+\subsection{Reduced Commitment Game Tree with Numerical Payoffs and Commitment Labels}
+
+\begin{forest}
+    for tree={
+        minimum size=1.7em,
+        inner sep=1pt,  % Reduce padding inside circles
+        where n children=0{}{circle, draw},
+        s sep=26pt,
+        l sep=33pt,
+        font=\footnotesize 
+    }
+    [P1
+        [P2, name=p2_first_period_W, edge label={node[midway,left]{$W$}}
+            [P1, edge label={node[midway,left]{$W$}}
+                [P2, name=p2_second_period_S, edge label={node[midway,left]{$S$}}
+                    [{$-1,-1$}, edge label={node[midway,left]{$S$}}]
+                    [{$1,-0.5$}, edge label={node[midway,right]{$M$}}]
+                ]
+                [P2, name=p2_second_period_M, edge label={node[midway,right]{$M$}}
+                    [{$-0.5,1$}, edge label={node[midway,left]{$S$}}]
+                    [{$0,0$}, edge label={node[midway,right] {$M$}}]
+                ]
+            ]
+            [{$1,-0.5$}, edge label={node[midway,left, shift={(0.1,0)}, align=center, font=\tiny]{Commit\\$S$}}]
+            [{$-0.5,1$}, edge label={node[midway,right, align=center, font=\tiny]{Commit\\$M$}}]
+        ]
+        [P2, name=p2_first_period_S, edge label={node[midway, left, align=center, font=\tiny]{Commit\\$S$}}
+            [{$-0.5,1$},edge label={node[midway,left]{$W$}}]
+            [{$-1,-1$},edge label={node[midway,left, shift={(0.1,0)}, align=center, font=\tiny]{Commit\\$S$}}]
+            [{$-0.5,1$},edge label={node[midway,right, align=center, font=\tiny]{Commit\\$M$}}]
+        ]
+        [P2, name=p2_first_period_M, edge label={node[midway,right=5pt, align=center, font=\tiny]{Commit\\$M$}}
+            [{$1,-0.5$},edge label={node[midway,left]{$W$}}]
+            [{$1,-0.5$},edge label={node[midway,left, shift={(0.1,0)}, align=center, font=\tiny]{Commit\\$S$}}]
+            [{$0,0$},edge label={node[midway,right, align=center, font=\tiny]{Commit\\$M$}}]
+        ]
+    ]
+    \draw[dashed, thick] (p2_first_period_W) -- (p2_first_period_S);
+    \draw[dashed, thick] (p2_first_period_M) -- (p2_first_period_S);
+    \draw[dashed, thick] (p2_second_period_M) -- (p2_second_period_S);
+\end{forest}
 \subsection{Reduced Commitment Game Tree with Parametrized Payoffs}
 \begin{forest}
     for tree={
