@@ -3,7 +3,7 @@
 % Packages %%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%
 \usepackage[style = authoryear]{biblatex}\addbibresource{references.bib}
-\usepackage{geometry, tikz, pgfplots, graphicx, amsmath, amsthm, setspace, hyperref, booktabs, xcolor, array, amsfonts, forest}
+\usepackage{geometry, tikz, pgfplots, graphicx, amsmath, amsthm, setspace, hyperref, booktabs, xcolor, array, amsfonts, forest, xfp}
 \usetikzlibrary{positioning, fit, backgrounds, patterns}
 
 %%%%%%%%%%%%%%%%%%%%%%%
@@ -122,8 +122,73 @@ How would equilibrium outcomes change if players could simultaneously commit to 
     \label{fig:game-tree}
 \end{figure}
 \newline
-In this commitment game, there are multiple subgame‐perfect Nash equilibria (SPNE) in pure strategies: in one, a player commits straight while the other waits and then moves out of the way; in another, one player commits straight and the other commits to moving out of the way. Importantly, no equilibrium can involve both players waiting before choosing a pure‐strategy equilibrium, since in that case one player would end up in her less‐preferred equilibrium and could profitably deviate by committing straight. Next to these pure strategy equilibria, there exists an interesting mixed subgame perfect equilibrium with probabilistic commitment. Here, each player commits to the aggressive strategy (Straight) with probability $\frac{8}{11}$ and waits with probability $\frac{3}{11}$. If both players opt to wait, they play the base game and the original MSNE strategies there. This mixed equilibrium is the unique equilibrium with probabilistic commitment, and it is also the unique symmetric equilibrium. Strikingly, this equilibrium has expected payoffs of $-\frac{5}{11}$ per player, representing a lower expected payoff than the original game's mixed-strategy equilibrium with $-\frac{1}{3}$.\footnote{For clarity, in this paper, only equilibria involving both-sided probabilistic commitment are referred to as mixed equilibria in commitment games, even though pure strategy equilibria are technically also mixed strategy equilibria.} The reason is that players are more likely to behave aggressively. While players move with probability $\tfrac{1}{3}$ in the base game's MSNE, they only wait with probability $\tfrac{3}{11}$ in the commitment game.
-Introducing commitment leads to more aggressive behavior, increased miscoordination, and lower payoffs for both players.
+In this commitment game, there are multiple subgame‐perfect Nash equilibria (SPNE) in pure strategies: in one, a player commits straight while the other waits and then moves out of the way; in another, one player commits straight and the other commits to moving out of the way. Importantly, no equilibrium can involve both players waiting before choosing a pure‐strategy equilibrium, since in that case one player would end up in her less‐preferred equilibrium and could profitably deviate by committing straight. 
+Next to these pure strategy equilibria, there exists an interesting mixed subgame perfect equilibrium with probabilistic commitment. Here, each player commits to the aggressive strategy (Straight) with probability $\frac{8}{11}$ and waits with probability $\frac{3}{11}$. If both players opt to wait, they play the base game and the original MSNE strategies there.
+This mixed equilibrium is the unique equilibrium with probabilistic commitment, and it is also the unique symmetric equilibrium. Strikingly, this equilibrium has expected payoffs of $-\frac{5}{11}$ per player, representing a lower expected payoff than the original game's mixed-strategy equilibrium with $-\frac{1}{3}$.
+\footnote{For clarity, in this paper, only equilibria involving both-sided probabilistic commitment are referred to as mixed equilibria in commitment games, even though pure strategy equilibria are technically also mixed strategy equilibria.}
+
+Why is that? We argue that commitment transforms the Game of Chicken into another Game of Chicken with worse payoffs. Consider Table~\ref{tab:introduction-intuition}. On the left side, the original Game of Chicken without commitment is displayed. On the right, we present the reduced normal form of the Game of Chicken with commitment. Committing to $M$ (moving out of the way) is weakly dominated by $W$ (waiting), so that $M$ is effectively replaced by $W$, and thus the $(M,M)$ payoff is substituted by the $(W,W)$ payoff. This is the expected mixed equilibrium payoff of the original Game of Chicken, $-\tfrac{1}{3}$, instead of the payoff $0$ that players received before when both played $M$. Thus, playing $S$ becomes relatively more attractive, leading to more aggressive behavior, a higher probability of crashing\footnote{Defined as both players playing Straight in the same period and getting payoff $-1,-1$.} and worse payoffs for both players in the MSNE.
+\begin{table}[h!]
+\centering
+\begin{tabular}{ccc}
+    % First table - Base game
+        \begin{tabular}{c|cc}
+        & $S$ & $M$ \\[0.2em]
+        \hline
+        $S$ & $-1,-1$ & $1,-0.5$ \\[0.2em]
+        $M$ & $-0.5,1$ & $0,0$ \\[0.2em]
+    \end{tabular}
+    &
+    % Arrow
+    \hspace{1em}
+    \begin{tikzpicture}[baseline=(current bounding box.center)]
+        \draw[thick, ->] (0,0)--(1.5,0);
+    \end{tikzpicture}
+    \hspace{1em}
+    &
+    % Second table - Commitment game
+    \begin{tabular}{c|cc}
+        & $S$ & $W$\\[0.2em]
+        \hline
+        $S$ & $-1,-1$ & $1,-0.5$\\[0.2em]
+        $W$   & $-0.5,1$ & $-\tfrac{5}{11},-\tfrac{5}{11}$\\[0.2em]
+    \end{tabular}
+\end{tabular}
+\caption{Game of Chicken without (left) and with commitment (right)}
+\label{tab:introduction-intuition}
+\end{table}
+
+So far, we have considered a single commitment period before the base game, during
+which players can simultaneously commit. However, if players can commit
+to a strategy for a game they will play in the future, it seems natural that they might
+be able to do so at multiple points in time prior to play. This is particularly
+relevant if one thinks of the players as AI agents. Fast computational speed could
+imply that agents have many, effectively infinite, opportunities to commit.
+From this point forward, let $T$ represent the number of discrete commitment periods. Having examined the single-period case ($T=1$), we now consider multiple periods ($T>1$).
+In each commitment period, players simultaneously decide whether to commit to a strategy or wait. If both players commit, their chosen strategies are executed immediately. If only one player commits, the other observes this commitment and best responds to it. If both players wait, the game advances to the next commitment period, or to the base game if no commitment periods remain.
+
+This notation allows us to present another important finding for the Game of Chicken. In the unique mixed subgame perfect equilibrium, the expected payoff for both players decreases as the number of commitment periods $T$ increases. As $T$ approaches infinity, the expected payoff converges to the minmax payoff of the game, representing the worst possible equilibrium for both players.
+Table~\ref{tab:multiple-commitment-periods-chicken} shows the expected payoffs and the probability of crashing for different values of $T$.
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{lccccc}
+\toprule
+ & $T = 0$ & $T = 1$ & $T = 2$ & $\cdots$ & $T \to \infty$ \\
+\midrule
+Expected payoff & \fpeval{round(-1/3, 2)} & \fpeval{round(-5/11, 2)} & \fpeval{round(-21/43, 2)} & $\cdots$ & \fpeval{round(-1/2, 2)} \\ [1ex]
+$P(\text{Crash})$ & \fpeval{round(4/9, 2)} & \fpeval{round(0.562, 2)} & \fpeval{round(0.5906, 2)} & $\cdots$ & 0.6 \\
+\bottomrule
+\end{tabular}
+\caption{Expected MSNE payoff and probability of crashing with multiple commitment periods $T$. The base game is the Game of Chicken in Table~\ref{tab:gameofchicken}. $T=0$ corresponds to the mixed equilibrium in the base game without commitment.}
+\label{tab:multiple-commitment-periods-chicken}
+\end{table}
+
+The mechanism behind this result identical to the single-period case. Each additional commitment period transforms the game into a new Game of Chicken with worse payoffs. Waiting becomes relatively less attractive, making early commitments to Straight more likely, which increases the probability of crashing and lowers payoffs for both players. 
+
+We refer to this dynamic as a commitment race. A commitment race is when two agents each attempt to be the first to lock in the action associated with their preferred equilibrium, so that the best response of the other is to concede. 
+We study commitment races in all symmetric 2x2 games. In Section \ref{sec:GamePayoffs}, we shot that in most but not all symmetric 2x2 games, players do in fact want to race to commit, and for some games this improves outcomes for both players and for some games this worsens outcomes for both players. In Section \ref{sec:convergence}, we analyze the effect of increasing the number of commitment periods $T$ and present a generalized convergence result for all 2x2 games. Section \ref{sec:conclusion} concludes.
+
 
 \subsection*{\centering Literature}
 In economic theory, commitment is often associated with welfare-enhancing outcomes, at least for the player making the commitment. Commitment features prominently across a wide range of models, such as principals committing to mechanisms, players delegating decision-making to agents, and first movers in Stackelberg games earning a higher profit \parencite[see the discussion in][]{kalai_commitment_2010}. This paper, however, turns to the question of whether the ability to make commitments can \textit{harm} players.
@@ -307,8 +372,7 @@ While initially stated that all symmetric $2\times2$ games would be considered, 
 \noindent Although Corollary \ref{cor:staghunt-coord} is instructive, the more interesting strategic dynamics arise in games such as the Game of Chicken and the Battle of the Sexes. Thus, in the next section, we will focus on these two game types.
 
 \section{Multiple Commitment Periods}\label{sec:convergence}
-So far, we have assumed a single commitment period before the base game, during which players can simultaneously commit. In this section, we extend the model to allow for multiple commitment periods, denoted by $T$. If players can credibly commit to a strategy for a game they will play in the future, it seems natural that they might be able to do so at several points in time leading up to the game. This is particularly relevant if one thinks of these players as AI agents. Fast computational speed could imply that agents have many, effectively infinite, opportunities to commit.
-
+In this section, we extend the model to allow for multiple commitment periods, denoted by $T$.
 From this point forward, let $T$ represent the number of discrete commitment periods.
 Suppose that in the first commitment period, player $1$ commits and player $2$ waits. Then, player $2$ gets to observe $1$'s commitment in the second period, and can best respond to it.
 But if instead both players did not commit in the first period, they observe each other's inaction and then in the second period simultaneously decide again whether to commit. The base game is played only if neither player commits in any of the $T$ commitment periods.
