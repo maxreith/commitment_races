@@ -70,38 +70,82 @@ def print_equilibria(equilibrium_dic, games_dic=None):
                     payoff_p2 = eq[0] @ payoff_p2_matrix @ eq[1]
                     print(f"    Expected payoffs: P1={payoff_p1:.3f}, P2={payoff_p2:.3f}")
 
-def _transform_game(game):
-    "Transforms a base game into a commitment game with one commitment period."
+def _transform_game(game, T):
+    "Transforms a base game into a commitment game with T commitment periods."
     
     if not isinstance(game, nash.Game):
         raise TypeError("Input is not a nash.Game object, but of type {}".format(type(game)))
 
     _check_for_unique_best_responses(game)
 
-    payoff_p1, payoff_p2 = game.payoff_matrices
+    if not (isinstance(T, int) and T > 0):
+        raise ValueError("T must be a positive integer.")
 
+    payoff_p1, payoff_p2 = game.payoff_matrices
     num_strategies_p1, num_strategies_p2 = payoff_p1.shape
 
-    commitment_matrix_p1 = np.zeros((num_strategies_p1 * 2, num_strategies_p2 * 2))
-    commitment_matrix_p2 = np.zeros((num_strategies_p1 * 2, num_strategies_p2 * 2))
+    # Initialize commitment matrices
+    commitment_matrix_p1, commitment_matrix_p2 = _initialize_commitment_matrices(
+        payoff_p1, payoff_p2, num_strategies_p1, num_strategies_p2, T
+    )
 
+    for t in range(1, T+1):
+        # Fill player 1 commitment region (rows num_strategies_p1:2*num_strategies_p1, cols 0:num_strategies_p2)
+        _fill_p1_commitment_region(
+            commitment_matrix_p1, commitment_matrix_p2, payoff_p1, payoff_p2, 
+            num_strategies_p1, num_strategies_p2, t
+        )
+
+        # Fill player 2 commitment region (rows 0:num_strategies_p1, cols num_strategies_p2:2*num_strategies_p2)
+        _fill_p2_commitment_region(
+            commitment_matrix_p1, commitment_matrix_p2, payoff_p1, payoff_p2,
+            num_strategies_p1, num_strategies_p2, t
+        )
+
+        # Fill simultaneous commitment region
+        _fill_simultaneous_commitment_region(
+            commitment_matrix_p1, commitment_matrix_p2, payoff_p1, payoff_p2,
+            num_strategies_p1, num_strategies_p2
+        )
+
+    return nash.Game(commitment_matrix_p1, commitment_matrix_p2)
+
+
+def _initialize_commitment_matrices(payoff_p1, payoff_p2, num_strategies_p1, num_strategies_p2, T):
+    """Initialize commitment game matrices with base game payoffs in top-left quadrant."""
+    commitment_matrix_p1 = np.zeros((num_strategies_p1 * (T+1), num_strategies_p2 * (T+1)))
+    commitment_matrix_p2 = np.zeros((num_strategies_p1 * (T+1), num_strategies_p2 * (T+1)))
+    
     commitment_matrix_p1[:num_strategies_p1, :num_strategies_p2] = payoff_p1
     commitment_matrix_p2[:num_strategies_p1, :num_strategies_p2] = payoff_p2
-
-    for j in range(num_strategies_p2): 
-        best_response_payoff_p1_idx = np.argmax(payoff_p1[:, j])
-        commitment_matrix_p1[num_strategies_p1:2*num_strategies_p1, j] = payoff_p1[best_response_payoff_p1_idx, j]
-        commitment_matrix_p2[num_strategies_p1:2*num_strategies_p1, j] = payoff_p2[best_response_payoff_p1_idx, j]
-
-    for i in range(num_strategies_p1):
-        best_response_payoff_p2_idx = np.argmax(payoff_p2[i, :])
-        commitment_matrix_p2[i, num_strategies_p2:2*num_strategies_p2] = payoff_p2[i, best_response_payoff_p2_idx]
-        commitment_matrix_p1[i, num_strategies_p2:2*num_strategies_p2] = payoff_p1[i, best_response_payoff_p2_idx]
     
+    return commitment_matrix_p1, commitment_matrix_p2
+
+
+def _fill_p2_commitment_region(commitment_matrix_p1, commitment_matrix_p2, 
+                                payoff_p1, payoff_p2, num_strategies_p1, num_strategies_p2, t):
+    """Fill the region where player 2 commits (bottom-left quadrant)."""
+    for j in range(num_strategies_p2):
+        best_response_idx = np.argmax(payoff_p1[:, j])
+        commitment_matrix_p1[num_strategies_p1*t:num_strategies_p1*(t+1), j] = payoff_p1[best_response_idx, j]
+        commitment_matrix_p2[num_strategies_p1*t:num_strategies_p1*(t+1), j] = payoff_p2[best_response_idx, j]
+
+
+def _fill_p1_commitment_region(commitment_matrix_p1, commitment_matrix_p2,
+                                payoff_p1, payoff_p2, num_strategies_p1, num_strategies_p2, t):
+    """Fill the region where player 1 commits (top-right quadrant)."""
+    for i in range(num_strategies_p1):
+        best_response_idx = np.argmax(payoff_p2[i, :])
+        commitment_matrix_p2[i, num_strategies_p2*t:num_strategies_p2*(t+1)] = payoff_p2[i, best_response_idx]
+        commitment_matrix_p1[i, num_strategies_p2*t:num_strategies_p2*(t+1)] = payoff_p1[i, best_response_idx]
+
+
+def _fill_simultaneous_commitment_region(commitment_matrix_p1, commitment_matrix_p2,
+                                          payoff_p1, payoff_p2, num_strategies_p1, num_strategies_p2):
+    """Fill the region where both players commit simultaneously (bottom-right quadrant)."""
     commitment_matrix_p1[num_strategies_p1:2*num_strategies_p1, num_strategies_p2:2*num_strategies_p2] = payoff_p1
     commitment_matrix_p2[num_strategies_p1:2*num_strategies_p1, num_strategies_p2:2*num_strategies_p2] = payoff_p2
 
-    return nash.Game(commitment_matrix_p1, commitment_matrix_p2)
 
 def _check_for_unique_best_responses(game):
     payoff_p1, payoff_p2 = game.payoff_matrices

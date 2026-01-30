@@ -1,5 +1,4 @@
-import pdb
-from Code.commitment_periods import calculate_p_1, calculate_commitment_probabilities, calculate_crashing_probability, calculate_expected_payoff
+from commitment_periods import calculate_p_1, calculate_commitment_probabilities, calculate_crashing_probability, calculate_expected_payoff
 
 def test_calculate_p_1():
     T = 1
