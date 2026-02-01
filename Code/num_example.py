@@ -217,6 +217,9 @@ def generate_numerical_example(A, B, C, D, output_path):
     """
     b, c = normalize_game(A, B, C, D)
 
+    def fmt(value, decimals=2):
+        return f"{value:.{decimals}f}".rstrip("0").rstrip(".")
+
     t2_probs = calculate_commitment_probabilities(2, b, c)
 
     macros = {
@@ -224,23 +227,23 @@ def generate_numerical_example(A, B, C, D, output_path):
         "capB": f"{B:g}",
         "capC": f"{C:g}",
         "capD": f"{D:g}",
-        "baseProbStraight": f"{calculate_base_prob_straight(b, c):.2f}",
-        "baseProbMove": f"{calculate_base_prob_move(b, c):.2f}",
-        "baseMixPayoff": f"{to_original_payoff(calculate_base_mix_payoff(b, c), A, D):.2f}",
-        "ToneProbCommitStraight": f"{calculate_p_1(1, b, c):.2f}",
-        "ToneWait": f"{1 - calculate_p_1(1, b, c):.2f}",
-        "TonePayoff": f"{to_original_payoff(calculate_expected_payoff(1, b, c), A, D):.2f}",
-        "TtwoProbCommitStraightFirstPeriod": f"{t2_probs[0]:.2f}",
-        "TtwoProbCommitStraightSecondPeriod": f"{t2_probs[1]:.2f}",
-        "TtwoWait": f"{t2_probs[2]:.2f}",
-        "TtwoPayoff": f"{to_original_payoff(calculate_expected_payoff(2, b, c), A, D):.2f}",
-        "TinfCommitProbStraightFirstPeriod": f"{calculate_tinf_commit_prob_first_period(b, c):.2f}",
-        "TinfPayoff": f"{to_original_payoff(c, A, D):.2f}",
-        "TinfCrashInFirstPeriodPercentage": f"{calculate_tinf_crash_first_period_pct(b, c):.0f}",
-        "TinfCrashProbability": f"{calculate_tinf_crash_probability(b, c):.2f}",
-        "baseProbCrash": f"{calculate_base_crash_prob(b, c):.2f}",
-        "ToneProbCrash": f"{calculate_crashing_probability(1, b, c):.2f}",
-        "TtwoProbCrash": f"{calculate_crashing_probability(2, b, c):.2f}",
+        "baseProbStraight": fmt(calculate_base_prob_straight(b, c)),
+        "baseProbMove": fmt(calculate_base_prob_move(b, c)),
+        "baseMixPayoff": fmt(to_original_payoff(calculate_base_mix_payoff(b, c), A, D)),
+        "ToneProbCommitStraight": fmt(calculate_p_1(1, b, c)),
+        "ToneWait": fmt(1 - calculate_p_1(1, b, c)),
+        "TonePayoff": fmt(to_original_payoff(calculate_expected_payoff(1, b, c), A, D)),
+        "TtwoProbCommitStraightFirstPeriod": fmt(t2_probs[0]),
+        "TtwoProbCommitStraightSecondPeriod": fmt(t2_probs[1]),
+        "TtwoWait": fmt(t2_probs[2]),
+        "TtwoPayoff": fmt(to_original_payoff(calculate_expected_payoff(2, b, c), A, D)),
+        "TinfCommitProbStraightFirstPeriod": fmt(calculate_tinf_commit_prob_first_period(b, c)),
+        "TinfPayoff": fmt(to_original_payoff(c, A, D)),
+        "TinfCrashInFirstPeriodPercentage": fmt(calculate_tinf_crash_first_period_pct(b, c), 0),
+        "TinfCrashProbability": fmt(calculate_tinf_crash_probability(b, c)),
+        "baseProbCrash": fmt(calculate_base_crash_prob(b, c)),
+        "ToneProbCrash": fmt(calculate_crashing_probability(1, b, c)),
+        "TtwoProbCrash": fmt(calculate_crashing_probability(2, b, c)),
     }
 
     lines = []
@@ -250,9 +253,9 @@ def generate_numerical_example(A, B, C, D, output_path):
     Path(output_path).write_text("\n".join(lines) + "\n")
 
 
-A_DEFAULT = -1
+A_DEFAULT = -10
 B_DEFAULT = 1
-C_DEFAULT = -0.5
+C_DEFAULT = -1
 D_DEFAULT = 0
 
 if __name__ == "__main__":
