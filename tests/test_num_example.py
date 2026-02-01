@@ -1,3 +1,6 @@
+import pytest
+from dataclasses import dataclass, field
+
 from Code.num_example import (
     calculate_p_1,
     calculate_commitment_probabilities,
@@ -15,140 +18,179 @@ from Code.num_example import (
 )
 
 
-def test_calculate_p_1():
-    T = 1
-    b = 2
-    c = 0.5
-    expected_p_1 = 8 / 11
-    calculated_p_1 = calculate_p_1(T, b, c)
-    assert abs(calculated_p_1 - expected_p_1) < 1e-6, f"Expected {expected_p_1}, but got {calculated_p_1}"
+@dataclass
+class CommitmentGameExample:
+    """Expected values for a commitment game numerical example.
+
+    All payoffs (base_mix_payoff, t1_payoff, etc.) are in normalized (b,c) form.
+    To add a new example, fill in all fields and append to EXAMPLES.
+    """
+
+    id: str
+    # Raw payoff matrix
+    A: float
+    B: float
+    C: float
+    D: float
+    # Normalized parameters
+    b: float
+    c: float
+    # Base game MSNE
+    base_prob_straight: float  # (b-1)/(b+c-1)
+    base_prob_move: float  # c/(b+c-1)
+    base_mix_payoff: float  # bc/(b+c-1)
+    base_crash_prob: float  # ((b-1)/(b+c-1))^2
+    # T=1 commitment game
+    t1_p1: float  # first-period commit probability
+    t1_payoff: float  # MSNE expected payoff
+    t1_crash_prob: float
+    # T=2 commitment game
+    t2_probs: list  # [p_1, p_2, p_W]
+    t2_payoff: float
+    t2_crash_prob: float
+    # T -> inf limits
+    tinf_p1: float  # (b-c)/b
+    tinf_payoff: float  # c
+    tinf_crash_prob: float  # p1^2 / (1-(c/b)^2)
+    tinf_crash_first_pct: float  # ((b-c)/b)^2 * 100
 
 
-def test_calculate_p_1_multiple_periods():
-    T = 2
-    b = 2
-    c = 0.5
-    expected_p_1 = 32 / 43
-    calculated_p_1 = calculate_p_1(T, b, c)
-    assert abs(calculated_p_1 - expected_p_1) < 1e-6, f"Expected {expected_p_1}, but got {calculated_p_1}"
+EXAMPLES = [
+    CommitmentGameExample(
+        id="chicken_b2_c0.5",
+        A=-1, B=1, C=-0.5, D=0,
+        b=2, c=0.5,
+        base_prob_straight=2 / 3,
+        base_prob_move=1 / 3,
+        base_mix_payoff=2 / 3,
+        base_crash_prob=4 / 9,
+        t1_p1=8 / 11,
+        t1_payoff=6 / 11,
+        t1_crash_prob=(8 / 11) ** 2 + (3 / 11) ** 2 * (2 / 3) ** 2,
+        t2_probs=[32 / 43, 8 / 43, 3 / 43],
+        t2_payoff=22 / 43,
+        t2_crash_prob=(32 / 43) ** 2 + (8 / 43) ** 2 + (3 / 43) ** 2 * (2 / 3) ** 2,
+        tinf_p1=3 / 4,
+        tinf_payoff=0.5,
+        tinf_crash_prob=0.6,
+        tinf_crash_first_pct=56.25,
+    ),
+    # To add a new example, copy the block above and fill in all fields.
+]
 
 
-def test_calculate_p_1_T_to_infinity():
-    T = 20
-    b = 2
-    c = 0.5
-    expected_p_1 = 3 / 4
-    calculated_p_1 = calculate_p_1(T, b, c)
-    assert abs(calculated_p_1 - expected_p_1) < 1e-6, f"Expected {expected_p_1}, but got {calculated_p_1}"
+def _example_id(ex):
+    return ex.id
 
 
-def test_calculate_commitment_probabilities():
-    T = 2
-    b = 2
-    c = 0.5
-    expected_probabilities = [32 / 43, 8 / 43, 3 / 43]
-    calculated_probabilities = calculate_commitment_probabilities(T, b, c)
-    for calculated, expected in zip(calculated_probabilities, expected_probabilities):
-        assert abs(calculated - expected) < 1e-6, f"Expected {expected}, but got {calculated}"
+# --- Normalization ---
 
 
-def test_calculate_commitment_probabilities_T_to_infinity():
-    T = 20
-    b = 2
-    c = 0.5
-    expected_wait_probability = 0
-    calculated_probabilities = calculate_commitment_probabilities(T, b, c)
-    calculated_wait_probability = calculated_probabilities[-1]
-    assert abs(calculated_wait_probability - expected_wait_probability) < 1e-6, f"Expected {expected_wait_probability}, but got {calculated_wait_probability}"
+@pytest.mark.parametrize("ex", EXAMPLES, ids=_example_id)
+def test_normalize_game(ex):
+    b, c = normalize_game(ex.A, ex.B, ex.C, ex.D)
+    assert b == pytest.approx(ex.b)
+    assert c == pytest.approx(ex.c)
 
 
-def test_calculate_crashing_probability_one_period():
-    T = 1
-    b = 2
-    c = 0.5
-    expected_crashing_probability = (8 / 11) ** 2 + (3 / 11) ** 2 * (2 / 3) ** 2
-    calculated_crashing_probability = calculate_crashing_probability(T, b, c)
-    assert abs(calculated_crashing_probability - expected_crashing_probability) < 1e-6, f"Expected {expected_crashing_probability}, but got {calculated_crashing_probability}"
+@pytest.mark.parametrize("ex", EXAMPLES, ids=_example_id)
+def test_to_original_payoff_roundtrip(ex):
+    assert to_original_payoff(ex.b, ex.A, ex.D) == pytest.approx(ex.B)
+    assert to_original_payoff(ex.c, ex.A, ex.D) == pytest.approx(ex.C)
+    assert to_original_payoff(0, ex.A, ex.D) == pytest.approx(ex.A)
+    assert to_original_payoff(1, ex.A, ex.D) == pytest.approx(ex.D)
 
 
-def test_calculate_crashing_probability_multiple_periods():
-    T = 2
-    b = 2
-    c = 0.5
-    expected_crashing_probability = (32 / 43) ** 2 + (8 / 43) ** 2 + (3 / 43) ** 2 * (2 / 3) ** 2
-    calculated_crashing_probability = calculate_crashing_probability(T, b, c)
-    assert abs(calculated_crashing_probability - expected_crashing_probability) < 1e-6, f"Expected {expected_crashing_probability}, but got {calculated_crashing_probability}"
+# --- Base game ---
 
 
-def test_calculate_expected_payoff_single_period():
-    T = 1
-    b = 2
-    c = 0.5
-    expected_payoff = -5 / 11 + 1
-    calculated_payoff = calculate_expected_payoff(T, b, c)
-    assert abs(calculated_payoff - expected_payoff) < 1e-6, f"Expected {expected_payoff}, but got {calculated_payoff}"
+@pytest.mark.parametrize("ex", EXAMPLES, ids=_example_id)
+def test_base_prob_straight(ex):
+    assert calculate_base_prob_straight(ex.b, ex.c) == pytest.approx(ex.base_prob_straight)
 
 
-def test_calculate_expected_payoff_multiple_periods():
-    T = 2
-    b = 2
-    c = 0.5
-    expected_payoff = -21 / 43 + 1
-    calculated_payoff = calculate_expected_payoff(T, b, c)
-    assert abs(calculated_payoff - expected_payoff) < 1e-6, f"Expected {expected_payoff}, but got {calculated_payoff}"
+@pytest.mark.parametrize("ex", EXAMPLES, ids=_example_id)
+def test_base_prob_move(ex):
+    assert calculate_base_prob_move(ex.b, ex.c) == pytest.approx(ex.base_prob_move)
 
 
-def test_calculate_expected_payoff_T_to_infinity():
-    T = 20
-    b = 2
-    c = 0.5
-    expected_payoff = -0.5 + 1
-    calculated_payoff = calculate_expected_payoff(T, b, c)
-    assert abs(calculated_payoff - expected_payoff) < 1e-6, f"Expected {expected_payoff}, but got {calculated_payoff}"
+@pytest.mark.parametrize("ex", EXAMPLES, ids=_example_id)
+def test_base_mix_payoff(ex):
+    assert calculate_base_mix_payoff(ex.b, ex.c) == pytest.approx(ex.base_mix_payoff)
 
 
-def test_normalize_game():
-    b, c = normalize_game(-1, 1, -0.5, 0)
-    assert abs(b - 2.0) < 1e-6
-    assert abs(c - 0.5) < 1e-6
+@pytest.mark.parametrize("ex", EXAMPLES, ids=_example_id)
+def test_base_crash_prob(ex):
+    assert calculate_base_crash_prob(ex.b, ex.c) == pytest.approx(ex.base_crash_prob)
 
 
-def test_to_original_payoff():
-    assert abs(to_original_payoff(0, -1, 0) - (-1)) < 1e-6
-    assert abs(to_original_payoff(1, -1, 0) - 0) < 1e-6
-    assert abs(to_original_payoff(0.5, -1, 0) - (-0.5)) < 1e-6
+# --- T=1 commitment game ---
 
 
-def test_calculate_base_prob_straight():
-    # b=2, c=0.5 => (2-1)/(2+0.5-1) = 1/1.5 = 2/3
-    assert abs(calculate_base_prob_straight(2, 0.5) - 2 / 3) < 1e-6
+@pytest.mark.parametrize("ex", EXAMPLES, ids=_example_id)
+def test_p1_t1(ex):
+    assert calculate_p_1(1, ex.b, ex.c) == pytest.approx(ex.t1_p1)
 
 
-def test_calculate_base_prob_move():
-    # b=2, c=0.5 => 0.5/1.5 = 1/3
-    assert abs(calculate_base_prob_move(2, 0.5) - 1 / 3) < 1e-6
+@pytest.mark.parametrize("ex", EXAMPLES, ids=_example_id)
+def test_payoff_t1(ex):
+    assert calculate_expected_payoff(1, ex.b, ex.c) == pytest.approx(ex.t1_payoff)
 
 
-def test_calculate_base_mix_payoff():
-    # b=2, c=0.5 => (2*0.5)/(2+0.5-1) = 1/1.5 = 2/3
-    assert abs(calculate_base_mix_payoff(2, 0.5) - 2 / 3) < 1e-6
+@pytest.mark.parametrize("ex", EXAMPLES, ids=_example_id)
+def test_crash_prob_t1(ex):
+    assert calculate_crashing_probability(1, ex.b, ex.c) == pytest.approx(ex.t1_crash_prob)
 
 
-def test_calculate_base_crash_prob():
-    # ((2-1)/(2+0.5-1))^2 = (2/3)^2 = 4/9
-    assert abs(calculate_base_crash_prob(2, 0.5) - 4 / 9) < 1e-6
+# --- T=2 commitment game ---
 
 
-def test_calculate_tinf_commit_prob_first_period():
-    # (2-0.5)/2 = 0.75
-    assert abs(calculate_tinf_commit_prob_first_period(2, 0.5) - 0.75) < 1e-6
+@pytest.mark.parametrize("ex", EXAMPLES, ids=_example_id)
+def test_commitment_probs_t2(ex):
+    probs = calculate_commitment_probabilities(2, ex.b, ex.c)
+    for computed, expected in zip(probs, ex.t2_probs):
+        assert computed == pytest.approx(expected)
 
 
-def test_calculate_tinf_crash_probability():
-    # p1 = 0.75, total = 0.75^2 / (1 - 0.25^2) = 0.5625 / 0.9375 = 0.6
-    assert abs(calculate_tinf_crash_probability(2, 0.5) - 0.6) < 1e-6
+@pytest.mark.parametrize("ex", EXAMPLES, ids=_example_id)
+def test_payoff_t2(ex):
+    assert calculate_expected_payoff(2, ex.b, ex.c) == pytest.approx(ex.t2_payoff)
 
 
-def test_calculate_tinf_crash_first_period_pct():
-    # ((2-0.5)/2)^2 * 100 = 0.75^2 * 100 = 56.25
-    assert abs(calculate_tinf_crash_first_period_pct(2, 0.5) - 56.25) < 1e-6
+@pytest.mark.parametrize("ex", EXAMPLES, ids=_example_id)
+def test_crash_prob_t2(ex):
+    assert calculate_crashing_probability(2, ex.b, ex.c) == pytest.approx(ex.t2_crash_prob)
+
+
+# --- T -> inf limits ---
+
+
+@pytest.mark.parametrize("ex", EXAMPLES, ids=_example_id)
+def test_tinf_commit_prob_first_period(ex):
+    assert calculate_tinf_commit_prob_first_period(ex.b, ex.c) == pytest.approx(ex.tinf_p1)
+
+
+@pytest.mark.parametrize("ex", EXAMPLES, ids=_example_id)
+def test_p1_convergence(ex):
+    assert calculate_p_1(20, ex.b, ex.c) == pytest.approx(ex.tinf_p1)
+
+
+@pytest.mark.parametrize("ex", EXAMPLES, ids=_example_id)
+def test_wait_prob_convergence(ex):
+    probs = calculate_commitment_probabilities(20, ex.b, ex.c)
+    assert probs[-1] == pytest.approx(0, abs=1e-6)
+
+
+@pytest.mark.parametrize("ex", EXAMPLES, ids=_example_id)
+def test_payoff_convergence(ex):
+    assert calculate_expected_payoff(20, ex.b, ex.c) == pytest.approx(ex.tinf_payoff)
+
+
+@pytest.mark.parametrize("ex", EXAMPLES, ids=_example_id)
+def test_tinf_crash_prob(ex):
+    assert calculate_tinf_crash_probability(ex.b, ex.c) == pytest.approx(ex.tinf_crash_prob)
+
+
+@pytest.mark.parametrize("ex", EXAMPLES, ids=_example_id)
+def test_tinf_crash_first_pct(ex):
+    assert calculate_tinf_crash_first_period_pct(ex.b, ex.c) == pytest.approx(ex.tinf_crash_first_pct)
