@@ -1,22 +1,16 @@
 # Editỏr files
 *.swp
 *.bak
-
 ~*
 
-
 # Notebooks folder
-
 code/notebooks/
 
-
-# LaTeX output folder
-
+# LaTeX stuff
 **/out/
-
+*.DS_Store
 
 # pixi environments
-
 .pixi/*
 .pixi/config.toml
 pixi.lock
@@ -26,5 +20,5 @@ pixi.toml
 old/
 .vscode/
 CLAUDE.md
-
 .gitattributes
+__pycache__/
