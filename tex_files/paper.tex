@@ -6,7 +6,7 @@
 datamodel=acmdatamodel,
 style=acmnumeric, % use style=acmauthoryear for publications that require it
 ]{biblatex}\addbibresource{references.bib}
-\usepackage{forest, subcaption, xfp, pgfplots, array}
+\usepackage{forest, subcaption, pgfplots, array}
 \pgfplotsset{compat=1.18}
 \usetikzlibrary{patterns}
 
@@ -40,91 +40,7 @@ style=acmnumeric, % use style=acmauthoryear for publications that require it
 %%%%%%%%%%%%%%%%%%%%%%%
 % Computed Values %%%%%
 %%%%%%%%%%%%%%%%%%%%%%%
-
-% Example: Game of Chicken parameters
-\newcommand{\capA}{-1}      % A parameter
-\newcommand{\capB}{1}      % B parameter
-\newcommand{\capC}{-0.5}      % C parameter
-\newcommand{\capD}{0}      % D parameter
-
-% transforming into b and c
-\newcommand{\bNum}{(\capB-\capA)/(\capD-\capA)}      % b parameter
-\newcommand{\cNum}{(\capC-\capA)/(\capD-\capA)}     % c parameter
-
-% Base game mixed equilibrium probability and payoff
-\newcommand{\baseProbStraight}{\fpeval{round(
-    (\bNum-1)/(\bNum+\cNum-1),
-    2)}}
-\newcommand{\baseProbMove}{\fpeval{round(
-    (\cNum)/(\bNum+\cNum-1),
-    2)}}
-\newcommand{\baseMixPayoff}{\fpeval{round(
-    (\bNum * \cNum)/(\bNum+\cNum - 1) * (\capD - \capA) + \capA,
-    2)}}
-
-% Commitment Game Calculations
-\newcommand{\computeProbCommitStraight}[3]{\fpeval{
-  1 / ( (1 - (#2/#1)^#3) / (1 - #2/#1) + (#2/#1)^#3 * (#1 + #2 - 1) / (#1 - 1) )
-}}
-
-\newcommand{\ToneProbCommitStraight}{\fpeval{round(
-    \computeProbCommitStraight{\bNum}{\cNum}{1},
-    2)}}
-
-\newcommand{\ToneWait}{\fpeval{round(
-    1- \computeProbCommitStraight{\bNum}{\cNum}{1},
-    2)}}
-
-\newcommand{\TonePayoff}{\fpeval{round(
-    (1 - \computeProbCommitStraight{\bNum}{\cNum}{1}) * \bNum * (\capD - \capA) + \capA,
-    2)}}
-
-
-% T=2 commitment game calculations
-\newcommand{\TtwoProbCommitStraightFirstPeriod}{\fpeval{round(
-    \computeProbCommitStraight{\bNum}{\cNum}{2},
-    2)}}
-
-\newcommand{\TtwoProbCommitStraightSecondPeriod}{\fpeval{round(
-    \computeProbCommitStraight{\bNum}{\cNum}{2} * \cNum/\bNum,
-    2)}}
-
-\newcommand{\TtwoWait}{\fpeval{round(
-    \computeProbCommitStraight{\bNum}{\cNum}{2} * (\cNum/\bNum)^2 * (\bNum+\cNum-1)/(\bNum-1),
-    2)}}
-    
-\newcommand{\TtwoPayoff}{\fpeval{round(
-    (1 - \computeProbCommitStraight{\bNum}{\cNum}{2}) * \bNum * (\capD - \capA) + \capA,
-    2)}}
-
-% T→∞ limit values
-\newcommand{\TinfCommitProbStraightFirstPeriod}{\fpeval{round(
-    (\bNum-\cNum)/\bNum,
-    2)}}
-\newcommand{\TinfPayoff}{\capC}
-
-\newcommand{\TinfCrashInFirstPeriodPercentage}{\fpeval{round(
-    (1 - (\bNum-\cNum)/\bNum) * \bNum * (\capD - \capA) + \capA,
-    0)}}
-
-\newcommand{\TinfCrashProbability}{\fpeval{round(
-    \TinfCommitProbStraightFirstPeriod^2/(1-(\cNum/\bNum)^2),
-    2)}}
-
-% Crash Probability
-\newcommand{\baseProbCrash}{\fpeval{round(
-    ((\bNum-1)/(\bNum+\cNum-1))^2,
-    2)}}
-
-\newcommand{\ToneProbCrash}{\fpeval{round(
-    \computeProbCommitStraight{\bNum}{\cNum}{1}^2+(1-\computeProbCommitStraight{\bNum}{\cNum}{1})^2*((\bNum-1)/(\bNum+\cNum-1))^2,
-    2)}}
-
-\newcommand{\TtwoProbCrash}{\fpeval{round(
-    \computeProbCommitStraight{\bNum}{\cNum}{2}^2
-    + (\computeProbCommitStraight{\bNum}{\cNum}{2} * \cNum/\bNum)^2
-    +(1-\computeProbCommitStraight{\bNum}{\cNum}{1} *(1+\cNum/\bNum))^2*((\bNum-1)/(\bNum+\cNum-1))^2,
-    2)}}
+\input{numerical_example}
 %%%%%%%%%%%%%%%%%%%%%%%
 % Formatting %%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%
