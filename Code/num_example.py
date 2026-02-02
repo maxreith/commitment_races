@@ -250,7 +250,9 @@ def generate_numerical_example(A, B, C, D, output_path):
     for name, value in macros.items():
         lines.append(f"\\newcommand{{\\{name}}}{{{value}}}")
 
-    Path(output_path).write_text("\n".join(lines) + "\n")
+    output_file = Path(output_path)
+    output_file.parent.mkdir(parents=True, exist_ok=True)
+    output_file.write_text("\n".join(lines) + "\n")
 
 
 A_DEFAULT = -10
@@ -261,5 +263,5 @@ D_DEFAULT = 0
 if __name__ == "__main__":
     generate_numerical_example(
         A_DEFAULT, B_DEFAULT, C_DEFAULT, D_DEFAULT,
-        "tex_files/numerical_example.tex",
+        "bld/numerical_example.tex",
     )
