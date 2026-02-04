@@ -643,7 +643,7 @@ Consider the general symmetric $2\times2$ game in~\autoref{tab:general2x2}, with
 \end{enumerate}
 \end{lemma}
 \paragraph{Proof:}
-Remember that $U(A_{1t})$ denotes the payoff of committing to strategy $A_1$ in period $t$. $p_t$ and $q_t$ denote the probability of a player playing strategy $A_{1t}$ or $A_{2t}$, respectively, and $\sigma(W)=1-\sum_{\tau=1}^T(p_\tau+q_\tau)$ denotes the probability of waiting. Then, the pure strategy payoffs in a commitment game with $T$ periods are
+Recall that $U(A_{1t})$ denotes the payoff of committing to strategy $A_1$ in period $t$. $p_t$ and $q_t$ denote the probability of a player playing strategy $A_{1t}$ or $A_{2t}$, respectively, and $\sigma(W)=1-\sum_{\tau=1}^T(p_\tau+q_\tau)$ denotes the probability of waiting. Then, the pure strategy payoffs in a commitment game with $T$ periods are
 \begin{align}
 U(A_{1t}) &= \sum_{\tau=1}^{t-1}\left( p_\tau \cparam + q_\tau \bparam \right) + p_t \cdot 0 + q_t \cdot \bparam + \left(1 - \sum_{\tau=1}^{t}(p_\tau + q_\tau)\right) \bparam
 \label{eq:U_A1t} \\[6pt]
@@ -844,11 +844,313 @@ The sum of the geometric series is $\sum_{\tau=0}^{T-1} \rho^\tau = \frac{1-\rho
 p_1 = \frac{1}{\frac{1-\rho^{T}}{1-\rho} + \rho^{T}\,\frac{\bparam+\cparam-1}{\bparam-1}},
 \]
 which together with \ref{eq:action1} and \ref{eq:terminal1} give the closed form expressions for all $p_t$ and $\sigma(W)$.
-Again, let me analyze the equilibrium as $T\to\infty$. Note that $\rho^{T}\to 0$, so that the geometric series simplifies to $\frac{1-\rho^{T}}{1-\rho}\to \frac{1}{1-\rho}$. Thus,
+Again, we analyze the equilibrium as $T\to\infty$. Note that $\rho^{T}\to 0$, so that the geometric series simplifies to $\frac{1-\rho^{T}}{1-\rho}\to \frac{1}{1-\rho}$. Thus,
 \[
 p_1\to 1-\rho,\qquad \sigma(W) \to 0.
 \]
-Consider $U(W)$ again to see that the equilibrium payoff converges to $\cparam$. Thus fur $\cparam<1$ the equilibrium payoff worsens as $T$ increases. Note that $\cparam=1$ is an edge case, where the MSNE base game payoff $\frac{\bparam\cparam}{\bparam+\cparam-1}=1$ and thus the commitment game equilibrium payoff stays $1$ as $T\to\infty$. This concludes the proof of Lemma \ref{lem:convergence}.
+Consider $U(W)$ again to see that the equilibrium payoff converges to $\cparam$. Thus for $\cparam<1$ the equilibrium payoff worsens as $T$ increases. Note that $\cparam=1$ is an edge case, where the MSNE base game payoff $\frac{\bparam\cparam}{\bparam+\cparam-1}=1$ and thus the commitment game equilibrium payoff stays $1$ as $T\to\infty$. This concludes the proof of Lemma \ref{lem:convergence}.
+
+\section*{Alternative Way to present Proposition 2 and Its Proof}
+\subsection*{Proposition 2}
+
+\begin{definition}
+    A new equilibrium outcome (neo) is an equilibrium outcome in the commitment game that does not exist in the base game.
+\end{definition}
+
+\begin{proposition}\label{theo:convergence}
+    As $T\to\infty$, the expected payoff in the unique new equilibrium outcome for both players
+    \begin{enumerate}
+        \item decreases in the Game of Chicken and converges to $\cparam$
+        \item increases in the Battle of Sexes and converges to $\min\{\bparam,\cparam\}$
+    \end{enumerate}
+\end{proposition}
+
+\begin{table*}[!ht]
+    \caption{Asymptotic Convergence of Probabilities as $T \to \infty$ by Game Type.}
+    \label{tab:convergence}
+    \centering
+    % Uses array package syntax for centering fixed-width columns
+    % Requires \usepackage{array} in preamble
+    \begin{tabular}{ >{\centering\arraybackslash}p{2cm} >{\centering\arraybackslash}p{2.5cm} >{\centering\arraybackslash}p{6.5cm} >{\centering\arraybackslash}p{1cm} }
+        \toprule
+        \textbf{Game} & \textbf{Condition} & \textbf{Asymptotic Behavior} & \textbf{Payoff} \\ 
+        \midrule
+        Chicken & 
+        $0<\cparam \leq 1 < \bparam$ & 
+        {\small $p_1\to\dfrac{\bparam-\cparam}{\,\bparam},\quad \sigma(W) \to 0$} & 
+        $\to \cparam$ \\[2ex]
+        
+        \multirow{2}{2cm}[-1ex]{\centering Battle of Sexes} &
+        $0<1< \cparam < \bparam$ &
+        {\small $p_1 \to \dfrac{\bparam-\cparam}{\,\bparam},\quad q_1 \to 0,\quad \sigma(W) \to 0$} & 
+        $\to \cparam$ \\[1ex]
+        
+        &
+        $0<1< \bparam < \cparam$ &
+        {\small $p_1 \to 0,\quad q_1 \to \dfrac{\cparam-\bparam}{\,\cparam-1},\quad \sigma(W) \to 0$} & 
+        $\to \bparam$ \\ 
+        \bottomrule
+    \end{tabular}
+\end{table*}
+
+
+\subsection*{New Proof of Proposition \ref{theo:convergence}}
+
+This section proves Proposition~\ref{theo:convergence}. We prove 3 lemmas.
+
+\begin{lemma}[No New Equilibrium Outcome without crashes]\label{lem:no-neo-without-crashes}
+    Consider the general symmetric $2\times2$ game in~\autoref{tab:general2x2}, with parameters $\bparam > 1$ and $\cparam > 0$. Let each player have the ability to commit to one of two actions, $A_1$ or $A_2$, in any of $T$ commitment periods, or to wait until the end. 
+    Consider an equilibrium in this game. If there is no miscoordination in the equilibrium (no 'crashing'), then this equilibrium does not constitute a new equilibrium outcome.
+\end{lemma}
+\begin{proof}
+We will prove this by contradiction. 
+Suppose there is an equilibrium constituting a new equilibrium outcome without crashes. To be precise, 'no crashes' means that in each commitment period it must be that at most one player is committing with positive probability. This means that at most one player is committing with positive probability in the first commitment period.
+Note that a neo must by definition give both players a payoff which is less than what they would get in their preferred pure strategies equilibrium.
+
+If one player commits with positive probability in the first period, this player will want to commit with probability 1, because then she can induce her preferred base game equilibrium. However, the pure strategy base game equilibria do not constitute neos.
+If no player commits in the first period, then both players have an incentive to deviate to committing in the first period to induce their preferred base game equilibrium. 
+Thus, there cannot be an equilibrium without crashes that constitutes a neo. This concludes the proof.
+\end{proof}
+\begin{lemma}[No New Equilibrium Outcome without base game MSNE]\label{lem:no-neo-without-msne}
+    Consider the general symmetric $2\times2$ game with parameters $\bparam > 1$ and $\cparam > 0$.
+    Let each player have the ability to commit to one of two actions, $A_1$ or $A_2$, in any of $T$ commitment periods, or to wait until the end.
+    Assume that players play the base game MSNE after both have waited. Then, the only equilibrium of this commitment game where players crash with positive probability is the mixed strategy equilibrium where both players mix over all commitment strategies (if $\cparam>1$) or only over $A_1$ and waiting (if $\cparam\leq1$).
+\end{lemma}
+\begin{proof}
+Recall that $U(A_{1t})$ denotes the payoff of committing to strategy $A_1$ in period $t$. $p_t$ and $q_t$ denote the probability of a player playing strategy $A_{1t}$ or $A_{2t}$, respectively, and $\sigma(W)=1-\sum_{\tau=1}^T(p_\tau+q_\tau)$ denotes the probability of waiting. Then, the pure strategy payoffs in a commitment game with $T$ periods are
+\begin{align}
+U(A_{1t}) &= \sum_{\tau=1}^{t-1}\left( p_\tau \cparam + q_\tau \bparam \right) + p_t \cdot 0 + q_t \cdot \bparam + \left(1 - \sum_{\tau=1}^{t}(p_\tau + q_\tau)\right) \bparam
+\label{eq:U_A1t} \\[6pt]
+U(A_{2t}) &= \sum_{\tau=1}^{t-1}\left( p_\tau \cparam + q_\tau \bparam \right) + p_t \cparam + q_t \cdot 1 + \left(1 - \sum_{\tau=1}^{t}(p_\tau + q_\tau) \right) \cparam
+\label{eq:U_A2t} \\[6pt]
+U(W) &= \sum_{\tau=1}^{T} \left( p_\tau \cparam + q_\tau \bparam \right) + \sigma(W) \left( \frac{\bparam\cparam}{\bparam + \cparam - 1} \right)
+\label{eq:U_W}
+\end{align}
+To illustrate, suppose player 1 plays $A_{1t}$. With probability $\sum_{\tau=1}^{t-1}(p_\tau + q_\tau)$, player 2 commits to $A_1$ or $A_2$ before her, and player 1 best responds, receiving $\cparam$ or $\bparam$ accordingly.
+\footnote{We adopt the convention that $\sum_{\tau=1}^{t-1} (\cdots) = 0$ when $t=1$, i.e.\ the sum is empty and thus vanishes.}
+With probability $p_t + q_t$, both players commit simultaneously: if 2 also commits $A_1$, the payoff is $0$; if 2 commits $A_2$, player 1 receives $\bparam$. With the remaining probability $1 - \sum_{\tau=1}^{t}(p_\tau + q_\tau)$, player 2 was planning to move only after player 1 committed $A_1$. In this case, player 1 commits, player 2 best responds with $A_2$ and 1 receives the payoff $\bparam$.
+
+We will prove the lemma showing that if players do not put positive probability on all strategies, the only equilibria that can exist are equilibria without crashing, and thus do not consitute neos.
+
+For now, consider the case $\cparam > 1$.
+Suppose some $\sigma(W)$, $p_t$ or $q_t$ equals 0.
+First, consider
+\begin{align*}
+U(A_{1t})-U(A_{1,t+1}) &= p_t \cdot (-\cparam) + p_{t+1} \cdot \bparam \\
+U(A_{2t})-U(A_{2,t+1}) &=  q_t \cdot (1-\bparam) + q_{t+1} \cdot (\cparam-1) \\
+U(A_{1, T}) - U(W) &= p_{T} \cdot (- \cparam) + \sigma(W) \cdot \left( \frac{\bparam(\bparam-1)}{\bparam+\cparam-1} \right) \\
+U(A_{2, T}) - U(W) &= q_{T} \cdot (1-\bparam) + \sigma(W) \cdot \left( \frac{\cparam(\cparam-1)}{\bparam+\cparam-1} \right)
+\end{align*}
+
+If $p_t=0$, the other player does not want to put positive probability on $p_{t-1}$ or $p_{t+1}$, or if $p_T=0$, on waiting. But if then, from the other player's perspective, $p_{t-1}$ and $p_{t+1}$ equal 0, that player will not want to put positive probability on committing in the adjacent period either. By iterating this argument, it follows that if there is an equilibrium with some $p_t=0$, then it must be that in this equilibrium players are committing in such a way that there is no crashing.
+
+When $\cparam\leq1$, playing any $A_{2t}$ is weakly dominated by waiting: equations \ref{eq:U_A2t} and \ref{eq:U_W} imply $U(A_{2t})\leq U(W)$.
+Players will not put probability weight on $A_2$ and thus all $q_t=0$. The argument of the proof for $\cparam>1$ then holds for $A_1$ and $W$. This concludes the proof.
+There must be pure strategy base game equilibrium being played after both players have waited.
+Let this equilibrium be the preferred equilibrium of player $i$. Let $p_t^i$, $q_t^i$, and $\sigma(W)^i$ denote the probabilities with which $i$ mixes over strategies $A_{1t}$, $A_{2t}$, and $W$, and analogously for player $-i$. Then it holds that
+\begin{align}
+    U_i(A_{1, t}) - U_i(W)
+    &= \sum_{\tau = t+1}^T p_{\tau}^{-i}(\bparam-\cparam) + p_{t}^{-i}(-\cparam) + \sigma(W)^{-i} \bigl(\bparam - \max\{\bparam,\cparam\}\bigr),
+    \label{eq:Udiff_A1t} \\[6pt]
+    U_i(A_{2, t}) - U_i(W)
+    &= \sum_{\tau = t+1}^T q_{\tau}^{-i}(\cparam-\bparam) + q_{t}^{-i}(1-\bparam) + \sigma(W)^{-i} \bigl(\cparam - \max\{\bparam,\cparam\}\bigr),
+    \label{eq:Udiff_A2t}
+\end{align}
+and analogously for player $-i$:
+\begin{align}
+    U_{-i}(A_{1, t}) - U_{-i}(W)
+    &= \sum_{\tau = t+1}^T p_{\tau}^{i}(\bparam-\cparam) + p_{t}^{i}(-\cparam) + \sigma(W)^{i} \bigl(\bparam - \min\{\bparam,\cparam\}\bigr),
+    \label{eq:Udiff_A1t_-i} \\[6pt]
+    U_{-i}(A_{2, t}) - U_{-i}(W)
+    &= \sum_{\tau = t+1}^T q_{\tau}^{i}(\cparam-\bparam) + q_{t}^{i}(1-\bparam) + \sigma(W)^{i} \bigl(\cparam - \min\{\bparam,\cparam\}\bigr).
+    \label{eq:Udiff_A2t_-i}
+\end{align}
+Assume $\bparam > \cparam$. Then from equations~\eqref{eq:Udiff_A2t} and~\eqref{eq:Udiff_A2t_-i}, it follows:
+\[
+U_i(A_{2t}) < U_i(W) \quad \text{and} \quad U_{-i}(A_{2t}) \leq U_{-i}(W) \quad \text{for all } t.
+\]
+Thus, neither player will commit to any $A_{2t}$ with positive probability in any equilibrium. The case $\bparam < \cparam,$ is symmetric and implies that neither player will commit to $A_1$. For the remainder of the proof, we focus on the case $\bparam > \cparam$.
+
+We prove this by contradiction. Suppose there was a neo. From lemma \ref{lem:no-neo-without-crashes} it follows that there must be crashing with positive probabilty. The argument from the proof of lemma \ref{lem:no-neo-without-msne} carries over: if players do not put positive probability on all commitment strategies and waiting, then there cannot be crashing with positive probability.
+
+However, consider
+\begin{align*}
+    &U_i(A_{1, T}) - U_i(W) = p_{T}^{-i} \cdot (- \cparam) + \sigma(W)^{-i} \cdot (\bparam-\max\{\bparam,\cparam\})
+\end{align*}
+Since $\bparam > \cparam$, the second term is zero. If player $-i$ assigns positive probability to $A_{1T}$, i.e., $p_T^{-i} > 0$, then $U_i(A_{1,T}) < U_i(W)$. This implies that player $i$ cannot be indifferent between waiting and $A_{1T}$ and thus will prefer waiting to committing in any commitment period.
+
+Again, it is the case that only equilibria survive in which there is no crashing, and thus a base game equilibrium is played, which again is not a neo. In particular, if player $i$ does not put positive probability on $p_T^i$, then player $-i$ cannot put positive probability on committing in period $T-1$, thus $p_{T-1}^{-i}=0$. 
+This concludes the proof.
+
+\end{proof}
+\begin{lemma}[No New Equilibrium Outcome without base game MSNE]\label{lem:no-neo-without-msne}
+    Consider the general symmetric $2\times2$ game with parameters $\bparam > 1$ and $\cparam > 0$.
+    Let each player have the ability to commit to one of two actions, $A_1$ or $A_2$, in any of $T$ commitment periods, or to wait until the end.
+    If players do not play the base game MSNE after both have waited, then there cannot be a neo.
+\end{lemma}
+\begin{proof}
+There must be pure strategy base game equilibrium being played after both players have waited.
+Let this equilibrium be the preferred equilibrium of player $i$. Let $p_t^i$, $q_t^i$, and $\sigma(W)^i$ denote the probabilities with which $i$ mixes over strategies $A_{1t}$, $A_{2t}$, and $W$, and analogously for player $-i$. Then it holds that
+\begin{align}
+    U_i(A_{1, t}) - U_i(W)
+    &= \sum_{\tau = t+1}^T p_{\tau}^{-i}(\bparam-\cparam) + p_{t}^{-i}(-\cparam) + \sigma(W)^{-i} \bigl(\bparam - \max\{\bparam,\cparam\}\bigr),
+    \label{eq:Udiff_A1t} \\[6pt]
+    U_i(A_{2, t}) - U_i(W)
+    &= \sum_{\tau = t+1}^T q_{\tau}^{-i}(\cparam-\bparam) + q_{t}^{-i}(1-\bparam) + \sigma(W)^{-i} \bigl(\cparam - \max\{\bparam,\cparam\}\bigr),
+    \label{eq:Udiff_A2t}
+\end{align}
+and analogously for player $-i$:
+\begin{align}
+    U_{-i}(A_{1, t}) - U_{-i}(W)
+    &= \sum_{\tau = t+1}^T p_{\tau}^{i}(\bparam-\cparam) + p_{t}^{i}(-\cparam) + \sigma(W)^{i} \bigl(\bparam - \min\{\bparam,\cparam\}\bigr),
+    \label{eq:Udiff_A1t_-i} \\[6pt]
+    U_{-i}(A_{2, t}) - U_{-i}(W)
+    &= \sum_{\tau = t+1}^T q_{\tau}^{i}(\cparam-\bparam) + q_{t}^{i}(1-\bparam) + \sigma(W)^{i} \bigl(\cparam - \min\{\bparam,\cparam\}\bigr).
+    \label{eq:Udiff_A2t_-i}
+\end{align}
+Assume $\bparam > \cparam$. Then from equations~\eqref{eq:Udiff_A2t} and~\eqref{eq:Udiff_A2t_-i}, it follows:
+\[
+U_i(A_{2t}) < U_i(W) \quad \text{and} \quad U_{-i}(A_{2t}) \leq U_{-i}(W) \quad \text{for all } t.
+\]
+Thus, neither player will commit to any $A_{2t}$ with positive probability in any equilibrium. The case $\bparam < \cparam,$ is symmetric and implies that neither player will commit to $A_1$. For the remainder of the proof, we focus on the case $\bparam > \cparam$.
+
+We prove this by contradiction. Suppose there was a neo. From lemma \ref{lem:no-neo-without-crashes} it follows that there must be crashing with positive probabilty. The argument from the proof of lemma \ref{lem:no-neo-without-msne} carries over: if players do not put positive probability on all commitment strategies and waiting, then there cannot be crashing with positive probability.
+
+However, consider
+\begin{align*}
+    &U_i(A_{1, T}) - U_i(W) = p_{T}^{-i} \cdot (- \cparam) + \sigma(W)^{-i} \cdot (\bparam-\max\{\bparam,\cparam\})
+\end{align*}
+Since $\bparam > \cparam$, the second term is zero. If player $-i$ assigns positive probability to $A_{1T}$, i.e., $p_T^{-i} > 0$, then $U_i(A_{1,T}) < U_i(W)$. This implies that player $i$ cannot be indifferent between waiting and $A_{1T}$ and thus will prefer waiting to committing in any commitment period.
+
+Again, it is the case that only equilibria survive in which there is no crashing, and thus a base game equilibrium is played, which again is not a neo. In particular, if player $i$ does not put positive probability on $p_T^i$, then player $-i$ cannot put positive probability on committing in period $T-1$, thus $p_{T-1}^{-i}=0$. 
+This concludes the proof.
+
+\end{proof}
+\begin{lemma}\label{lem:convergence}
+    Consider the general symmetric $2\times2$ game with parameters satisfying $\bparam>1$ and $\cparam>0$. The mixed subgame perfect Nash equilibrium yielding a neo is described in Table~\ref{tab:lemma4-probabilities}. Table~\ref{tab:convergence_new} summarizes the convergence of equilibrium probabilities and payoffs as $T\to\infty$.
+\end{lemma}
+\begin{table*}[t]
+    \caption{Equilibrium Probabilities in the Commitment Game}
+    \label{tab:lemma4-probabilities}
+    \centering
+    % Increase row height to accommodate tall fractions
+    \renewcommand{\arraystretch}{1.8}
+    \begin{tabular}{lccc}
+        \toprule
+        \textbf{Strategy} & \textbf{Symbol} & \multicolumn{2}{c}{\textbf{Equilibrium Probability}} \\[-0.7em]
+         & & $0 < \cparam \leq 1$ & $\cparam > 1$ \\[-1em]
+         & & \textit{Game of Chicken} & \textit{Battle of Sexes} \\
+        \midrule
+
+        Commit $A_1$ immediately & $p_1$ &
+        $\tfrac{1}{\tfrac{1 - \rho^{T}}{1 - \rho} + \rho^{T}\,\tfrac{\bparam + \cparam - 1}{\bparam - 1}}$ &
+        $\tfrac{\cparam - \bparam}{\cparam \left(\tfrac{\cparam-1}{\bparam-1}\right) \left[ \tfrac{\cparam(\cparam - 1)}{\bparam(\bparam - 1)} \right]^T - \bparam}$ \\
+
+        Commit $A_2$ immediately & $q_1$ &
+        $0$ &
+        $\tfrac{p_1 \bparam + \cparam - \bparam}{\cparam - 1}$ \\
+
+        Commit $A_1$ in period $t$ & $p_t$ &
+        $p_1 \left( \tfrac{\cparam}{\bparam} \right)^{t - 1}$ &
+        $p_1 \left( \tfrac{\cparam}{\bparam} \right)^{t - 1}$ \\
+
+        Commit $A_2$ in period $t$ & $q_t$ &
+        $0$ &
+        $q_1 \left( \tfrac{\bparam - 1}{\cparam - 1} \right)^{t - 1}$ \\
+
+        Wait & $\sigma(W)$ &
+        $\tfrac{\bparam + \cparam - 1}{\bparam-1} \left( \tfrac{\cparam}{\bparam} \right)^T p_1$ &
+        $\tfrac{\bparam + \cparam - 1}{\bparam-1} \left( \tfrac{\cparam}{\bparam} \right)^T p_1$ \\
+        \bottomrule
+    \end{tabular}
+\end{table*}
+\begin{proof}
+We will first consider $\cparam>1$ and then $\cparam\leq1$.
+
+\textbf{Case 1: $\cparam>1$.}
+Suppose player $-i$ mixes over $A_{1t}$, $A_{2t}$ and $W$ with probabilities $p_{t}$, $q_{t}$ and $\sigma(W)=1-\sum_{\tau=1}^{T}(p_\tau+q_\tau)$. Then again, player $i$'s pure strategy payoffs are described by equations \ref{eq:U_A1t}, \ref{eq:U_A2t} and \ref{eq:U_W}.
+In a mixed equilibrium, all these strategies must yield the same expected payoff:
+\[
+U(A_{11})=...=U(A_{1,T})=U(A_{2,1})=...=U(A_{2,T})=U(W).
+\]
+It can be shown that
+\begin{align}
+U(A_{11}) &= U(A_{21})
+&&\Longleftrightarrow \quad q_1 = \frac{p_1 \bparam +\cparam-\bparam}{\cparam-1}
+\label{eq:initial} \\
+%
+U(A_{1t}) &= U(A_{1t+1})
+&&\Longleftrightarrow \quad p_{t+1} = p_t\cdot\frac{\cparam}{\bparam}
+\label{eq:action1} \\
+%
+U(A_{2t}) &= U(A_{2t+1})
+&&\Longleftrightarrow \quad q_{t+1} = q_t\cdot\frac{\bparam-1}{\cparam-1}
+\label{eq:action2} \\
+%
+U(A_{1T}) &= U(W)
+&&\Longleftrightarrow \quad \sigma(W) = p_T\cdot\frac{\cparam}{\bparam}\cdot\frac{\bparam+\cparam-1}{\bparam-1}
+\label{eq:terminal1} \\
+%
+U(A_{2T}) &= U(W)
+&&\Longleftrightarrow \quad \sigma(W) = q_T \cdot \frac{\bparam-1}{\cparam-1}\frac{\bparam+\cparam-1}{\cparam}
+\label{eq:terminal2}
+\end{align}
+We now want to express $p_t$, $q_t$ and $\sigma(W)$ as closed form solutions in terms of $\bparam$, $\cparam$ and $T$. First note that \ref{eq:action1} and \ref{eq:action2} can be used to write
+\[
+p_t = p_1 \left(\frac{\cparam}{\,\bparam}\right)^{t-1} \qquad
+q_t = q_1 \left(\frac{\bparam-1}{\,\cparam-1}\right)^{t-1}
+\]
+Next, we will use these to plug into \ref{eq:terminal1} and \ref{eq:terminal2} to obtain
+\[
+p_1 \, \left(\frac{\cparam}{\,\bparam}\right)^{T} \, \frac{\bparam+\cparam-1}{\bparam-1} =  q_1 \, \frac{\bparam+\cparam-1}{\cparam} \, \left(\frac{\bparam-1}{\,\cparam-1}\right)^{T}
+\]
+Next, we plug in \ref{eq:initial} for $q_1$ to obtain an expression that can be rearranged for $p_1$. This finally yields:
+\begin{equation}
+   p_1 = \frac{\cparam-\bparam}{\,\cparam\frac{\cparam-1}{\bparam-1}\left(\frac{\cparam(\cparam-1)}{\,\bparam(\bparam-1)}\right)^{T}-\bparam}, \qquad
+   \label{eq:p_deriv}
+\end{equation}
+We have thus derived a closed form expression for $p_1$, and using equations \ref{eq:initial}-\ref{eq:terminal2} we can obtain closed form expressions for all $p_t$, $q_t$ and $\sigma(W)$. Next, let's analyze the equilibrium as $T\to\infty$. Define $r=\frac{\cparam(\cparam-1)}{\bparam(\bparam-1)}$. Then
+\begin{equation*}
+p_1 = \frac{\cparam - \bparam}{\cparam \frac{\cparam-1}{\bparam-1}r^T-\bparam}
+ \text{,} \quad
+q_1 = \frac{p_1 \bparam + \cparam - \bparam}{\cparam - 1}
+\quad \text{and} \quad
+\sigma(W) = p_1\left(\frac{\cparam}{\bparam}\right)^T\frac{\bparam + \cparam - 1}{\bparam-1}  \,.
+\end{equation*}
+As $T\to\infty$, we distinguish three cases:
+\begin{itemize}
+    \item If $\cparam<\bparam$, then $r<1$, and
+    \[
+    p_1 \to \frac{\bparam-\cparam}{\,\bparam},\qquad q_1 \to 0,\qquad \sigma(W) \to 0.
+    \]
+    \item If $\cparam>\bparam$, then $r>1$, and
+    \[
+    p_1 \to 0,\qquad q_1 \to \frac{\cparam-\bparam}{\,\cparam-1},\qquad \sigma(W) \to 0.
+    \]
+    \item Finally, if $\cparam=\bparam$
+    \[
+    p_1=\frac{1}{T+1}\frac{\bparam-1}{2b-1}, \quad q_1 = \frac{1}{T+1}\frac{\bparam}{2b-1}, \quad \sigma(W)\to 0
+\]
+\end{itemize}
+Note that the case $\bparam=\cparam$ is not derived from equation \ref{eq:p_deriv}. Instead, we plug equations \ref{eq:initial}-\ref{eq:terminal2} into $\sum_{t=1}^T(p_t+q_t)+\sigma(W)=1$ to obtain closed form expressions. To see the equilibrium payoff in all cases consider $U(W)$. As can be seen, it converges to $\min\{\bparam,\cparam\}$ as $T\to\infty$.
+
+\textbf{Case 2: $\cparam\leq1$.}
+Here, committing to $A_2$ is weakly dominated by waiting. Thus all $q_t=0$ and the mixed equilibrium is only characterized by Equation \ref{eq:action1} and \ref{eq:terminal1}.
+Let $\rho=\frac{\cparam}{\bparam}$. Since the probability sequence must satisfy $ \sum_{\tau=1}^{T} p_\tau + \sigma(W) = 1 $, we can write
+$$
+p_1\sum_{\tau=0}^{T-1} \rho^\tau + p_1\,\rho^{T}\,\frac{\bparam+\cparam-1}{\bparam-1} = 1.
+$$
+The sum of the geometric series is $\sum_{\tau=0}^{T-1} \rho^\tau = \frac{1-\rho^{T}}{1-\rho}$. Plugging this into the above expression and solving for $p_1$ gives
+\[
+p_1 = \frac{1}{\frac{1-\rho^{T}}{1-\rho} + \rho^{T}\,\frac{\bparam+\cparam-1}{\bparam-1}},
+\]
+which together with \ref{eq:action1} and \ref{eq:terminal1} give the closed form expressions for all $p_t$ and $\sigma(W)$.
+We analyze the equilibrium as $T\to\infty$. Note that $\rho^{T}\to 0$, so that the geometric series simplifies to $\frac{1-\rho^{T}}{1-\rho}\to \frac{1}{1-\rho}$. Thus,
+\[
+p_1\to 1-\rho,\qquad \sigma(W) \to 0.
+\]
+Consider $U(W)$ again to see that the equilibrium payoff converges to $\cparam$. Thus for $\cparam<1$ the equilibrium payoff worsens as $T$ increases. Note that $\cparam=1$ is an edge case, where the MSNE base game payoff $\frac{\bparam\cparam}{\bparam+\cparam-1}=1$ and thus the commitment game equilibrium payoff stays $1$ as $T\to\infty$. This concludes the proof of Lemma \ref{lem:convergence}.
+\end{proof}
 
 \end{document}
 
