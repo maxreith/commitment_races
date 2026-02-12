@@ -291,7 +291,7 @@ packages:
 - pypi: ./
   name: commitment-races
   version: 0.1.0
-  sha256: a8ca4745dfd33deca8a7b1e2afb8e1294c849ed2ca310ec580cdefe8233a20ec
+  sha256: 1e0ddb1b3ef3bf8e22d4cb227ab6f80f91dca3a1ff267db4bad96c93e2ac5940
   editable: true
 - conda: https://conda.anaconda.org/conda-forge/osx-arm64/contourpy-1.3.3-py314hf8a3a22_4.conda
   sha256: 754ab72f1c1ae99ef7c57995f59224dc9632cbd6731fe7e6277437fd01d43156

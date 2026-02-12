@@ -1,7 +1,7 @@
 import pytest
 from dataclasses import dataclass, field
 
-from Code.num_example import (
+from src.num_example import (
     calculate_p_1,
     calculate_commitment_probabilities,
     calculate_crashing_probability,

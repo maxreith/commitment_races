@@ -4,7 +4,7 @@ from typing import Annotated
 from pytask import Product, mark
 from pytask_latex import compilation_steps as cs
 
-from Code.num_example import (
+from src.num_example import (
     A_DEFAULT,
     B_DEFAULT,
     C_DEFAULT,
@@ -16,7 +16,7 @@ TEX = Path("tex_files")
 
 
 def task_generate_numerical_example(
-    script: Path = Path("Code/num_example.py"),
+    script: Path = Path("src/num_example.py"),
     produces: Annotated[Path, Product] = TEX / "numerical_example.tex",
 ):
     """Generates LaTeX macros from the numerical example parameters."""
