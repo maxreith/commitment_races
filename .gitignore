@@ -3,8 +3,8 @@
 *.bak
 ~*
 
-# Notebooks folder
-src/notebooks/
+# Jupyter notebooks
+*.ipynb
 
 # LaTeX stuff
 **/out/
