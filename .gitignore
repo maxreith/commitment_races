@@ -20,6 +20,9 @@ CLAUDE.md
 .gitattributes
 **/__pycache__/
 
+# Build outputs
+bld/
+
 # Cache directories
 .claude/
 .pytask/
