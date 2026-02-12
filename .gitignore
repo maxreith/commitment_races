@@ -11,10 +11,7 @@ code/notebooks/
 *.DS_Store
 
 # pixi environments
-.pixi/*
-.pixi/config.toml
-pixi.lock
-pixi.toml
+.pixi/
 
 # Other
 old/
@@ -22,3 +19,8 @@ old/
 CLAUDE.md
 .gitattributes
 **/__pycache__/
+
+# Cache directories
+.claude/
+.pytask/
+.pytest_cache/
