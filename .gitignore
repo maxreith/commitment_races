@@ -13,6 +13,10 @@
 # pixi environments
 .pixi/
 
+# Secrets - never commit
+.env
+*.env
+
 # Other
 old/
 .vscode/
