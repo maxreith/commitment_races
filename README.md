@@ -1,6 +1,6 @@
 # Commitment Races
 
-This repository contains the paper "Commitment Races" by Loren K. Fryxell and Maximilian Reith, submitted to ACM EC 2026.
+This repository contains the paper "Commitment Races" by Loren K. Fryxell and Maximilian Reith.
 
 The paper develops a formal model to study commitment races in game theory. We show that in symmetric 2x2 games like the Game of Chicken, the ability to credibly commit can lead both players to be worse off than if neither had this ability.
 
