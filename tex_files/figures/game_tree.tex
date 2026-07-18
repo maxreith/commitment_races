@@ -1,0 +1,49 @@
+\documentclass[border=2pt]{standalone}
+\usepackage{newtxtext}
+\usepackage{forest}
+
+\newcommand{\capA}{-10}
+\newcommand{\capB}{1}
+\newcommand{\capC}{-1}
+\newcommand{\capD}{0}
+
+\begin{document}
+\begin{forest}
+    for tree={
+        inner sep=1pt,
+        where n children=0{}{circle, draw},
+        s sep=12pt,
+        l sep=25pt,
+        font=\small
+    }
+    [P1
+        [P2, name=p2_first_period_W, edge label={node[midway,left]{$W$}}
+            [P1, edge label={node[midway,left]{$W$}}
+                [P2, name=p2_second_period_S, edge label={node[midway,left]{$S$}}
+                    [{$\capA,\capA$}, edge label={node[midway,left]{$S$}}]
+                    [{$\capB,\capC$}, edge label={node[midway,right]{$M$}}]
+                ]
+                [P2, name=p2_second_period_M, edge label={node[midway,right]{$M$}}
+                    [{$\capC,\capB$}, edge label={node[midway,left]{$S$}}]
+                    [{$\capD,\capD$}, edge label={node[midway,right]{$M$}}]
+                ]
+            ]
+            [{$\capB,\capC$}, edge label={node[midway,left]{$S$}}]
+            [{$\capC,\capB$}, edge label={node[midway,right]{$M$}}]
+        ]
+        [P2, name=p2_first_period_S, edge label={node[midway,left]{$S$}}
+            [{$\capC,\capB$}, edge label={node[midway,left]{$W$}}]
+            [{$\capA,\capA$}, edge label={node[midway,left]{$S$}}]
+            [{$\capC,\capB$}, edge label={node[midway,right]{$M$}}]
+        ]
+        [P2, name=p2_first_period_M, edge label={node[midway,right=5pt]{$M$}}
+            [{$\capB,\capC$}, edge label={node[midway,left]{$W$}}]
+            [{$\capB,\capC$}, edge label={node[midway,left]{$S$}}]
+            [{$\capD,\capD$}, edge label={node[midway,right]{$M$}}]
+        ]
+    ]
+    \draw[dashed, thick] (p2_first_period_W) -- (p2_first_period_S);
+    \draw[dashed, thick] (p2_first_period_M) -- (p2_first_period_S);
+    \draw[dashed, thick] (p2_second_period_M) -- (p2_second_period_S);
+\end{forest}
+\end{document}

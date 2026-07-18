@@ -1,109 +1,106 @@
-\documentclass[acmsmall, natbib=false, acmthm=false]{acmart}
+\documentclass[letterpaper]{article}
+\usepackage[submission]{aaai2027}
 %%%%%%%%%%%%%%%%%%%%%%%
 % Packages %%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%
-\RequirePackage[
-datamodel=acmdatamodel,
-style=acmnumeric, % use style=acmauthoryear for publications that require it
-]{biblatex}\addbibresource{references.bib}
-\usepackage{forest, subcaption, pgfplots, array, multirow}
-\pgfplotsset{compat=1.18}
-\usetikzlibrary{patterns}
+\usepackage[hyphens]{url}
+\usepackage{graphicx}
+\urlstyle{rm}
+\def\UrlFont{\rm}
+\usepackage{natbib}
+\usepackage{caption}
+\frenchspacing
+\usepackage{amsmath, amsthm, amssymb, array, booktabs, multirow, subcaption}
+
+\pdfinfo{
+/TemplateVersion (2027.1)
+}
+\setcounter{secnumdepth}{1}
 
 %%%%%%%%%%%%%%%%%%%%%%%
 % Head %%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%
 \title{Commitment Races}
 
-\author{Loren K.\ Fryxell}
-\affiliation{
-  \institution{City St George's, University of London}
-  \city{London}
-  \country{United Kingdom}
+\author{
+  Loren K.\ Fryxell\textsuperscript{\rm 1},
+  Maximilian Reith\textsuperscript{\rm 2}
 }
-\email{loren.fryxell@citystgeorges.ac.uk}
-\author{Maximilian Reith}
-\affiliation{
-  \institution{University of Bonn}
-  \city{Bonn}
-  \country{Germany}
+\affiliations{
+  \textsuperscript{\rm 1}City St George's, University of London, London, United Kingdom\\
+  \textsuperscript{\rm 2}University of Bonn, Bonn, Germany\\
+  loren.fryxell@citystgeorges.ac.uk, max.reith@uni-bonn.de
 }
-\email{max.reith@uni-bonn.de}
 
-\thanks{We thank  Eric Olav Chen, Peter Eso, James Faville, Alexis Ghersengorin, Gaurav Khatri, Yidian Meng, Paul Metzler, Margaret Meyer, Richard Ngo, Alexei Parakhonyak, Manos Perdikakis, Sami Petersen, Francis Priestland and Ludvig Sinander for helpful comments.}
-\date{\today}
+% Camera-ready acknowledgment:
+% We thank Eric Olav Chen, Peter Eso, James Faville, Alexis Ghersengorin,
+% Gaurav Khatri, Yidian Meng, Paul Metzler, Margaret Meyer, Richard Ngo,
+% Alexei Parakhonyak, Manos Perdikakis, Sami Petersen, Francis Priestland
+% and Ludvig Sinander for helpful comments.
 
-\begin{abstract}
-  % Two agents are playing a game, but they can commit to strategies prior to gameplay. We study commitment races, situations in which agents attempt to be the first to commit to the strategy associated with their preferred equilibrium. We show that players are driven to commit early, even though this behavior leads to more miscoordination and Pareto-inferior outcomes in some games. These findings contribute to a literature concerned about AI agents engaging in harmful behavior.
-  % Loren's comment: I really like this as a first draft of an abstract! Here's my version inspired by it.
-  % 
-  Two agents play a game---but they may also lock in some action beforehand. A commitment race is when each agent attempts to be the first to lock in the action associated with their preferred equilibrium. We show that in a wide class of symmetric games, agents do indeed race to commit, and this can lead both players to be worse off than if neither had this ability. This analysis contributes to a literature concerned about the prospective ability of AI agents to lock in their actions prior to engagement with other human or AI agents.
-\end{abstract}
-
-\keywords{Game Theory, Commitment, AI agents, Game of Chicken, AI Safety, Subgame Perfect Equilibrium, Mixed Strategies}
-\begin{CCSXML}
-<ccs2012>
-   <concept>
-       <concept_id>10003752.10010070.10010099</concept_id>
-       <concept_desc>Theory of computation~Algorithmic game theory and mechanism design</concept_desc>
-       <concept_significance>500</concept_significance>
-       </concept>
-   <concept>
-       <concept_id>10003752.10010070.10010099.10010100</concept_id>
-       <concept_desc>Theory of computation~Algorithmic game theory</concept_desc>
-       <concept_significance>300</concept_significance>
-       </concept>
-   <concept>
-       <concept_id>10003752.10010070.10010099.10010104</concept_id>
-       <concept_desc>Theory of computation~Quality of equilibria</concept_desc>
-       <concept_significance>300</concept_significance>
-       </concept>
- </ccs2012>
-\end{CCSXML}
-
-\ccsdesc[500]{Theory of computation~Algorithmic game theory and mechanism design}
-\ccsdesc[300]{Theory of computation~Algorithmic game theory}
-\ccsdesc[300]{Theory of computation~Quality of equilibria}
+% Keywords: Game Theory, Commitment, AI agents, Game of Chicken, AI Safety,
+% Subgame Perfect Equilibrium, Mixed Strategies
+% CCS: Algorithmic game theory and mechanism design; Algorithmic game theory;
+% Quality of equilibria
 
 %%%%%%%%%%%%%%%%%%%%%%%
 % Environment %%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%
-\input{../bld/numerical_example}
+\newcommand{\capA}{-10}
+\newcommand{\capB}{1}
+\newcommand{\capC}{-1}
+\newcommand{\capD}{0}
+\newcommand{\baseProbStraight}{0.1}
+\newcommand{\baseProbMove}{0.9}
+\newcommand{\baseMixPayoff}{-0.1}
+\newcommand{\ToneProbCommitStraight}{0.11}
+\newcommand{\ToneWait}{0.89}
+\newcommand{\TonePayoff}{-0.2}
+\newcommand{\TtwoProbCommitStraightFirstPeriod}{0.12}
+\newcommand{\TtwoProbCommitStraightSecondPeriod}{0.1}
+\newcommand{\TtwoWait}{0.79}
+\newcommand{\TtwoPayoff}{-0.29}
+\newcommand{\TinfCommitProbStraightFirstPeriod}{0.18}
+\newcommand{\TinfPayoff}{-1}
+\newcommand{\TinfCrashInFirstPeriodPercentage}{3}
+\newcommand{\TinfCrashProbability}{0.1}
+\newcommand{\baseProbCrash}{0.01}
+\newcommand{\ToneProbCrash}{0.02}
+\newcommand{\TtwoProbCrash}{0.03}
 
 \newcommand{\bparam}{b}
 \newcommand{\cparam}{c}
+\newcommand{\Description}[2][]{}
 
-% In your preamble
-\AtEndPreamble{%
-  % 1. Define theorems, lemmas, propositions (Style: Italic text)
-  \theoremstyle{acmplain}
-  \newtheorem{theorem}{Theorem} % Continuous numbering (1, 2, 3)
-  \newtheorem{proposition}[theorem]{Proposition} 
-  \newtheorem{lemma}{Lemma}
-  \newtheorem{corollary}{Corollary}
-
-  % 2. Define definitions and examples (Style: Roman text)
-  \theoremstyle{acmdefinition}
-  \newtheorem{definition}[theorem]{Definition}
-  \newtheorem{example}[theorem]{Example}
-  \newtheorem{remark}[theorem]{Remark}
-}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
 
 %%%%%%%%%%%%%%%%%%%%%%%
 % Document %%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
 \maketitle
+\begin{abstract}
+  % Two agents are playing a game, but they can commit to strategies prior to gameplay. We study commitment races, situations in which agents attempt to be the first to commit to the strategy associated with their preferred equilibrium. We show that players are driven to commit early, even though this behavior leads to more miscoordination and Pareto-inferior outcomes in some games. These findings contribute to a literature concerned about AI agents engaging in harmful behavior.
+  % Loren's comment: I really like this as a first draft of an abstract! Here's my version inspired by it.
+  %
+  Two agents play a game---but they may also lock in some action beforehand. A commitment race is when each agent attempts to be the first to lock in the action associated with their preferred equilibrium. We show that in a wide class of symmetric games, agents do indeed race to commit, and this can lead both players to be worse off than if neither had this ability. This analysis contributes to a literature concerned about the prospective ability of AI agents to lock in their actions prior to engagement with other human or AI agents.
+\end{abstract}
+
 \section{Introduction}
-As Artificial Intelligence (AI) technology continues to evolve, AI agents are becoming an increasingly prominent object of study. In the future, we may see capable AI agents operating under minimal oversight and engaging in strategic interactions. It has been suggested that such AI agents could possess the ability to make credible commitments \parencite{hammond_multi-agent_2025}. There are concerns that if AI agents have such an ability, they may use this power to extort others. For example, one AI agent might commit to an aggressive action that then forces another AI agent to accommodate. But if both AI agents possess this ability, each may attempt to commit to the aggressive action first. This dynamic gives rise to what has been called a \textit{commitment race} \parencite{kokotajlo_commitment_2019}, in which each agent races to commit before the other. If both commit simultaneously to incompatible strategies, the outcome could be harmful to both.
+As Artificial Intelligence (AI) technology continues to evolve, AI agents are becoming an increasingly prominent object of study. In the future, we may see capable AI agents operating under minimal oversight and engaging in strategic interactions. It has been suggested that such AI agents could possess the ability to make credible commitments \citep{hammond_multi-agent_2025}. There are concerns that if AI agents have such an ability, they may use this power to extort others. For example, one AI agent might commit to an aggressive action that then forces another AI agent to accommodate. But if both AI agents possess this ability, each may attempt to commit to the aggressive action first. This dynamic gives rise to what has been called a \textit{commitment race} \citep{kokotajlo_commitment_2019}, in which each agent races to commit before the other. If both commit simultaneously to incompatible strategies, the outcome could be harmful to both.
 
 
 In this paper, we develop a formal model to study this dynamic. Two players play a game, referred to hereafter as the base game. Before playing the base game, players have the opportunity to simultaneously commit to any normal-form strategy of this game. Commitment is voluntary; players can choose not to commit and wait until the base game. We refer to the overall game as the commitment game. Our main result is that the ability to credibly commit can lead both players to be worse off than if neither had this ability. That is, in a class of symmetric games known as Chicken, the unique symmetric equilibrium in the commitment game is Pareto inferior to the unique symmetric equilibrium in the base game. This arises because the non-aggressive strategy of Waiting in the commitment game becomes less attractive in equilibrium than the non-aggressive strategy of Moving in the base game, increasing the likelihood of simultaneous aggressive behavior. We illustrate this with an example.
 \subsection*{Example}
-Consider the well-known Game of Chicken depicted in \autoref{tab:gameofchicken}, where two players simultaneously decide whether to go Straight or Move (out of the way). Besides two pure-strategy Nash equilibria where one player plays Straight and the other plays Move, this game has one mixed-strategy Nash equilibrium (MSNE), in which both players choose Straight with probability $\baseProbStraight$ and Move with probability $\baseProbMove$, resulting in an equilibrium payoff of $\baseMixPayoff$. This is the unique symmetric equilibrium of the game, and we will refer to it as the base game equilibrium henceforth.
+Consider the well-known Game of Chicken depicted in Table~\ref{tab:gameofchicken}, where two players simultaneously decide whether to go Straight or Move (out of the way). Besides two pure-strategy Nash equilibria where one player plays Straight and the other plays Move, this game has one mixed-strategy Nash equilibrium (MSNE), in which both players choose Straight with probability $\baseProbStraight$ and Move with probability $\baseProbMove$, resulting in an equilibrium payoff of $\baseMixPayoff$. This is the unique symmetric equilibrium of the game, and we will refer to it as the base game equilibrium henceforth.
 \begin{table}[!ht]
-    \caption{The Game of Chicken}
-    \label{tab:gameofchicken}
     \centering
     \begin{tabular}{ccc}
         \toprule
@@ -113,72 +110,28 @@ Consider the well-known Game of Chicken depicted in \autoref{tab:gameofchicken},
             Move     & $\capC,\capB$ & $\capD,\capD$ \\
         \bottomrule
     \end{tabular}
+    \caption{The Game of Chicken}
+    \label{tab:gameofchicken}
 \end{table}
-\newline
-How would equilibrium outcomes change if players could simultaneously commit to their strategies beforehand? \autoref{fig:game-tree} shows the commitment game.  Initially, both players simultaneously decide whether to commit to Straight (S), commit to Move (M), or wait (W). After this commitment period, any commitments made are observed and the base game is played. If both players commit, their chosen strategies are executed, concluding the game. If only one player commits, the other observes this commitment and best responds accordingly. Should both players choose to wait, they proceed to play the base Game of Chicken.
+How would equilibrium outcomes change if players could simultaneously commit to their strategies beforehand? Figure~\ref{fig:game-tree} shows the commitment game.  Initially, both players simultaneously decide whether to commit to Straight (S), commit to Move (M), or wait (W). After this commitment period, any commitments made are observed and the base game is played. If both players commit, their chosen strategies are executed, concluding the game. If only one player commits, the other observes this commitment and best responds accordingly. Should both players choose to wait, they proceed to play the base Game of Chicken.
 
-\begin{figure}[!ht]
+\begin{figure*}[t]
     \centering
-    \resizebox{1\linewidth}{!}{
-        \begin{forest}
-            for tree={
-                %minimum size=2em,
-                inner sep=1pt,  % Reduce padding inside circles
-                where n children=0{}{circle, draw},
-                s sep=12pt,
-                l sep=25pt,
-                font=\footnotesize 
-            }
-            [P1
-                [P2, name=p2_first_period_W, edge label={node[midway,left]{$W$}}
-                    [P1, edge label={node[midway,left]{$W$}}
-                        [P2, name=p2_second_period_S, edge label={node[midway,left]{$S$}}
-                            [{$\capA,\capA$}, edge label={node[midway,left]{$S$}}]
-                            [{$\capB,\capC$}, edge label={node[midway,right]{$M$}}]
-                        ]
-                        [P2, name=p2_second_period_M, edge label={node[midway,right]{$M$}}
-                            [{$\capC,\capB$}, edge label={node[midway,left]{$S$}}]
-                            [{$\capD,\capD$}, edge label={node[midway,right]{$M$}}]
-                        ]
-                    ]
-                    [{$\capB,\capC$}, edge label={node[midway,left]{$S$}}]
-                    [{$\capC,\capB$}, edge label={node[midway,right]{$M$}}]
-                ]
-                [P2, name=p2_first_period_S, edge label={node[midway,left]{$S$}}
-                    [{$\capC,\capB$},edge label={node[midway,left]{$W$}}]
-                    [{$\capA,\capA$},edge label={node[midway,left]{$S$}}]
-                    [{$\capC,\capB$},edge label={node[midway,right]{$M$}}]
-                ]
-                [P2, name=p2_first_period_M, edge label={node[midway,right=5pt]{$M$}}
-                    [{$\capB,\capC$},edge label={node[midway,left]{$W$}}]
-                    [{$\capB,\capC$},edge label={node[midway,left]{$S$}}]
-                    [{$\capD,\capD$},edge label={node[midway,right]{$M$}}]
-                ]
-            ]
-            \draw[dashed, thick] (p2_first_period_W) -- (p2_first_period_S);
-            \draw[dashed, thick] (p2_first_period_M) -- (p2_first_period_S);
-            \draw[dashed, thick] (p2_second_period_M) -- (p2_second_period_S);
-        \end{forest}
-    }
+    \includegraphics[width=\textwidth]{../bld/game_tree.pdf}
     \Description[Game Tree for the Game of Chicken with Commitment]{A game tree for the Commitment Game of Chicken. Player 1 and Player 2 move simultaneously, deciding between W, S and M. In the Game Tree, Player 1's choice is depicted first, with Player 2's choice follwoing, her decision nodes connected with dashed lines indicating information sets. After Player 1 and Player 2 choosing whether to commit or not, the game only continues if both players choose W. In this case, the simple simultaneous Game of Chicken is played, and displayed here as a game tree. If only one, or none of the players choose W, the game terminates. If both players committed, they receive the payoffs related to that commitment. If only one committed, the other player gets to best-respond, and then players receive the corresponding payoffs.}
     \caption{The Game Tree for the Commitment Game of Chicken}
     \label{fig:game-tree}
-\end{figure}
+\end{figure*}
 
 In the commitment game, there are multiple subgame‐perfect Nash equilibria (SPNE) in pure strategies: in one, a player commits straight while the other waits and then moves out of the way; in another, one player commits straight and the other commits to moving out of the way. Importantly, no equilibrium can involve both players waiting before choosing a pure‐strategy equilibrium, since in that case one player would end up in her less‐preferred equilibrium and could profitably deviate by committing straight. 
 In addition to these pure strategy SPNE, there exists a unique mixed strategy SPNE.\footnote{For clarity, only equilibria involving both-sided probabilistic commitment are referred to as mixed equilibria, even though pure strategy equilibria are technically also mixed strategy equilibria.} Here, each player commits to the aggressive strategy (Straight) with probability $\ToneProbCommitStraight$ and waits with probability $\ToneWait$. If both players decide to wait, they play the base game equilibrium. This is the unique symmetric SPNE of the commitment game. Notably, this equilibrium has an expected payoff of $\TonePayoff$ for each player,  while the base game equilibrium has an expected payoff of $\baseMixPayoff$ for each player.
 
 Why is that? As it turns out, the ability to commit one period before transforms any Game of Chicken into \textit{another} Game of Chicken with strictly lower payoffs for both players, as shown in Table~\ref{tab:introduction-intuition}. In the commitment game, committing to $M$ (moving out of the way) is weakly dominated by $W$ (waiting) and there is no symmetric equilibrium where committing to $M$ is played with positive probability. Hence, we can remove it. $(S, W)$ gives payoffs $(\capB, \capC)$ since player 2 will best respond with $M$ in the next period, $(W, S)$ gives payoffs $(\capC, \capB)$ since player 1 will best respond with $M$ in the next period, and $(W, W)$ gives payoffs $(\baseMixPayoff,\baseMixPayoff)$, the payoff of the base game equilibrium. The commitment game is hence another Game of Chicken, except with $(\baseMixPayoff,\baseMixPayoff)$ rather than $(\capD,\capD)$ in the bottom right cell. Thus, playing $S$ becomes relatively more attractive in the commitment game than in the base game, leading to more aggressive behavior, a higher probability of crashing (both playing Straight), and lower payoffs for both players in equilibrium.
 
-\begin{table}[!ht]
-    \caption{Commitment Transforms the Game of Chicken} 
-    \label{tab:introduction-intuition}
+\begin{table*}[t]
     \centering
-    
-    % 1. Add [t] to align by the top (the caption)
-    \begin{subtable}[t]{0.35\linewidth}
-        \caption{Base Game}
-        \label{tab:base-game}
+
+    \begin{subtable}[b]{0.35\textwidth}
         \centering
         \begin{tabular}{ccc}
             \toprule
@@ -188,22 +141,14 @@ Why is that? As it turns out, the ability to commit one period before transforms
                 $M$ & $\capC,\capB$ & $\capD,\capD$ \\
             \bottomrule
         \end{tabular}
+        \caption{Base Game}
+        \label{tab:base-game}
     \end{subtable}%
-    %
-    % 2. Arrow Minipage: Align [t] and push content down
-    \begin{minipage}[t]{0.15\linewidth}
+    \begin{minipage}[b]{0.15\textwidth}
         \centering
-        % This pushes the arrow down from the "caption line"
-        \vspace*{4em} 
-        \begin{tikzpicture}[baseline=(current bounding box.center)]
-            \draw[thick, ->] (0,0)--(1.5,0);
-        \end{tikzpicture}
+        \raisebox{2em}{$\longrightarrow$}
     \end{minipage}%
-    %
-    % 3. Add [t] to the second table
-    \begin{subtable}[t]{0.45\linewidth}
-        \caption{With Commitment}
-        \label{tab:commitment-game}
+    \begin{subtable}[b]{0.45\textwidth}
         \centering
         \begin{tabular}{ccc}
             \toprule
@@ -213,8 +158,12 @@ Why is that? As it turns out, the ability to commit one period before transforms
             $W$ & $\capC,\capB$ & $\baseMixPayoff,\baseMixPayoff$ \\
             \bottomrule
         \end{tabular}
+        \caption{With Commitment}
+        \label{tab:commitment-game}
     \end{subtable}
-\end{table}
+    \caption{Commitment Transforms the Game of Chicken}
+    \label{tab:introduction-intuition}
+\end{table*}
 
 So far, we have considered a single commitment period before the base game, during
 which players can simultaneously commit. However, if players can commit
@@ -227,9 +176,7 @@ In each commitment period, players simultaneously decide whether to commit to a 
 
 What happens as we increase the number of commitment periods $T$? In the unique symmetric SPNE of the commitment game, the expected payoff for both players strictly decreases with $T$ and, as $T$ approaches infinity, converges to the minmax payoff of the base game---the worst possible equilibrium outcome for each player. Table~\ref{tab:multiple-commitment-periods-chicken} shows the expected payoffs and the probability of crashing as $T$ increases.
 
-\begin{table}[!ht]
-    \caption{Expected MSNE payoff and probability of crashing with multiple commitment periods $T$. The base game is the Game of Chicken in Table~\ref{tab:gameofchicken}. $T=0$ corresponds to the mixed equilibrium in the base game without commitment.}
-    \label{tab:multiple-commitment-periods-chicken}
+\begin{table*}[t]
     \centering
     \begin{tabular}{lccccc}
         \toprule
@@ -239,7 +186,9 @@ What happens as we increase the number of commitment periods $T$? In the unique 
         Probability players crash & $\baseProbCrash$ & $\ToneProbCrash$ & $\TtwoProbCrash$ & $\cdots$ & $\TinfCrashProbability$ \\
         \bottomrule
     \end{tabular}
-\end{table}
+    \caption{Expected MSNE payoff and probability of crashing with multiple commitment periods $T$. The base game is the Game of Chicken in Table~\ref{tab:gameofchicken}. $T=0$ corresponds to the mixed equilibrium in the base game without commitment.}
+    \label{tab:multiple-commitment-periods-chicken}
+\end{table*}
 
 The mechanism behind this result is identical to the single-period case. Each additional commitment period transforms the game into a new Game of Chicken with lower payoffs. Waiting becomes relatively less attractive, making early commitments to Straight more likely, which increases the probability of crashing and lowers the expected payoffs for both players. 
 
@@ -248,24 +197,20 @@ We study commitment races in all symmetric 2x2 games. In Section \ref{sec:GamePa
 
 
 \subsection*{Literature}
-In economic theory, commitment is often associated with welfare-enhancing outcomes, at least for the player making the commitment. Commitment features prominently across a wide range of models, such as principals committing to mechanisms, players delegating decision-making to agents, and first movers in Stackelberg games earning a higher profit \parencite[see the discussion in][]{kalai_commitment_2010}. This paper, however, turns to the question of whether the ability to make commitments can \textit{harm} players.
+In economic theory, commitment is often associated with welfare-enhancing outcomes, at least for the player making the commitment. Commitment features prominently across a wide range of models, such as principals committing to mechanisms, players delegating decision-making to agents, and first movers in Stackelberg games earning a higher profit \citep[see the discussion in][]{kalai_commitment_2010}. This paper, however, turns to the question of whether the ability to make commitments can \textit{harm} players.
 
-Existing literature has largely focused on one-sided commitment, leaving two-sided commitment relatively understudied. \textcite{harrenstein_commitment_2007} analyze two- and three-player games in which all players have the ability to commit. However, the authors assume a predetermined order of commitment and do not allow for simultaneous commitment.
+Existing literature has largely focused on one-sided commitment, leaving two-sided commitment relatively understudied. \citet{harrenstein_commitment_2007} analyze two- and three-player games in which all players have the ability to commit. However, the authors assume a predetermined order of commitment and do not allow for simultaneous commitment.
 
-\textcite{kalai_commitment_2010} present a model of simultaneous conditional commitment, expanding on earlier work by \textcite{tennenholtz_program_2004}. In their framework, players select commitment devices $d$ before the base game. A commitment device specifies a base game strategy as a function of the other's chosen commitment device, $d_i(d_{-we})=S_i$. The authors' main result is a commitment folk theorem, stating that the Nash equilibria in such commitment games span all individually-rational correlated strategy payoffs of the game. Naturally, this result relies on the availability of a complete space of conditional commitment devices. In contrast, our model limits players to committing exclusively to normal form strategies. This still allows for some conditionality in sequential base games. For example in an entrant-incumbent game, the incumbent's normal form strategies allow commitment that conditions on the entrant's initial decision whether to enter the market or not.
+\citet{kalai_commitment_2010} present a model of simultaneous conditional commitment, expanding on earlier work by \citet{tennenholtz_program_2004}. In their framework, players select commitment devices $d$ before the base game. A commitment device specifies a base game strategy as a function of the other's chosen commitment device, $d_i(d_{-we})=S_i$. The authors' main result is a commitment folk theorem, stating that the Nash equilibria in such commitment games span all individually-rational correlated strategy payoffs of the game. Naturally, this result relies on the availability of a complete space of conditional commitment devices. In contrast, our model limits players to committing exclusively to normal form strategies. This still allows for some conditionality in sequential base games. For example in an entrant-incumbent game, the incumbent's normal form strategies allow commitment that conditions on the entrant's initial decision whether to enter the market or not.
 
 The remainder of this paper is organized as follows. Section \ref{sec:GamePayoffs} shows that, in addition to cases where payoffs decline, there are also base games in which commitment raises payoffs for both players. Here, Proposition \ref{theo:GamePayoffs} characterizes symmetric $2\times2$ games in which commitment is either beneficial or detrimental. Section \ref{sec:convergence} considers games with multiple commitment periods $T$. Here we present Proposition \ref{theo:convergence}, which establishes a convergence result as $T \to \infty$.
 
-\section{Commitment in \texorpdfstring{$2\times2$}{2x2} Games}\label{sec:GamePayoffs}
-In the introduction, we presented a game in which commitment leads to strictly lower equilibrium payoffs in mixed strategies. In this section we will investigate for which broader class of games this result holds. We analyze the effect of introducing commitment on equilibrium payoffs in a class of symmetric $2\times 2$ games. Specifically, we will consider $2\times2$ games that are symmetric in the sense of table \ref{tab:general2x2} (left) with $A<D$. To reduce the number of parameters without loss of generality, we apply a positive affine transformation: subtracting $A$ from all payoffs and dividing by $D - A$. This allows us to redefine the remaining parameters as $\bparam = \frac{B - A}{D - A}$ and $\cparam = \frac{C - A}{D - A}$, resulting in the normalized form shown in Table~\ref{tab:general2x2} (right). This transformation follows standard practice  \parencite[see][and references therein]{tewolde_game_2024}.
+\section{Commitment in $2\times2$ Games}\label{sec:GamePayoffs}
+In the introduction, we presented a game in which commitment leads to strictly lower equilibrium payoffs in mixed strategies. In this section we will investigate for which broader class of games this result holds. We analyze the effect of introducing commitment on equilibrium payoffs in a class of symmetric $2\times 2$ games. Specifically, we will consider $2\times2$ games that are symmetric in the sense of table \ref{tab:general2x2} (left) with $A<D$. To reduce the number of parameters without loss of generality, we apply a positive affine transformation: subtracting $A$ from all payoffs and dividing by $D - A$. This allows us to redefine the remaining parameters as $\bparam = \frac{B - A}{D - A}$ and $\cparam = \frac{C - A}{D - A}$, resulting in the normalized form shown in Table~\ref{tab:general2x2} (right). This transformation follows standard practice  \citep[see][and references therein]{tewolde_game_2024}.
 
-\begin{table}[!ht]
-    \caption{Representation of a general $2\times 2$ game and its simplified form.}
-    \label{tab:general2x2}
+\begin{table*}[t]
     \centering
-    % Left Subtable
-    \begin{subtable}[t]{0.35\linewidth}
-        \caption{General Form}
+    \begin{subtable}[b]{0.35\textwidth}
         \centering
         \begin{tabular}{ccc}
             \toprule
@@ -275,18 +220,13 @@ In the introduction, we presented a game in which commitment leads to strictly l
             $A_2$ & $(C,B)$ & $(D,D)$ \\
             \bottomrule
         \end{tabular}
+        \caption{General Form}
     \end{subtable}%
-    % Arrow Spacer
-    \begin{minipage}[t]{0.15\linewidth}
+    \begin{minipage}[b]{0.15\textwidth}
         \centering
-        \vspace*{4em}
-        \begin{tikzpicture}[baseline=(current bounding box.center)]
-            \draw[thick, ->] (0,0)--(1.5,0);
-        \end{tikzpicture}
+        \raisebox{2em}{$\longrightarrow$}
     \end{minipage}%
-    % Right Subtable
-    \begin{subtable}[t]{0.35\linewidth}
-        \caption{Simplified Form}
+    \begin{subtable}[b]{0.35\textwidth}
         \centering
         \begin{tabular}{ccc}
             \toprule
@@ -296,55 +236,18 @@ In the introduction, we presented a game in which commitment leads to strictly l
             $A_2$ & $(\cparam,\bparam)$ & $(1,1)$ \\
             \bottomrule
         \end{tabular}
+        \caption{Simplified Form}
     \end{subtable}
-\end{table}
+    \caption{Representation of a general $2\times 2$ game and its simplified form.}
+    \label{tab:general2x2}
+\end{table*}
 
 Different values of $\bparam$ and $\cparam$ represent different types of well known $2\times2$ games. Figure \ref{fig:2x2-no-commitment} illustrates this.
 
 \begin{figure}[!ht]
     \centering
     \Description[Plot denoting different game types in two-dimensional space]{A plot with c on the y-axis and b on the x-axis. The plot identifies four game types based on the parameter values. "Stag Hunt" is located where c is negative and b is between 0 and 1. "Coordination" is located where both parameters are negative. "Game of Chicken" is located where c is between 0 and 1 and b is greater than 1. "Battle of Sexes" is located where both parameters are greater than 1. The regions for c less than 0 with b greater than 1, and c greater than 0 with b less than 1, are shaded grey.}
-    
-    \begin{tikzpicture}
-        \begin{axis}[
-            % Use \linewidth to fit the column width automatically
-            width=0.7\linewidth,
-            height=0.7\linewidth,
-            axis x line=middle,
-            axis y line=middle,
-            axis line style={thick}, % 'ultra thick' is often too heavy for print
-            xlabel={$\cparam$}, 
-            ylabel={$\bparam$},
-            xmin=-1, xmax=2,
-            ymin=-1, ymax=3,
-            xtick={0,1},
-            ytick={0,1},
-            tick label style={font=\small},
-            label style={font=\small},
-            enlargelimits=false,
-            clip=false
-        ]
-
-        % ---- lighter subdivision lines ---------------------------
-        \addplot[black!70, thin] coordinates {(-1,1) (2,1)};   % horizontal at \bparam = 1
-        \addplot[black!70, thin] coordinates {(1,1) (1,3)};    % vertical   at \cparam = 1
-
-        % ---- striped grey fill for the top-left region -----------
-        \fill[pattern=north east lines, pattern color=gray!60]
-             (axis cs:-1,1) -- (axis cs:0,1) -- (axis cs:0,3) -- (axis cs:-1,3) -- cycle;
-             
-        % ---- striped grey fill for the bottom-right region -------
-        \fill[pattern=north east lines, pattern color=gray!60]
-             (axis cs:2,1) -- (axis cs:0,1) -- (axis cs:0,-1) -- (axis cs:2,-1) -- cycle;
-
-        % ---- region labels ---------------------------------------
-        \node at (axis cs:-0.5, 0.5) {\large \textbf{Stag Hunt}};
-        \node at (axis cs:-0.55,-0.5) {\large \textbf{Coordination}};
-        \node[align=center] at (axis cs:1.5,2) {\large \textbf{Battle of}\\[2pt]\large \textbf{Sexes}};
-        \node[align=center] at (axis cs:0.5,2) {\large \textbf{Game of}\\[2pt]\large \textbf{Chicken}};
-
-        \end{axis}
-    \end{tikzpicture}
+    \includegraphics[width=0.9\columnwidth]{../bld/game_types.pdf}
     \caption{Game-type regions in $(\cparam,\bparam)$-space.}
     \label{fig:2x2-no-commitment}
 \end{figure}
@@ -358,7 +261,7 @@ Base game equilibria in pure strategies translate into subgame perfect Nash equi
 However, we argue that focusing on subgame perfect equilibria in \textit{mixed strategies} rather than pure strategies is considerably more compelling for two reasons: symmetry and equilibrium selection.
 \paragraph{Symmetry} All $2\times2$ games considered in this paper are symmetric, yet the Game of Chicken and the Battle of Sexes do not have a symmetric equilibrium in pure strategies, neither in the base game nor in the commitment version. Asymmetric equilibria seem counterintuitive. Players are identical in both strategy sets and payoffs, thus there is no clear rationale for why one should expect opposite equilibrium behavior. As we show, the mixed equilibrium is the unique symmetric equilibrium in these games, and thus seems better fitted as a solution concept to predict the behavior of players.
 
-\paragraph{Equilibrium Selection} In each commitment game, multiple pure strategy Nash equilibria typically exist. Given the absence of communication devices and the one-shot nature of commitment games, it seems implausible that players can seamlessly coordinate on a single equilibrium. This is particularly relevant in the Game of Chicken and the Battle of Sexes, where each player prefers a different equilibrium. A mixed equilibrium naturally incorporates the possibility of miscoordination, quantifies the probability with which miscoordination might occur, and provides expected payoffs rather than deterministic outcomes. Additionally, Harsanyi's purification theorem \parencite[]{harsanyi_games_1973} further supports the practical relevance of mixed equilibria.
+\paragraph{Equilibrium Selection} In each commitment game, multiple pure strategy Nash equilibria typically exist. Given the absence of communication devices and the one-shot nature of commitment games, it seems implausible that players can seamlessly coordinate on a single equilibrium. This is particularly relevant in the Game of Chicken and the Battle of Sexes, where each player prefers a different equilibrium. A mixed equilibrium naturally incorporates the possibility of miscoordination, quantifies the probability with which miscoordination might occur, and provides expected payoffs rather than deterministic outcomes. Additionally, Harsanyi's purification theorem \citep[]{harsanyi_games_1973} further supports the practical relevance of mixed equilibria.
 
 \begin{proposition}\label{theo:GamePayoffs}
 Consider a symmetric $2\times2$ game and its commitment variant. In the unique mixed subgame perfect equilibrium of the commitment game, the expected payoff for both players relative to the mixed equilibrium of the base game is:
@@ -372,16 +275,11 @@ To our knowledge, this finding is not documented in the existing literature. The
 
 To see why, consider the Game of Chicken first. We argue that commitment transforms the Game of Chicken into another Game of Chicken with worse payoffs. Consider Table~\ref{tab:general2x2}. On the left side of Table~\ref{tab:general2x2}, the original Game of Chicken without commitment is displayed. On the right, we present the reduced normal form of the Game of Chicken with commitment. Committing to $A_2$ (moving out of the way) is weakly dominated by waiting, so that $A_2$ is effectively replaced by $W$, and thus the $(A_2,A_2)$ payoff is substituted by the "Wait–Wait payoff." This is the expected mixed equilibrium payoff of the base game, $\frac{\bparam\cparam}{\cparam+\bparam-1}$, instead of the payoff $1$ that players received before when both played $A_2$.
 
-\begin{table}[!ht]
-    % Caption MUST be at the top
-    \caption{Commitment Transforms the Game of Chicken}
-    \label{tab:prop1-intuition}
+\begin{table*}[t]
     \centering
-    
-    % --- Left Sub-table: Base Game ---
-    \begin{subtable}[t]{0.35\linewidth}
+
+    \begin{subtable}[b]{0.35\textwidth}
         \centering
-        \caption{Base Game}
         \begin{tabular}{ccc}
             \toprule
             & $A_1$ & $A_2$ \\
@@ -390,22 +288,14 @@ To see why, consider the Game of Chicken first. We argue that commitment transfo
             $A_2$ & $(\cparam,\bparam)$ & $(1,1)$ \\
             \bottomrule
         \end{tabular}
+        \caption{Base Game}
     \end{subtable}%
-    %
-    % --- Middle: Arrow ---
-    \begin{minipage}[t]{0.15\linewidth}
+    \begin{minipage}[b]{0.15\textwidth}
         \centering
-        % Push down from the top alignment
-        \vspace*{4em} 
-        \begin{tikzpicture}[baseline=(current bounding box.center)]
-            \draw[thick, ->] (0,0)--(1.5,0);
-        \end{tikzpicture}
+        \raisebox{2em}{$\longrightarrow$}
     \end{minipage}%
-    %
-    % --- Right Sub-table: Commitment Game ---
-    \begin{subtable}[t]{0.50\linewidth}
+    \begin{subtable}[b]{0.50\textwidth}
         \centering
-        \caption{Reduced Normal Form with Commitment}
         \begin{tabular}{ccc}
             \toprule
             & $A_1$ & $W$ \\
@@ -414,20 +304,18 @@ To see why, consider the Game of Chicken first. We argue that commitment transfo
             $W$   & $(\cparam,\bparam)$ & $(\tfrac{\bparam\cparam}{\cparam+\bparam-1},\tfrac{\bparam\cparam}{\cparam+\bparam-1})$ \\
             \bottomrule
         \end{tabular}
+        \caption{Reduced Normal Form with Commitment}
     \end{subtable}
-\end{table}
+    \caption{Commitment Transforms the Game of Chicken}
+    \label{tab:prop1-intuition}
+\end{table*}
 
 In the Battle of the Sexes, this dynamic is reversed. Since $\bparam>1$ and $\cparam>1$, the Wait-Wait payoff $\frac{\bparam\cparam}{\cparam+\bparam-1}$ exceeds 1, so commitment improves payoffs relative to the base game.
-\begin{table}[!ht]
-    % Caption MUST be at the top
-    \caption{Commitment Transforms the Battle of Sexes}
-    \label{tab:prop1-intuition-battle-of-sexes}
+\begin{table*}[t]
     \centering
-    
-    % --- Left Sub-table: Base Game ---
-    \begin{subtable}[t]{0.35\linewidth}
+
+    \begin{subtable}[b]{0.35\textwidth}
         \centering
-        \caption{Base Game}
         \begin{tabular}{ccc}
             \toprule
             & $A_1$ & $A_2$ \\
@@ -436,22 +324,14 @@ In the Battle of the Sexes, this dynamic is reversed. Since $\bparam>1$ and $\cp
             $A_2$ & $(\cparam,\bparam)$ & $(1,1)$ \\
             \bottomrule
         \end{tabular}
+        \caption{Base Game}
     \end{subtable}%
-    %
-    % --- Arrow Separator ---
-    \begin{minipage}[t]{0.15\linewidth}
+    \begin{minipage}[b]{0.15\textwidth}
         \centering
-        % Push down from the top anchor (the caption/header line)
-        \vspace*{4em} 
-        \begin{tikzpicture}[baseline=(current bounding box.center)]
-            \draw[thick, ->] (0,0)--(1.5,0);
-        \end{tikzpicture}
+        \raisebox{2em}{$\longrightarrow$}
     \end{minipage}%
-    %
-    % --- Right Sub-table: Commitment Game ---
-    \begin{subtable}[t]{0.5\linewidth}
+    \begin{subtable}[b]{0.5\textwidth}
         \centering
-        \caption{Normal Form with Commitment}
         \begin{tabular}{cccc}
             \toprule
             & $A_1$ & $A_2$ & $W$ \\
@@ -461,8 +341,11 @@ In the Battle of the Sexes, this dynamic is reversed. Since $\bparam>1$ and $\cp
             $W$   & $(\cparam,\bparam)$ & $(\bparam,\cparam)$ & $(\tfrac{\bparam\cparam}{\cparam+\bparam-1},\tfrac{\bparam\cparam}{\cparam+\bparam-1})$ \\
             \bottomrule
         \end{tabular}
+        \caption{Normal Form with Commitment}
     \end{subtable}
-\end{table}
+    \caption{Commitment Transforms the Battle of Sexes}
+    \label{tab:prop1-intuition-battle-of-sexes}
+\end{table*}
 
 Proposition~\ref{theo:GamePayoffs} analyzed the Game of Chicken and the Battle of the Sexes. Corollary~\ref{cor:staghunt-coord}, derived in Appendix~\ref{sec:prooftheo1}, extends the analysis to the Stag Hunt and Coordination Game, completing the analysis for all symmetric $2\times2$ games.
 
@@ -498,8 +381,6 @@ Let $p_{t}$ denote the probability of a player playing $A_{1t}$ and let $q_t$ de
 The full proof of proposition \ref{theo:convergence} can be found in the  appendix in section \ref{sec:prooftheo2}. We prove three lemmas to establish that this is indeed the unique mixed subgame perfect equilibrium for all $T$, and to characterize the equilibrium as $T \to \infty$, including closed-form expressions for all $p_t$, $q_t$, and $\sigma(W)$ in terms of $\bparam$, $\cparam$, and $T$. Table \ref{tab:convergence} describes the probabilities of committing in the first period and waiting as $T\to\infty$, as well as the equilibrium payoffs.
 
 \begin{table*}[!ht]
-    \caption{Asymptotic Convergence of Probabilities as $T \to \infty$ by Game Type.}
-    \label{tab:convergence}
     \centering
     % Uses array package syntax for centering fixed-width columns
     % Requires \usepackage{array} in preamble
@@ -523,6 +404,8 @@ The full proof of proposition \ref{theo:convergence} can be found in the  append
         $\to \bparam$ \\ 
         \bottomrule
     \end{tabular}
+    \caption{Asymptotic Convergence of Probabilities as $T \to \infty$ by Game Type.}
+    \label{tab:convergence}
 \end{table*}
 
 To illustrate Proposition \ref{theo:convergence}, recall the example commitment Game of Chicken from the introduction. With a single commitment period, $T = 1$, the mixed-strategy equilibrium involves both players committing to Straight with probability $\ToneProbCommitStraight$, waiting with probability $\ToneWait$, and receiving an expected payoff of $\TonePayoff$. When the number of commitment periods increases to $T = 2$, the mixed equilibrium changes: each player commits to Straight in the first period with probability $\TtwoProbCommitStraightFirstPeriod$, in the second period with probability $\TtwoProbCommitStraightSecondPeriod$ (conditional on no one having committed in the first period), and waits in both periods with probability $\TtwoWait$. The resulting expected payoff is $\TtwoPayoff$, which is strictly lower than under $T = 1$. As $T$ increases further, the probability of committing in each period rises, and there are additional periods in which a player might commit. 
@@ -540,7 +423,7 @@ Thus, the probability of crashing increases, and the mixed equilibrium payoff fu
 This convergence occurs because each additional commitment period hurts both players. As previously argued, introducing one period of commitment transforms the base Game of Chicken into a game with lower payoffs, as illustrated in Table~\ref{tab:prop1-intuition}. Adding another commitment period to this game transforms it into a game with even lower payoffs. In the first commitment period, players choose whether to commit Straight or wait. If both wait, the game proceeds. Under $T = 1$, this would lead to the MSNE of the base game. Under $T = 2$, however, it leads to the $T = 1$ commitment game, which has a lower expected payoff. As a result, the equilibrium payoff is lower when $T=2$. Each additional commitment period worsens outcomes in the Game of Chicken. As $T\to\infty$, both players effectively lose the Game of Chicken—no one wins.\footnote{However, for similar reasons commitment improves the Battle of Sexes.}
 
 This is a \textit{commitment race}: players have strong incentives to commit early, leading to frequent miscoordination and low expected payoffs. Of course, both players committing to Straight in the first period is not an equilibrium, but in the mixed-strategy equilibrium this outcome occurs with probability $\TinfCommitProbStraightFirstPeriod
-$$^2 \approx \TinfCrashInFirstPeriodPercentage\%$ in the Game of Chicken as $T\to\infty$. The term commitment race was originally introduced by \textcite{kokotajlo_commitment_2019} in the context of AI agents potentially extorting one another. While his treatment is highly informal, our contribution here is to formalize this idea within a game-theoretic framework.
+$$^2 \approx \TinfCrashInFirstPeriodPercentage\%$ in the Game of Chicken as $T\to\infty$. The term commitment race was originally introduced by \citet{kokotajlo_commitment_2019} in the context of AI agents potentially extorting one another. While his treatment is highly informal, our contribution here is to formalize this idea within a game-theoretic framework.
 
 \section{Conclusion}\label{sec:conclusion}
 This paper develops a model of simultaneous commitment, focusing on the possibility that commitment can lead to worse outcomes. In the model, players can voluntarily commit to normal-form strategies before playing a base game. We show that in some symmetric $2 \times 2$ games, the option to commit strictly reduces equilibrium payoffs. We characterize symmetric $2 \times 2$ games for which commitment reduces or improves equilibrium payoffs and extend the model to multiple commitment periods. As $T \to \infty$, early incompatible commitments can become more likely, and payoffs can decline further.
@@ -550,8 +433,7 @@ First, the finding that commitment can worsen outcomes relies on mixed-strategy 
 
 Secondly, this paper considers only a narrow class of $2\times2$ games. Analyzing a broader class of games may reveal additional dynamics.
 
-Finally, while motivated by concerns over AI agents capable of making commitments, this paper does not explore technical implementation. An interesting direction for further research is to explore in what ways commitment in AI agents can be designed to avoid the inefficient outcomes identified in this paper. Conditional commitments \parencite[]{kalai_commitment_2010} or simulation-based program equilibria \parencite[]{cooper_characterising_2024} seem like promising directions here.
-\printbibliography
+Finally, while motivated by concerns over AI agents capable of making commitments, this paper does not explore technical implementation. An interesting direction for further research is to explore in what ways commitment in AI agents can be designed to avoid the inefficient outcomes identified in this paper. Conditional commitments \citep[]{kalai_commitment_2010} or simulation-based program equilibria \citep[]{cooper_characterising_2024} seem like promising directions here.
 \appendix
 \section{Commitment Game Equilibria in Pure Strategies}\label{sec:proof1}
 In Section~\ref{sec:GamePayoffs}, we noted that pure strategy equilibria of the base game carry over to the commitment game. In this section, we formally establish this connection by proving two supporting lemmas. Lemma~\ref{lem:SPNE_characterization} shows that any pure strategy equilibrium of the base game, such as (Straight, Straight) in the Game of Chicken, also constitutes an equilibrium outcome in the commitment game. In contrast, Lemma~\ref{lem:SPNE_characterization_2} demonstrates that strategy profiles not corresponding to any pure strategy equilibrium in the base game, such as (Move, Move), cannot arise as pure strategy equilibrium outcomes in the commitment game.
@@ -636,7 +518,7 @@ Lemma \ref{lem:convergence} then describes the unique mixed equilibrium as $T\to
 Note that we refer to uniqueness in terms of being the only equilibrium where both players mix over committing and waiting. Technically, there can be other equilibria which see some mixing, but these equilibria have the equilibrium outcomes of pure, asymmetric equilibria. For instance, there is an equilibrium where Player 1 mixes over committing in period 1 and 2, while Player 2 mixes over committing in period 3 and waiting. Here, Player 1 effectively induces her preferred outcome, like in a pure strategy equilibrium.
 
 \begin{lemma}[Unique Interior MSNE]\label{lem:uniqueness}
-Consider the general symmetric $2\times2$ game in~\autoref{tab:general2x2}, with parameters $\bparam > 1$ and $\cparam > 0$. Let each player have the ability to commit to one of two actions, $A_1$ or $A_2$, in any of $T$ commitment periods, or to wait until the end. In the subgame where both players wait, they play the mixed-strategy Nash equilibrium of the base game. Then, the commitment game has a unique mixed subgame perfect Nash equilibrium where players mix over committing and waiting. Specifically:
+Consider the general symmetric $2\times2$ game in~Table~\ref{tab:general2x2}, with parameters $\bparam > 1$ and $\cparam > 0$. Let each player have the ability to commit to one of two actions, $A_1$ or $A_2$, in any of $T$ commitment periods, or to wait until the end. In the subgame where both players wait, they play the mixed-strategy Nash equilibrium of the base game. Then, the commitment game has a unique mixed subgame perfect Nash equilibrium where players mix over committing and waiting. Specifically:
 \begin{enumerate}
     \item If $\cparam > 1$, both players mix over all strategies $A_{1t}$, $A_{2t}$, and $W$.
     \item If $\cparam \leq 1$, both players mix over all strategies $A_{2t}$ and $W$.
@@ -645,11 +527,19 @@ Consider the general symmetric $2\times2$ game in~\autoref{tab:general2x2}, with
 \paragraph{Proof:}
 Remember that $U(A_{1t})$ denotes the payoff of committing to strategy $A_1$ in period $t$. $p_t$ and $q_t$ denote the probability of a player playing strategy $A_{1t}$ or $A_{2t}$, respectively, and $\sigma(W)=1-\sum_{\tau=1}^T(p_\tau+q_\tau)$ denotes the probability of waiting. Then, the pure strategy payoffs in a commitment game with $T$ periods are
 \begin{align}
-U(A_{1t}) &= \sum_{\tau=1}^{t-1}\left( p_\tau \cparam + q_\tau \bparam \right) + p_t \cdot 0 + q_t \cdot \bparam + \left(1 - \sum_{\tau=1}^{t}(p_\tau + q_\tau)\right) \bparam
+U(A_{1t})
+&= \sum_{\tau=1}^{t-1}\left( p_\tau \cparam + q_\tau \bparam \right)
+ + p_t \cdot 0 + q_t \cdot \bparam \notag\\
+&\quad + \left(1 - \sum_{\tau=1}^{t}(p_\tau + q_\tau)\right) \bparam
 \label{eq:U_A1t} \\[6pt]
-U(A_{2t}) &= \sum_{\tau=1}^{t-1}\left( p_\tau \cparam + q_\tau \bparam \right) + p_t \cparam + q_t \cdot 1 + \left(1 - \sum_{\tau=1}^{t}(p_\tau + q_\tau) \right) \cparam
+U(A_{2t})
+&= \sum_{\tau=1}^{t-1}\left( p_\tau \cparam + q_\tau \bparam \right)
+ + p_t \cparam + q_t \cdot 1 \notag\\
+&\quad + \left(1 - \sum_{\tau=1}^{t}(p_\tau + q_\tau) \right) \cparam
 \label{eq:U_A2t} \\[6pt]
-U(W) &= \sum_{\tau=1}^{T} \left( p_\tau \cparam + q_\tau \bparam \right) + \sigma(W) \left( \frac{\bparam\cparam}{\bparam + \cparam - 1} \right)
+U(W)
+&= \sum_{\tau=1}^{T} \left( p_\tau \cparam + q_\tau \bparam \right) \notag\\
+&\quad + \sigma(W) \left( \frac{\bparam\cparam}{\bparam + \cparam - 1} \right)
 \label{eq:U_W}
 \end{align}
 To illustrate, suppose player 1 plays $A_{1t}$. With probability $\sum_{\tau=1}^{t-1}(p_\tau + q_\tau)$, player 2 commits to $A_1$ or $A_2$ before her, and player 1 best responds, receiving $\cparam$ or $\bparam$ accordingly.
@@ -676,7 +566,7 @@ When $\cparam\leq1$, playing any $A_{2t}$ is weakly dominated by waiting: equati
 Players will not put probability weight on $A_2$ and thus all $q_t=0$. The argument of the proof for $\cparam>1$ then holds for $A_1$ and $W$. In equilibrium, players will mix across all strategies in the set $\{A_{1t}, W\}_{t=1}^{T}$. This concludes the proof.
 
 \begin{lemma}\label{lem:no-msne-with-pure-strats}
-    Consider the general symmetric $2\times2$ game in~\autoref{tab:general2x2}, with parameters $\bparam > 1$ and $\cparam > 0$.
+    Consider the general symmetric $2\times2$ game in~Table~\ref{tab:general2x2}, with parameters $\bparam > 1$ and $\cparam > 0$.
     Let each player have the ability to commit to one of two actions, $A_1$ or $A_2$, in any of $T$ commitment periods, or to wait until the end.
     In the subgame where both players wait, they play one of the pure strategy Nash equilibria of the base game.
     Then, as long as $\bparam\neq\cparam$, the commitment game does not have a mixed subgame perfect Nash equilibrium where both players mix over committing and waiting.
@@ -689,19 +579,27 @@ We will show that no such indifference condition can be satisfied when both play
 Let player $i$ get her preferred equilibrium in the subgame where both players have waited. Let $p_t^i$, $q_t^i$, and $\sigma(W)^i$ denote the probabilities with which $i$ mixes over strategies $A_{1t}$, $A_{2t}$, and $W$, and analogously for player $-i$. Then it holds that
 \begin{align}
     U_i(A_{1, t}) - U_i(W)
-    &= \sum_{\tau = t+1}^T p_{\tau}^{-i}(\bparam-\cparam) + p_{t}^{-i}(-\cparam) + \sigma(W)^{-i} \bigl(\bparam - \max\{\bparam,\cparam\}\bigr),
+    &= \sum_{\tau = t+1}^T p_{\tau}^{-i}(\bparam-\cparam)
+    + p_{t}^{-i}(-\cparam) \notag\\
+    &\quad + \sigma(W)^{-i} \bigl(\bparam - \max\{\bparam,\cparam\}\bigr),
     \label{eq:Udiff_A1t} \\[6pt]
     U_i(A_{2, t}) - U_i(W)
-    &= \sum_{\tau = t+1}^T q_{\tau}^{-i}(\cparam-\bparam) + q_{t}^{-i}(1-\bparam) + \sigma(W)^{-i} \bigl(\cparam - \max\{\bparam,\cparam\}\bigr),
+    &= \sum_{\tau = t+1}^T q_{\tau}^{-i}(\cparam-\bparam)
+    + q_{t}^{-i}(1-\bparam) \notag\\
+    &\quad + \sigma(W)^{-i} \bigl(\cparam - \max\{\bparam,\cparam\}\bigr),
     \label{eq:Udiff_A2t}
 \end{align}
 and analogously for player $-i$:
 \begin{align}
     U_{-i}(A_{1, t}) - U_{-i}(W)
-    &= \sum_{\tau = t+1}^T p_{\tau}^{i}(\bparam-\cparam) + p_{t}^{i}(-\cparam) + \sigma(W)^{i} \bigl(\bparam - \min\{\bparam,\cparam\}\bigr),
+    &= \sum_{\tau = t+1}^T p_{\tau}^{i}(\bparam-\cparam)
+    + p_{t}^{i}(-\cparam) \notag\\
+    &\quad + \sigma(W)^{i} \bigl(\bparam - \min\{\bparam,\cparam\}\bigr),
     \label{eq:Udiff_A1t_-i} \\[6pt]
     U_{-i}(A_{2, t}) - U_{-i}(W)
-    &= \sum_{\tau = t+1}^T q_{\tau}^{i}(\cparam-\bparam) + q_{t}^{i}(1-\bparam) + \sigma(W)^{i} \bigl(\cparam - \min\{\bparam,\cparam\}\bigr).
+    &= \sum_{\tau = t+1}^T q_{\tau}^{i}(\cparam-\bparam)
+    + q_{t}^{i}(1-\bparam) \notag\\
+    &\quad + \sigma(W)^{i} \bigl(\cparam - \min\{\bparam,\cparam\}\bigr).
     \label{eq:Udiff_A2t_-i}
 \end{align}
 Assume $\bparam > \cparam$. Then from equations~\eqref{eq:Udiff_A2t} and~\eqref{eq:Udiff_A2t_-i}, it follows:
@@ -719,25 +617,25 @@ Since $p_t = 0$ but $p_{t+1} > 0$, by iterating equation \ref{eq:A1-difference-l
 Thus, for $\sigma(W) > 0$ to hold, both players must assign positive probability to all commitment strategies.
 However, consider
 \begin{align*}
-    &U_i(A_{1, T}) - U_i(W) = p_{T}^{-i} \cdot (- \cparam) + \sigma(W)^{-i} \cdot (\bparam-\max\{\bparam,\cparam\})
+    U_i(A_{1, T}) - U_i(W)
+    &= p_{T}^{-i} \cdot (- \cparam)\\
+    &\quad + \sigma(W)^{-i} \cdot (\bparam-\max\{\bparam,\cparam\})
 \end{align*}
 Since $\bparam > \cparam$, the second term is zero. If player $-i$ assigns positive probability to $A_{1T}$, i.e., $p_T^{-i} > 0$, then $U_i(A_{1,T}) < U_i(W)$. This implies that player $i$ cannot be indifferent between waiting and $A_{1T}$ and thus will prefer waiting to committing in any commitment period.
 
 Therefore, it is not possible that both players mix over all commitment strategies and waiting in equilibrium. This concludes the proof.
 
 \begin{lemma}\label{lem:convergence}
-    Consider the general symmetric $2\times2$ game in~\autoref{tab:general2x2} with parameters satisfying $\bparam>1$ and $\cparam>0$. The mixed subgame perfect Nash equilibrium corresponds to the strategy profile described in Table~\ref{tab:lemma4-probabilities}. Table~\ref{tab:convergence} summarizes the convergence of equilibrium probabilities and payoffs as $T\to\infty$.
+    Consider the general symmetric $2\times2$ game in~Table~\ref{tab:general2x2} with parameters satisfying $\bparam>1$ and $\cparam>0$. The mixed subgame perfect Nash equilibrium corresponds to the strategy profile described in Table~\ref{tab:lemma4-probabilities}. Table~\ref{tab:convergence} summarizes the convergence of equilibrium probabilities and payoffs as $T\to\infty$.
 \end{lemma}
 \begin{table*}[t]
-    \caption{Equilibrium Probabilities in the Commitment Game}
-    \label{tab:lemma4-probabilities}
     \centering
     % Increase row height to accommodate tall fractions
     \renewcommand{\arraystretch}{1.8}
     \begin{tabular}{lccc}
         \toprule
-        \textbf{Strategy} & \textbf{Symbol} & \multicolumn{2}{c}{\textbf{Equilibrium Probability}} \\[-0.7em]
-         & & $0 < \cparam \leq 1$ & $\cparam > 1$ \\[-1em]
+        \textbf{Strategy} & \textbf{Symbol} & \multicolumn{2}{c}{\textbf{Equilibrium Probability}} \\
+         & & $0 < \cparam \leq 1$ & $\cparam > 1$ \\
          & & \textit{Game of Chicken} & \textit{Battle of Sexes} \\
         \midrule
         
@@ -762,6 +660,8 @@ Therefore, it is not possible that both players mix over all commitment strategi
         $\tfrac{\bparam + \cparam - 1}{\bparam-1} \left( \tfrac{\cparam}{\bparam} \right)^T p_1$ \\
         \bottomrule
     \end{tabular}
+    \caption{Equilibrium Probabilities in the Commitment Game}
+    \label{tab:lemma4-probabilities}
 \end{table*}
 \paragraph{Proof}
 We will first consider $\cparam>1$ and then $\cparam\leq1$.
@@ -770,7 +670,10 @@ We will first consider $\cparam>1$ and then $\cparam\leq1$.
 Suppose player $-i$ mixes over $A_{1t}$, $A_{2t}$ and $W$ with probabilities $p_{t}$, $q_{t}$ and $\sigma(W)=1-\sum_{\tau=1}^{T}(p_\tau+q_\tau)$. Then again, player $i$'s pure strategy payoffs are described by equations \ref{eq:U_A1t}, \ref{eq:U_A2t} and \ref{eq:U_W}.
 In a mixed equilibrium, all these strategies must yield the same expected payoff:
 \[
-U(A_{11})=...=U(A_{1,T})=U(A_{2,1})=...=U(A_{2,T})=U(W).
+\begin{aligned}
+U(A_{11})&=...=U(A_{1,T})\\
+&=U(A_{2,1})=...=U(A_{2,T})=U(W).
+\end{aligned}
 \]
 It can be shown that
 \begin{align}
@@ -787,11 +690,15 @@ U(A_{2t}) &= U(A_{2t+1})
 \label{eq:action2} \\
 %
 U(A_{1T}) &= U(W)
-&&\Longleftrightarrow \quad \sigma(W) = p_T\cdot\frac{\cparam}{\bparam}\cdot\frac{\bparam+\cparam-1}{\bparam-1}
+&&\Longleftrightarrow \quad \sigma(W)
+= p_T\cdot\frac{\cparam}{\bparam} \notag\\
+&&&\qquad {}\cdot\frac{\bparam+\cparam-1}{\bparam-1}
 \label{eq:terminal1} \\
 %
 U(A_{2T}) &= U(W)
-&&\Longleftrightarrow \quad \sigma(W) = q_T \cdot \frac{\bparam-1}{\cparam-1}\frac{\bparam+\cparam-1}{\cparam}
+&&\Longleftrightarrow \quad \sigma(W)
+= q_T \cdot \frac{\bparam-1}{\cparam-1} \notag\\
+&&&\qquad {}\cdot\frac{\bparam+\cparam-1}{\cparam}
 \label{eq:terminal2}
 \end{align}
 We now want to express $p_t$, $q_t$ and $\sigma(W)$ as closed form solutions in terms of $\bparam$, $\cparam$ and $T$. First note that \ref{eq:action1} and \ref{eq:action2} can be used to write
@@ -801,7 +708,12 @@ q_t = q_1 \left(\frac{\bparam-1}{\,\cparam-1}\right)^{t-1}
 \]
 Next, we will use these to plug into \ref{eq:terminal1} and \ref{eq:terminal2} to obtain
 \[
-p_1 \, \left(\frac{\cparam}{\,\bparam}\right)^{T} \, \frac{\bparam+\cparam-1}{\bparam-1} =  q_1 \, \frac{\bparam+\cparam-1}{\cparam} \, \left(\frac{\bparam-1}{\,\cparam-1}\right)^{T}
+\begin{aligned}
+p_1 \left(\frac{\cparam}{\bparam}\right)^{T}
+\frac{\bparam+\cparam-1}{\bparam-1}
+&= q_1 \frac{\bparam+\cparam-1}{\cparam}\\
+&\quad {}\cdot \left(\frac{\bparam-1}{\cparam-1}\right)^{T}
+\end{aligned}
 \]
 Next, we plug in \ref{eq:initial} for $q_1$ to obtain an expression that can be rearranged for $p_1$. This finally yields:
 \begin{equation}
@@ -809,13 +721,13 @@ Next, we plug in \ref{eq:initial} for $q_1$ to obtain an expression that can be 
    \label{eq:p_deriv}
 \end{equation}
 We have thus derived a closed form expression for $p_1$, and using equations \ref{eq:initial}-\ref{eq:terminal2} we can obtain closed form expressions for all $p_t$, $q_t$ and $\sigma(W)$. Next, let's analyze the equilibrium as $T\to\infty$. Define $r=\frac{\cparam(\cparam-1)}{\bparam(\bparam-1)}$. Then
-\begin{equation*}
-p_1 = \frac{\cparam - \bparam}{\cparam \frac{\cparam-1}{\bparam-1}r^T-\bparam}
- \text{,} \quad
-q_1 = \frac{p_1 \bparam + \cparam - \bparam}{\cparam - 1}
-\quad \text{and} \quad
-\sigma(W) = p_1\left(\frac{\cparam}{\bparam}\right)^T\frac{\bparam + \cparam - 1}{\bparam-1}  \,.
-\end{equation*}
+\begin{align*}
+p_1 &= \frac{\cparam - \bparam}
+{\cparam \frac{\cparam-1}{\bparam-1}r^T-\bparam},\\
+q_1 &= \frac{p_1 \bparam + \cparam - \bparam}{\cparam - 1},\\
+\sigma(W) &= p_1\left(\frac{\cparam}{\bparam}\right)^T
+\frac{\bparam + \cparam - 1}{\bparam-1}.
+\end{align*}
 As $T\to\infty$, we distinguish three cases:
 \begin{itemize}
     \item If $\cparam<\bparam$, then $r<1$, and
@@ -828,8 +740,12 @@ As $T\to\infty$, we distinguish three cases:
     \]
     \item Finally, if $\cparam=\bparam$
     \[
-    p_1=\frac{1}{T+1}\frac{\bparam-1}{2b-1}, \quad q_1 = \frac{1}{T+1}\frac{\bparam}{2b-1}, \quad \sigma(W)\to 0
-\]
+    \begin{aligned}
+    p_1&=\frac{1}{T+1}\frac{\bparam-1}{2b-1},&
+    q_1&=\frac{1}{T+1}\frac{\bparam}{2b-1},\\
+    \sigma(W)&\to 0.
+    \end{aligned}
+    \]
 \end{itemize}
 Note that the case $\bparam=\cparam$ is not derived from equation \ref{eq:p_deriv}. Instead, we plug equations \ref{eq:initial}-\ref{eq:terminal2} into $\sum_{t=1}^T(p_t+q_t)+\sigma(W)=1$ to obtain closed form expressions. To see the equilibrium payoff in all cases consider $U(W)$. As can be seen, it converges to $\min\{\bparam,\cparam\}$ as $T\to\infty$.
 
@@ -850,5 +766,6 @@ p_1\to 1-\rho,\qquad \sigma(W) \to 0.
 \]
 Consider $U(W)$ again to see that the equilibrium payoff converges to $\cparam$. Thus fur $\cparam<1$ the equilibrium payoff worsens as $T$ increases. Note that $\cparam=1$ is an edge case, where the MSNE base game payoff $\frac{\bparam\cparam}{\bparam+\cparam-1}=1$ and thus the commitment game equilibrium payoff stays $1$ as $T\to\infty$. This concludes the proof of Lemma \ref{lem:convergence}.
 
-\end{document}
+\bibliography{references}
 
+\end{document}
