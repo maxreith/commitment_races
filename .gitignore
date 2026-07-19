@@ -21,11 +21,15 @@
 old/
 .vscode/
 CLAUDE.md
+AGENTS.md
 .gitattributes
 **/__pycache__/
 
 # Build outputs
-bld/
+bld/*
+!bld/game_tree.pdf
+!bld/game_types.pdf
+!bld/commitment_probabilities.png
 output/
 
 # Cache directories

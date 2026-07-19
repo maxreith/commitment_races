@@ -384,33 +384,45 @@ Let $p_{t}$ denote the probability of a player playing $A_{1t}$ and let $q_t$ de
 
 The full proof of proposition \ref{theo:convergence} can be found in the  appendix in section \ref{sec:prooftheo2}. We prove three lemmas to establish that this is indeed the unique mixed subgame perfect equilibrium for all $T$, and to characterize the equilibrium as $T \to \infty$, including closed-form expressions for all $p_t$, $q_t$, and $\sigma(W)$ in terms of $\bparam$, $\cparam$, and $T$. Table \ref{tab:convergence} describes the probabilities of committing in the first period and waiting as $T\to\infty$, as well as the equilibrium payoffs. %TODO: Remove/replace this paragraph
 
-\begin{table*}[!ht]
+\begin{table}[h]
     \centering
-    % Uses array package syntax for centering fixed-width columns
-    % Requires \usepackage{array} in preamble
-    \begin{tabular}{ >{\centering\arraybackslash}p{2cm} >{\centering\arraybackslash}p{2.5cm} >{\centering\arraybackslash}p{6.5cm} >{\centering\arraybackslash}p{1cm} }
+    {\small
+    \setlength{\tabcolsep}{3pt}
+    \begin{tabular}{@{}cccc@{}}
         \toprule
-        \textbf{Game} & \textbf{Condition} & \textbf{Asymptotic Behavior} & \textbf{Payoff} \\ 
+        Game & Condition & \shortstack{Asymptotic\\behavior} & Payoff \\
         \midrule
-        Chicken & 
-        $0<\cparam \leq 1 < \bparam$ & 
-        {\small $p_1\to\dfrac{\bparam-\cparam}{\,\bparam},\quad \sigma(W) \to 0$} & 
-        $\to \cparam$ \\[2ex]
-        
-        \multirow{2}{2cm}[-1ex]{\centering Battle of Sexes} &
+        Chicken &
+        $0<\cparam \leq 1 < \bparam$ &
+        $\begin{gathered}[t]
+            p_1\to\dfrac{\bparam-\cparam}{\bparam} \\
+            \sigma(W) \to 0
+        \end{gathered}$ &
+        $\to \cparam$ \\
+        \midrule
+
+        \multirow{2}{*}[-2em]{\shortstack{Battle of\\Sexes}} &
         $0<1< \cparam < \bparam$ &
-        {\small $p_1 \to \dfrac{\bparam-\cparam}{\,\bparam},\quad q_1 \to 0,\quad \sigma(W) \to 0$} & 
-        $\to \cparam$ \\[1ex]
-        
+        $\begin{gathered}[t]
+            p_1 \to \dfrac{\bparam-\cparam}{\bparam} \\
+            q_1 \to 0,\quad \sigma(W) \to 0
+        \end{gathered}$ &
+        $\to \cparam$ \\
+        \cmidrule(lr){2-4}
+
         &
         $0<1< \bparam < \cparam$ &
-        {\small $p_1 \to 0,\quad q_1 \to \dfrac{\cparam-\bparam}{\,\cparam-1},\quad \sigma(W) \to 0$} & 
-        $\to \bparam$ \\ 
+        $\begin{gathered}[t]
+            p_1 \to 0,\quad \sigma(W) \to 0 \\
+            q_1 \to \dfrac{\cparam-\bparam}{\cparam-1}
+        \end{gathered}$ &
+        $\to \bparam$ \\
         \bottomrule
     \end{tabular}
+    }
     \caption{Asymptotic Convergence of Probabilities as $T \to \infty$ by Game Type.}
     \label{tab:convergence}
-\end{table*}
+\end{table}
 
 To illustrate Proposition \ref{theo:convergence}, recall the example commitment Game of Chicken from the introduction. With a single commitment period, $T = 1$, the mixed-strategy equilibrium involves both players committing to Straight with probability $\ToneProbCommitStraight$, waiting with probability $\ToneWait$, and receiving an expected payoff of $\TonePayoff$. When the number of commitment periods increases to $T = 2$, the mixed equilibrium changes: each player commits to Straight in the first period with probability $\TtwoProbCommitStraightFirstPeriod$, in the second period with probability $\TtwoProbCommitStraightSecondPeriod$ (conditional on no one having committed in the first period), and waits in both periods with probability $\TtwoWait$. The resulting expected payoff is $\TtwoPayoff$, which is strictly lower than under $T = 1$. As $T$ increases further, the probability of committing in each period rises, and there are additional periods in which a player might commit. 
 Figure \ref{fig:commitment-probabilities} illustrates how the commitment probabilities in each period increase as $T$ becomes larger. Each line corresponds to a different number of commitment periods with which the Game of Chicken from Table~\ref{tab:gameofchicken} is played. The $x$-axis represents the commitment periods. Consider $t=1$, the first commitment period. With $T=1$, it is also the only commitment period, and the probability of committing is $\ToneProbCommitStraight$. With $T=2$, it is the first of two commitment periods, and the probability of committing in this period increases to $\TtwoProbCommitStraightFirstPeriod$. As $T$ increases further, the probability of committing in the first period continues to rise, approaching $\TinfCommitProbStraightFirstPeriod$.
