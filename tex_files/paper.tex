@@ -117,7 +117,7 @@ How would equilibrium outcomes change if players could simultaneously commit to 
 
 \begin{figure*}[t]
     \centering
-    \includegraphics[width=\textwidth]{../bld/game_tree.pdf}
+    \includegraphics[width=0.7\textwidth]{../bld/game_tree.pdf}
     \Description[Game Tree for the Game of Chicken with Commitment]{A game tree for the Commitment Game of Chicken. Player 1 and Player 2 move simultaneously, deciding between W, S and M. In the Game Tree, Player 1's choice is depicted first, with Player 2's choice follwoing, her decision nodes connected with dashed lines indicating information sets. After Player 1 and Player 2 choosing whether to commit or not, the game only continues if both players choose W. In this case, the simple simultaneous Game of Chicken is played, and displayed here as a game tree. If only one, or none of the players choose W, the game terminates. If both players committed, they receive the payoffs related to that commitment. If only one committed, the other player gets to best-respond, and then players receive the corresponding payoffs.}
     \caption{The Game Tree for the Commitment Game of Chicken}
     \label{fig:game-tree}
@@ -128,7 +128,7 @@ In addition to these pure strategy SPNE, there exists a unique mixed strategy SP
 
 Why is that? As it turns out, the ability to commit one period before transforms any Game of Chicken into \textit{another} Game of Chicken with strictly lower payoffs for both players, as shown in Table~\ref{tab:introduction-intuition}. In the commitment game, committing to $M$ (moving out of the way) is weakly dominated by $W$ (waiting) and there is no symmetric equilibrium where committing to $M$ is played with positive probability. Hence, we can remove it. $(S, W)$ gives payoffs $(\capB, \capC)$ since player 2 will best respond with $M$ in the next period, $(W, S)$ gives payoffs $(\capC, \capB)$ since player 1 will best respond with $M$ in the next period, and $(W, W)$ gives payoffs $(\baseMixPayoff,\baseMixPayoff)$, the payoff of the base game equilibrium. The commitment game is hence another Game of Chicken, except with $(\baseMixPayoff,\baseMixPayoff)$ rather than $(\capD,\capD)$ in the bottom right cell. Thus, playing $S$ becomes relatively more attractive in the commitment game than in the base game, leading to more aggressive behavior, a higher probability of crashing (both playing Straight), and lower payoffs for both players in equilibrium.
 
-\begin{table}[t]
+\begin{table}[h]
     \centering
 
     \begin{subtable}[b]{0.42\columnwidth}
@@ -210,11 +210,12 @@ The remainder of this paper is organized as follows. Section \ref{sec:GamePayoff
 \section{Commitment in $2\times2$ Games}\label{sec:GamePayoffs}
 In the introduction, we presented a game in which commitment leads to strictly lower equilibrium payoffs in mixed strategies. In this section we will investigate for which symmetric $2\times 2$ games this result holds. We consider $2\times2$ games that are symmetric in the sense of table \ref{tab:general2x2} (left) with $A<D$. To reduce the number of parameters without loss of generality, we apply a positive affine transformation: subtracting $A$ from all payoffs and dividing by $D - A$. This allows us to redefine the remaining parameters as $\bparam = \frac{B - A}{D - A}$ and $\cparam = \frac{C - A}{D - A}$, resulting in the normalized form shown in Table~\ref{tab:general2x2} (right). This transformation follows standard practice  \citep[see][and references therein]{tewolde_game_2024}.
 
-\begin{table*}[t]
+\begin{table}[b]
     \centering
-    \begin{subtable}[b]{0.35\textwidth}
+    \begin{subtable}[b]{0.42\columnwidth}
         \centering
-        \begin{tabular}{ccc}
+        {\small
+        \begin{tabular}{@{}c@{\hspace{3pt}}c@{\hspace{7pt}}c@{}}
             \toprule
             & $A_1$ & $A_2$ \\
             \midrule
@@ -222,15 +223,14 @@ In the introduction, we presented a game in which commitment leads to strictly l
             $A_2$ & $(C,B)$ & $(D,D)$ \\
             \bottomrule
         \end{tabular}
+        }
         \caption{General Form}
-    \end{subtable}%
-    \begin{minipage}[b]{0.15\textwidth}
+    \end{subtable}\hfill
+    \raisebox{3.5em}{$\longrightarrow$}\hfill
+    \begin{subtable}[b]{0.42\columnwidth}
         \centering
-        \raisebox{2em}{$\longrightarrow$}
-    \end{minipage}%
-    \begin{subtable}[b]{0.35\textwidth}
-        \centering
-        \begin{tabular}{ccc}
+        {\small
+        \begin{tabular}{@{}c@{\hspace{3pt}}c@{\hspace{7pt}}c@{}}
             \toprule
             & $A_1$ & $A_2$ \\
             \midrule
@@ -238,11 +238,12 @@ In the introduction, we presented a game in which commitment leads to strictly l
             $A_2$ & $(\cparam,\bparam)$ & $(1,1)$ \\
             \bottomrule
         \end{tabular}
+        }
         \caption{Simplified Form}
     \end{subtable}
     \caption{Representation of a general $2\times 2$ game and its simplified form.}
     \label{tab:general2x2}
-\end{table*}
+\end{table}
 
 Different values of $\bparam$ and $\cparam$ represent different types of well known $2\times2$ games. Figure \ref{fig:2x2-no-commitment} illustrates this.
 
