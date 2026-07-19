@@ -128,29 +128,29 @@ In addition to these pure strategy SPNE, there exists a unique mixed strategy SP
 
 Why is that? As it turns out, the ability to commit one period before transforms any Game of Chicken into \textit{another} Game of Chicken with strictly lower payoffs for both players, as shown in Table~\ref{tab:introduction-intuition}. In the commitment game, committing to $M$ (moving out of the way) is weakly dominated by $W$ (waiting) and there is no symmetric equilibrium where committing to $M$ is played with positive probability. Hence, we can remove it. $(S, W)$ gives payoffs $(\capB, \capC)$ since player 2 will best respond with $M$ in the next period, $(W, S)$ gives payoffs $(\capC, \capB)$ since player 1 will best respond with $M$ in the next period, and $(W, W)$ gives payoffs $(\baseMixPayoff,\baseMixPayoff)$, the payoff of the base game equilibrium. The commitment game is hence another Game of Chicken, except with $(\baseMixPayoff,\baseMixPayoff)$ rather than $(\capD,\capD)$ in the bottom right cell. Thus, playing $S$ becomes relatively more attractive in the commitment game than in the base game, leading to more aggressive behavior, a higher probability of crashing (both playing Straight), and lower payoffs for both players in equilibrium.
 
-\begin{table*}[t]
+\begin{table}[t]
     \centering
 
-    \begin{subtable}[b]{0.35\textwidth}
+    \begin{subtable}[b]{0.42\columnwidth}
         \centering
-        \begin{tabular}{ccc}
+        {\small
+        \begin{tabular}{@{}c@{\hspace{3pt}}c@{\hspace{7pt}}c@{}}
             \toprule
             & $S$ & $M$ \\
             \midrule
-                $S$ & $\capA,\capA$ & $\capB,\capC$ \\
-                $M$ & $\capC,\capB$ & $\capD,\capD$ \\
+            $S$ & $\capA,\capA$ & $\capB,\capC$ \\
+            $M$ & $\capC,\capB$ & $\capD,\capD$ \\
             \bottomrule
         \end{tabular}
+        }
         \caption{Base Game}
         \label{tab:base-game}
-    \end{subtable}%
-    \begin{minipage}[b]{0.15\textwidth}
+    \end{subtable}\hfill
+    \raisebox{3.5em}{$\longrightarrow$}\hfill
+    \begin{subtable}[b]{0.42\columnwidth}
         \centering
-        \raisebox{2em}{$\longrightarrow$}
-    \end{minipage}%
-    \begin{subtable}[b]{0.45\textwidth}
-        \centering
-        \begin{tabular}{ccc}
+        {\small
+        \begin{tabular}{@{}c@{\hspace{3pt}}c@{\hspace{7pt}}c@{}}
             \toprule
             & $S$ & $W$ \\
             \midrule
@@ -158,12 +158,14 @@ Why is that? As it turns out, the ability to commit one period before transforms
             $W$ & $\capC,\capB$ & $\baseMixPayoff,\baseMixPayoff$ \\
             \bottomrule
         \end{tabular}
+        }
         \caption{With Commitment}
         \label{tab:commitment-game}
     \end{subtable}
+
     \caption{Commitment Transforms the Game of Chicken}
     \label{tab:introduction-intuition}
-\end{table*}
+\end{table}
 
 So far, we have considered a single commitment period before the base game, during
 which players can simultaneously commit. However, if players can commit
