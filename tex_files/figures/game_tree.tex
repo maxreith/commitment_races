@@ -14,7 +14,8 @@
         where n children=0{}{circle, draw},
         s sep=12pt,
         l sep=25pt,
-        font=\small
+        font=\small,
+        tier/.pgfmath=level()
     }
     [P1
         [P2, name=p2_first_period_W, edge label={node[midway,left, yshift=2pt]{$W$}}
