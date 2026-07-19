@@ -206,7 +206,7 @@ Existing literature has largely focused on one-sided commitment, leaving two-sid
 The remainder of this paper is organized as follows. Section \ref{sec:GamePayoffs} shows that, in addition to cases where payoffs decline, there are also base games in which commitment raises payoffs for both players. Here, Proposition \ref{theo:GamePayoffs} characterizes symmetric $2\times2$ games in which commitment is either beneficial or detrimental. Section \ref{sec:convergence} considers games with multiple commitment periods $T$. Here we present Proposition \ref{theo:convergence}, which establishes a convergence result as $T \to \infty$.
 
 \section{Commitment in $2\times2$ Games}\label{sec:GamePayoffs}
-In the introduction, we presented a game in which commitment leads to strictly lower equilibrium payoffs in mixed strategies. In this section we will investigate for which broader class of games this result holds. We analyze the effect of introducing commitment on equilibrium payoffs in a class of symmetric $2\times 2$ games. Specifically, we will consider $2\times2$ games that are symmetric in the sense of table \ref{tab:general2x2} (left) with $A<D$. To reduce the number of parameters without loss of generality, we apply a positive affine transformation: subtracting $A$ from all payoffs and dividing by $D - A$. This allows us to redefine the remaining parameters as $\bparam = \frac{B - A}{D - A}$ and $\cparam = \frac{C - A}{D - A}$, resulting in the normalized form shown in Table~\ref{tab:general2x2} (right). This transformation follows standard practice  \citep[see][and references therein]{tewolde_game_2024}.
+In the introduction, we presented a game in which commitment leads to strictly lower equilibrium payoffs in mixed strategies. In this section we will investigate for which symmetric $2\times 2$ games this result holds. We consider $2\times2$ games that are symmetric in the sense of table \ref{tab:general2x2} (left) with $A<D$. To reduce the number of parameters without loss of generality, we apply a positive affine transformation: subtracting $A$ from all payoffs and dividing by $D - A$. This allows us to redefine the remaining parameters as $\bparam = \frac{B - A}{D - A}$ and $\cparam = \frac{C - A}{D - A}$, resulting in the normalized form shown in Table~\ref{tab:general2x2} (right). This transformation follows standard practice  \citep[see][and references therein]{tewolde_game_2024}.
 
 \begin{table*}[t]
     \centering
@@ -256,9 +256,7 @@ When $\bparam>1$ and $\cparam\in[0,1]$, the game takes the form of a Game of Chi
 
 In pure strategies, the Game of Chicken and the Battle of Sexes have the Nash equilibria $\{A_1,A_2\}$ and $\{A_2,A_1\}$, whereas Stag Hunt and Coordination have the equilibria $\{A_1,A_1\}$ and $\{A_2,A_2\}$. All of these games have one equilibrium that involves mixing: Players play $A_1$ with probability $\frac{\bparam-1}{\cparam+\bparam-1}$, which yields the expected payoff $\frac{\bparam\cparam}{\bparam+\cparam-1}$. \footnote{The general game does not have a mixed equilibrium when $\bparam+\cparam=1$, in which case there are (weakly) dominated strategies.} Note that this MSNE is the unique symmetric equilibrium for the Game of Chicken and the Battle of Sexes.
 
-Base game equilibria in pure strategies translate into subgame perfect Nash equilibria in pure strategies in the commitment game. This can occur in three distinct ways: both players committing upfront to base game equilibrium strategies, one player committing first and the other waiting and then best responding, or both players waiting and then subsequently playing equilibrium strategies. In the appendix in section~\ref{sec:proof1}, we establish two lemmas characterizing the conditions under which each type of pure strategy equilibrium arises.
-
-However, we argue that focusing on subgame perfect equilibria in \textit{mixed strategies} rather than pure strategies is considerably more compelling for two reasons: symmetry and equilibrium selection.
+For each base game equilibrium in pure strategies, there will be a corresponding SPNE in pure strategies in the commitment game. However, we argue that focusing on subgame perfect equilibria in \textit{mixed strategies} rather than pure strategies is considerably more compelling for two reasons: symmetry and equilibrium selection.
 \paragraph{Symmetry} All $2\times2$ games considered in this paper are symmetric, yet the Game of Chicken and the Battle of Sexes do not have a symmetric equilibrium in pure strategies, neither in the base game nor in the commitment version. Asymmetric equilibria seem counterintuitive. Players are identical in both strategy sets and payoffs, thus there is no clear rationale for why one should expect opposite equilibrium behavior. As we show, the mixed equilibrium is the unique symmetric equilibrium in these games, and thus seems better fitted as a solution concept to predict the behavior of players.
 
 \paragraph{Equilibrium Selection} In each commitment game, multiple pure strategy Nash equilibria typically exist. Given the absence of communication devices and the one-shot nature of commitment games, it seems implausible that players can seamlessly coordinate on a single equilibrium. This is particularly relevant in the Game of Chicken and the Battle of Sexes, where each player prefers a different equilibrium. A mixed equilibrium naturally incorporates the possibility of miscoordination, quantifies the probability with which miscoordination might occur, and provides expected payoffs rather than deterministic outcomes. Additionally, Harsanyi's purification theorem \citep[]{harsanyi_games_1973} further supports the practical relevance of mixed equilibria.
@@ -266,7 +264,7 @@ However, we argue that focusing on subgame perfect equilibria in \textit{mixed s
 \begin{proposition}\label{theo:GamePayoffs}
 Consider a symmetric $2\times2$ game and its commitment variant. In the unique mixed subgame perfect equilibrium of the commitment game, the expected payoff for both players relative to the mixed equilibrium of the base game is:
 \begin{enumerate}
-    \item weakly lower in the Game of Chicken (strictly for $\cparam<1)$;
+    \item lower in the Game of Chicken (weakly lower for $\cparam=1)$;
     \item higher in the Battle of Sexes.
 \end{enumerate}
 \end{proposition}
@@ -347,7 +345,7 @@ In the Battle of the Sexes, this dynamic is reversed. Since $\bparam>1$ and $\cp
     \label{tab:prop1-intuition-battle-of-sexes}
 \end{table*}
 
-Proposition~\ref{theo:GamePayoffs} analyzed the Game of Chicken and the Battle of the Sexes. Corollary~\ref{cor:staghunt-coord}, derived in Appendix~\ref{sec:prooftheo1}, extends the analysis to the Stag Hunt and Coordination Game, completing the analysis for all symmetric $2\times2$ games.
+Proposition~\ref{theo:GamePayoffs} covers the Game of Chicken and the Battle of the Sexes. Corollary~\ref{cor:staghunt-coord} extends the analysis to the Stag Hunt and Coordination Game, derived by comparing MSNE of the respective commitment and base game. This completes the analysis for all symmetric $2\times2$ games. Going forward, we focus on the Game of Chicken and the Battle of the Sexes.
 
 \begin{corollary}
     The following results hold for the Coordination Game and the Stag Hunt.
@@ -359,15 +357,12 @@ Proposition~\ref{theo:GamePayoffs} analyzed the Game of Chicken and the Battle o
     \label{cor:staghunt-coord}
 \end{corollary}
 
-Going forward, we focus on the Game of Chicken and the Battle of the Sexes.
-
 \section{Multiple Commitment Periods}\label{sec:convergence}
-In this section, we extend the model to allow for multiple commitment periods, denoted by $T$.
-From this point forward, let $T$ represent the number of discrete commitment periods.
-Suppose that in the first commitment period, player $1$ commits and player $2$ waits. Then, player $2$ gets to observe $1$'s commitment in the second period, and can best respond to it.
-But if instead both players did not commit in the first period, they observe each other's inaction and then in the second period simultaneously decide again whether to commit. The base game is played only if neither player commits in any of the $T$ commitment periods.
+In this section, we extend the model to allow for multiple discrete commitment periods, denoted by $T$.
+If player $1$ commits in the first commitment period and player $2$ waits, then player $2$ gets to observe $1$'s commitment in the second period, and can best respond to it.
+If instead both players do not commit in the first period, they observe each other's inaction and then in the second period simultaneously decide again whether to commit. If they do not commit throughout all the $T$ commitment periods, they arrive at the base game and must choose $A_1$ or $A_2$ here.
 
-Let $A_{1t}$ denote the strategy whereby a player waits until period $t$ to commit to $A_1$, unless the other player has already committed in an earlier period. In that case, the player best responds. Waiting ($W$) is the strategy of not committing in any commitment period, best-responding to any commitment made by the other player, and if the base game is reached playing the MSNE strategy of the base game.
+Let $A_{1t}$ denote the strategy whereby a player commits to $A_1$ in period $t$, unless the other player has already committed in an earlier period, in which case, the player best responds instead of committing. Let $W$ denote the Waiting strategy, which means not committing in any commitment period, best-responding to any commitment made by the other player, and if the base game is reached playing the MSNE strategy of the base game.
 Let $p_{t}$ denote the probability of a player playing $A_{1t}$ and let $q_t$ denote the probability of a player playing $A_{2t}$. The probability of waiting is denoted as $\sigma(W)=1-\sum_{\tau=1}^{T}(p_\tau+q_\tau)$.
 
 \begin{proposition}\label{theo:convergence}
@@ -378,7 +373,7 @@ Let $p_{t}$ denote the probability of a player playing $A_{1t}$ and let $q_t$ de
     \end{enumerate}
 \end{proposition}
 
-The full proof of proposition \ref{theo:convergence} can be found in the  appendix in section \ref{sec:prooftheo2}. We prove three lemmas to establish that this is indeed the unique mixed subgame perfect equilibrium for all $T$, and to characterize the equilibrium as $T \to \infty$, including closed-form expressions for all $p_t$, $q_t$, and $\sigma(W)$ in terms of $\bparam$, $\cparam$, and $T$. Table \ref{tab:convergence} describes the probabilities of committing in the first period and waiting as $T\to\infty$, as well as the equilibrium payoffs.
+The full proof of proposition \ref{theo:convergence} can be found in the  appendix in section \ref{sec:prooftheo2}. We prove three lemmas to establish that this is indeed the unique mixed subgame perfect equilibrium for all $T$, and to characterize the equilibrium as $T \to \infty$, including closed-form expressions for all $p_t$, $q_t$, and $\sigma(W)$ in terms of $\bparam$, $\cparam$, and $T$. Table \ref{tab:convergence} describes the probabilities of committing in the first period and waiting as $T\to\infty$, as well as the equilibrium payoffs. %TODO: Remove/replace this paragraph
 
 \begin{table*}[!ht]
     \centering
@@ -434,6 +429,9 @@ First, the finding that commitment can worsen outcomes relies on mixed-strategy 
 Secondly, this paper considers only a narrow class of $2\times2$ games. Analyzing a broader class of games may reveal additional dynamics.
 
 Finally, while motivated by concerns over AI agents capable of making commitments, this paper does not explore technical implementation. An interesting direction for further research is to explore in what ways commitment in AI agents can be designed to avoid the inefficient outcomes identified in this paper. Conditional commitments \citep[]{kalai_commitment_2010} or simulation-based program equilibria \citep[]{cooper_characterising_2024} seem like promising directions here.
+
+
+\bibliography{references}
 \appendix
 \section{Commitment Game Equilibria in Pure Strategies}\label{sec:proof1}
 In Section~\ref{sec:GamePayoffs}, we noted that pure strategy equilibria of the base game carry over to the commitment game. In this section, we formally establish this connection by proving two supporting lemmas. Lemma~\ref{lem:SPNE_characterization} shows that any pure strategy equilibrium of the base game, such as (Straight, Straight) in the Game of Chicken, also constitutes an equilibrium outcome in the commitment game. In contrast, Lemma~\ref{lem:SPNE_characterization_2} demonstrates that strategy profiles not corresponding to any pure strategy equilibrium in the base game, such as (Move, Move), cannot arise as pure strategy equilibrium outcomes in the commitment game.
@@ -766,6 +764,5 @@ p_1\to 1-\rho,\qquad \sigma(W) \to 0.
 \]
 Consider $U(W)$ again to see that the equilibrium payoff converges to $\cparam$. Thus fur $\cparam<1$ the equilibrium payoff worsens as $T$ increases. Note that $\cparam=1$ is an edge case, where the MSNE base game payoff $\frac{\bparam\cparam}{\bparam+\cparam-1}=1$ and thus the commitment game equilibrium payoff stays $1$ as $T\to\infty$. This concludes the proof of Lemma \ref{lem:convergence}.
 
-\bibliography{references}
 
 \end{document}
