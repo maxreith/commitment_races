@@ -121,10 +121,9 @@ Consider the well-known Game of Chicken depicted in Table~\ref{tab:gameofchicken
 How would equilibrium outcomes change if players could simultaneously commit to their strategies beforehand? Figure~\ref{fig:game-tree} shows the commitment game.  Initially, both players simultaneously decide whether to commit to Straight (S), commit to Move (M), or wait (W). After this commitment period, any commitments made are observed and the base game is played. If both players commit, their chosen strategies are executed, concluding the game. If only one player commits, the other observes this commitment and best responds accordingly. Should both players choose to wait, they proceed to play the base Game of Chicken.
 
 \begin{figure*}[t]
-    \hspace*{-7em}
     \centering
-    \includegraphics[width=0.7\textwidth]{../bld/game_tree.pdf}
-    \Description[Game Tree for the Game of Chicken with Commitment]{A game tree for the Commitment Game of Chicken. Player 1 and Player 2 move simultaneously, deciding between W, S and M. In the Game Tree, Player 1's choice is depicted first, with Player 2's choice follwoing, her decision nodes connected with dashed lines indicating information sets. After Player 1 and Player 2 choosing whether to commit or not, the game only continues if both players choose W. In this case, the simple simultaneous Game of Chicken is played, and displayed here as a game tree. If only one, or none of the players choose W, the game terminates. If both players committed, they receive the payoffs related to that commitment. If only one committed, the other player gets to best-respond, and then players receive the corresponding payoffs.}
+    \includegraphics[width=0.8\textwidth]{../bld/game_tree.pdf}
+    \Description[Game Tree for the Game of Chicken with Commitment]{A game tree for the Commitment Game of Chicken. Player 1 and Player 2 move simultaneously, deciding between W, S and M. In the Game Tree, Player 1's choice is depicted first, with Player 2's choice following, her decision nodes connected with dashed lines indicating information sets. After Player 1 and Player 2 choosing whether to commit or not, the game only continues if both players choose W. In this case, the simple simultaneous Game of Chicken is played, and displayed here as a game tree. If only one, or none of the players choose W, the game terminates. If both players committed, they receive the payoffs related to that commitment. If only one committed, the other player gets to best-respond, and then players receive the corresponding payoffs.}
     \caption{The Commitment Game of Chicken}
     \label{fig:game-tree}
 \end{figure*}
@@ -194,7 +193,7 @@ What happens as we increase the number of commitment periods $T$ in the Game of 
         \toprule
         & $T = 0$ & $T = 1$ & $T = 2$ & $\cdots$ & $T \to \infty$ \\
         \midrule
-        Expected payoff & \baseMixPayoff & \TonePayoff & \TtwoPayoff & $\cdots$ & \TinfPayoff \\ [1ex]
+        Expected payoff & $\baseMixPayoff$ & $\TonePayoff$ & $\TtwoPayoff$ & $\cdots$ & $\TinfPayoff$ \\[1ex]
         Crash probability & $\baseProbCrash$ & $\ToneProbCrash$ & $\TtwoProbCrash$ & $\cdots$ & $\TinfCrashProbability$ \\
         \bottomrule
     \end{tabular}
@@ -214,8 +213,8 @@ The mechanism behind this result is identical to the single-period case. Each ad
 
 \begin{figure}[!ht]
     \centering
-    \includegraphics[width=0.8\linewidth]{../bld/commitment_probabilities.png}
-    \caption{Commitment probabilities in the commitment game with $T$ commitment rounds.}
+    \includegraphics[width=\linewidth]{../bld/commitment_probabilities.png}
+    \caption{Commitment probabilities ($p_t$) in the commitment game with $T$ commitment periods.}
     \Description[Line plot of the equilibrium probability of committing to Straight in each commitment period, with one line per total number of commitment periods]{A line plot for the Game of Chicken of Table 1. The horizontal axis is the commitment period $t$, running from 1 to 5. The vertical axis is the equilibrium probability $p_t$ of committing to Straight in period $t$, running from 0 to about 0.15. There are five series with circular markers, one for each total number of commitment periods $T$ from 1 to 5; the series for a given $T$ has one marker per period, at periods 1 through $T$, so the series for $T=1$ is a single isolated marker. Within each series the probability declines geometrically across periods by the factor $\cparam/\bparam \approx 0.82$; for $T=5$ it falls from about 0.14 in period 1 to about 0.06 in period 5. Across series, the probability in any given period rises with $T$: in the first period it is about 0.109 for $T=1$, 0.118 for $T=2$, 0.126 for $T=3$, 0.133 for $T=4$ and 0.140 for $T=5$, approaching \TinfCommitProbStraightFirstPeriod{} as $T$ grows without bound.}
     \label{fig:commitment-probabilities}
 \end{figure}
@@ -330,7 +329,7 @@ Different values of $\bparam$ and $\cparam$ represent different well-known symme
 
 % Original: In pure strategies, the Game of Chicken and the Battle of the Sexes have pure-strategy Nash equilibria $\{A_1,A_2\}$ and $\{A_2,A_1\}$, whereas the Stag Hunt and Coordination Games have pure-strategy Nash equilibria $\{A_1,A_1\}$ and $\{A_2,A_2\}$. All of these games have exactly one MSNE where each player plays $A_1$ with probability $\frac{\bparam-1}{\cparam+\bparam-1}$, yielding an expected payoff of $\frac{\bparam\cparam}{\bparam+\cparam-1}$. \footnote{The general game does not have a MSNE when $\bparam+\cparam=1$, in which case there are (weakly) dominated strategies.} In the Game of Chicken and the Battle of the Sexes, this is the unique symmetric equilibrium.
 
-In the $A<D$ case, the Game of Chicken and the Battle of the Sexes have pure strategy Nash equilibria (PSNE) $\{A_1,A_2\}$ and $\{A_2,A_1\}$, and the Stag Hunt and Coordination Games have PSNE $\{A_1,A_1\}$ and $\{A_2,A_2\}$. Moreover, each of these games has exactly one MSNE where each player plays $A_1$ with probability $\frac{\bparam-1}{\bparam+\cparam-1}$, yielding an expected payoff of $\frac{\bparam\cparam}{\bparam+\cparam-1}$. \footnote{The general game does not have a MSNE when $\bparam+\cparam=1$, in which case there are (weakly) dominated strategies.} In the Game of Chicken and the Battle of the Sexes, this is the unique symmetric equilibrium.\footnote{In the $A=D$ case, the Battle of the Sexes and Coordination Games have the same PSNE as before. Moreover, each of these games has exactly one MSNE where each player plays $A_1$ with probability $\frac{\bparam}{\bparam+\cparam}$, yielding an expected payoff of $\frac{\bparam\cparam}{\bparam+\cparam}$. In the Battle of the Sexes, this is the unique symmetric equilibrium.}
+In the $A<D$ case, the Game of Chicken and the Battle of the Sexes have pure strategy Nash equilibria (PSNE) $\{A_1,A_2\}$ and $\{A_2,A_1\}$, and the Stag Hunt and Coordination Games have PSNE $\{A_1,A_1\}$ and $\{A_2,A_2\}$. Moreover, each of these games has exactly one MSNE where each player plays $A_1$ with probability $\frac{\bparam-1}{\bparam+\cparam-1}$, yielding an expected payoff of $\frac{\bparam\cparam}{\bparam+\cparam-1}$. In the Game of Chicken and the Battle of the Sexes, this is the unique symmetric equilibrium.\footnote{In the $A=D$ case, the Battle of the Sexes and Coordination Games have the same PSNE as before. Moreover, each of these games has exactly one MSNE where each player plays $A_1$ with probability $\frac{\bparam}{\bparam+\cparam}$, yielding an expected payoff of $\frac{\bparam\cparam}{\bparam+\cparam}$. In the Battle of the Sexes, this is the unique symmetric equilibrium.}
 
 For each base game equilibrium in pure strategies, there will be a corresponding SPNE in pure strategies in the commitment game. However, as we focus on symmetric games in this paper, we will be interested in their symmetric equilibria too. In particular, we will study the \textit{undominated} symmetric equilibria of these games. To be clear, we are not saying that asymmetric equilibria are not plausible in practice, even with ex ante identical players. Rather, we focus on symmetric equilibria in this paper because they seem most natural in this context, and they admit the types of commitment race dynamics we seek to better understand.
 
@@ -374,7 +373,7 @@ Consider a Battle of the Sexes with $A<D$ and $0<1<b<c$. Here, $A_2$ corresponds
 % Long version
 % There are three types of Battle of the Sexes. The first (and most standard) has each player indifferent between the two uncoordinated outcomes: $\text{first choice together} \succ \text{second choice together} \succ \text{first choice alone} \sim \text{second choice alone}$. This corresponds to the $A = D$ Battle of the Sexes. The second has each player preferring to miscoordinate on their first choice rather than second choice option: $\text{first choice together} \succ \text{second choice together} \succ \text{first choice alone} \succ \text{second choice alone}$. This corresponds to the $A < D$ and $b > c$ case. The third has each player preferring to miscoordinate on their second choice rather than first choice option: $\text{first choice together} \succ \text{second choice together} \succ \text{second choice alone} \succ \text{first choice alone}$. This corresponds to the $A < D$ and $c > b$ case.\footnote{Note that in all cases, when $b > c$, $A_1$ corresponds to each player's first choice and $A_2$ their second choice. When $c > b$, $A_2$ corresponds to each player's first choice and $A_1$ their second choice.}
 
-In the base game, in any MSNE each player must be indifferent between between playing their first choice and second choice. Playing first choice results in a mixture between first choice together and first choice alone. Playing second choice results in a mixture between second choice together and second choice alone. Hence, each player's payoff in a MSNE must be strictly between those of the middle two outcomes, $\text{first choice together} \succ \text{second choice together} \succ \text{base game} \succ \text{first choice alone} \succ \text{second choice alone}$.
+In the base game, in any MSNE each player must be indifferent between playing their first choice and second choice. Playing first choice results in a mixture between first choice together and first choice alone. Playing second choice results in a mixture between second choice together and second choice alone. Hence, each player's payoff in a MSNE must be strictly between those of the middle two outcomes, $\text{first choice together} \succ \text{second choice together} \succ \text{base game} \succ \text{first choice alone} \succ \text{second choice alone}$.
 
 % % Removed because no good place for it, though maybe it's also not necessary, especially as it is only diplays the A < D case
 % \begin{table}[h]
@@ -523,7 +522,7 @@ The full proof of Proposition \ref{theo:convergence} can be found in the supplem
         $\to \cparam$ \\
         \midrule
         
-        \multirow{2}{*}[-3.5em]{\shortstack{Battle of\\the Sexes\\($A < D$)}} &
+        \multirow{3}{*}[-3.5em]{\shortstack{Battle of\\the Sexes\\($A < D$)}} &
         $0<1< \cparam < \bparam$ &
         $\begin{gathered}[t]
             p_1 \to \dfrac{\bparam-\cparam}{\bparam}, \\
@@ -544,7 +543,7 @@ The full proof of Proposition \ref{theo:convergence} can be found in the supplem
         
         \midrule
         
-        \multirow{2}{*}[-3.5em]{\shortstack{Battle of\\the Sexes\\($A = D$)}} &
+        \multirow{3}{*}[-3.5em]{\shortstack{Battle of\\the Sexes\\($A = D$)}} &
         $0< \cparam < \bparam$ &
         $\begin{gathered}[t]
             p_1 \to \dfrac{\bparam-\cparam}{\bparam}, \\
