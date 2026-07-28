@@ -2,17 +2,44 @@
 Generate graph for paper.
 """
 from pathlib import Path
+import matplotlib
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 from num_example import (
-    normalize_game, 
+    normalize_game,
     calculate_commitment_probabilities,
     calculate_crashing_probability,
     calculate_expected_payoff
 )
 
+# AAAI rejects Type 3 fonts even inside figures; matplotlib's PDF default is 3.
+matplotlib.rcParams['pdf.fonttype'] = 42
+
 # Default T values to plot
 T_values = [1, 2, 3, 4, 5]
+
+# Figures are drawn at final print size so LaTeX does not scale them down: a
+# scaled figure shrinks its text by the same factor, and AAAI requires in-figure
+# text to be at least 9 pt. This is slightly under the 3.325 in column so that
+# \includegraphics[width=\linewidth] scales up by ~7%, leaving the 9 pt labels
+# above the floor rather than exactly on it.
+FIGURE_WIDTH_IN = 3.0
+MARKERS = ['o', 's', '^', 'D', 'v']
+
+# T is an ordered quantity, so the series take a single-hue light-to-dark ramp
+# rather than a categorical cycle: it encodes the ordering, and its monotone
+# lightness survives greyscale printing. The matplotlib default cycle does not --
+# its orange and green are dE 0.7 apart under protanopia, i.e. indistinguishable.
+SERIES_RAMP = plt.cm.Blues
+SERIES_RAMP_RANGE = (0.45, 1.0)
+
+
+def series_colors(n):
+    """Sample the sequential ramp into n evenly spaced, light-to-dark colors."""
+    low, high = SERIES_RAMP_RANGE
+    if n == 1:
+        return [SERIES_RAMP(high)]
+    return [SERIES_RAMP(low + (high - low) * i / (n - 1)) for i in range(n)]
 
 def create_probabilities_across_T_graph(A, B, C, D, T_values):
     """
@@ -33,39 +60,52 @@ def create_probabilities_across_T_graph(A, B, C, D, T_values):
     for T in T_values:
         commitment_probabilities[f'T={T}'] = calculate_commitment_probabilities(T, b, c)[:-1]
     
-    # Create the plot with styling to match LaTeX paper
-    plt.figure(figsize=(7, 5))
-    
-    # Plot each series
-    for T_label, probs in commitment_probabilities.items():
+    fig, ax = plt.subplots(figsize=(FIGURE_WIDTH_IN, 2.1))
+
+    # Each series is also given its own marker, so the curves stay distinguishable
+    # even where the ramp's adjacent steps are close.
+    colors = series_colors(len(commitment_probabilities))
+    for i, (T_label, probs) in enumerate(commitment_probabilities.items()):
         T = int(T_label.split('=')[1])
-        x_values = list(range(1, T + 1))
-        y_values = probs
-        plt.plot(x_values, y_values, marker='o', label=f'$T={T}$', linewidth=2, markersize=6)
-    
-    # Styling to match LaTeX document
-    plt.xlabel('Period ($t$)', fontsize=11)
-    plt.ylabel('Commitment Probability ($p_t$)', fontsize=11)
-    plt.legend(fontsize=10, framealpha=0.9)
-    plt.grid(True, alpha=0.3, linestyle='--', linewidth=0.5)
-    plt.xlim(0.5, max(T_values) + 0.5)
-    plt.ylim(0, max([max(probs) for probs in commitment_probabilities.values()]) * 1.1)
-    plt.xticks(range(1, max(T_values) + 1), fontsize=10)
-    plt.yticks(fontsize=10)
-    
-    # Tight layout for better spacing
-    plt.tight_layout()
-    
+        ax.plot(range(1, T + 1), probs, marker=MARKERS[i % len(MARKERS)],
+                color=colors[i], label=f'$T={T}$', linewidth=1.1, markersize=3.2)
+
+    # The measure is named in a left-aligned headline rather than a rotated y-axis
+    # label, which reads more easily and frees the width for the plot itself.
+    ax.set_title('Commitment Probability', loc='center', fontsize=9, pad=6)
+    ax.set_xlabel('Period ($t$)', fontsize=9)
+    ax.tick_params(labelsize=9, length=2.5, width=0.6)
+    ax.set_xticks(range(1, max(T_values) + 1))
+
+    lowest = min(min(probs) for probs in commitment_probabilities.values())
+    highest = max(max(probs) for probs in commitment_probabilities.values())
+    padding = 0.12 * (highest - lowest)
+    ax.set_ylim(lowest - padding, highest + padding)
+    ax.set_xlim(0.7, max(T_values) + 0.3)
+
+    ax.grid(True, alpha=0.3, linewidth=0.4)
+    for side in ('top', 'right'):
+        ax.spines[side].set_visible(False)
+    for side in ('left', 'bottom'):
+        ax.spines[side].set_linewidth(0.6)
+
+    ax.legend(fontsize=9, framealpha=0.9, loc='upper right',
+              handlelength=1.6, borderpad=0.35, labelspacing=0.25,
+              handletextpad=0.5, borderaxespad=0.3)
+
+    fig.tight_layout(pad=0.2)
+
     # Create the bld directory at the same level as Code
     bld_dir = Path(__file__).parent.parent / 'bld'
     bld_dir.mkdir(exist_ok=True)
-    
+
     # Save the plot
     output_path_pdf = bld_dir / 'commitment_probabilities.pdf'
     output_path_png = bld_dir / 'commitment_probabilities.png'
-    
-    plt.savefig(output_path_pdf, format='pdf', bbox_inches='tight', dpi=300)
-    plt.savefig(output_path_png, format='png', bbox_inches='tight', dpi=300)
+
+    fig.savefig(output_path_pdf, format='pdf', bbox_inches='tight')
+    fig.savefig(output_path_png, format='png', bbox_inches='tight', dpi=600)
+    plt.close(fig)
 
 
 def create_payoff_and_crash_graph(b_values, c, T_range):
