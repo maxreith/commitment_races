@@ -17,6 +17,7 @@
         font=\small,
         tier/.pgfmath=level()
     }
+    % Terminal payoffs are always written in (P1, P2) order.
     [P1
         [P2, name=p2_first_period_W, edge label={node[midway,left, yshift=2pt]{$W$}}
             [P1, edge label={node[midway,left]{$W$}}
@@ -29,17 +30,17 @@
                     [{$\capD,\capD$}, edge label={node[midway,right]{$M$}}]
                 ]
             ]
-            [{$\capB,\capC$}, edge label={node[midway,left]{$S$}}]
-            [{$\capC,\capB$}, edge label={node[midway,right]{$M$}}]
+            [{$\capC,\capB$}, edge label={node[midway,left]{$S$}}]
+            [{$\capB,\capC$}, edge label={node[midway,right]{$M$}}]
         ]
         [P2, name=p2_first_period_S, edge label={node[midway,left]{$S$}}
-            [{$\capC,\capB$}, edge label={node[midway,left]{$W$}}]
+            [{$\capB,\capC$}, edge label={node[midway,left]{$W$}}]
             [{$\capA,\capA$}, edge label={node[midway,left]{$S$}}]
-            [{$\capC,\capB$}, edge label={node[midway,right]{$M$}}]
+            [{$\capB,\capC$}, edge label={node[midway,right]{$M$}}]
         ]
         [P2, name=p2_first_period_M, edge label={node[midway,right=8pt]{$M$}}
-            [{$\capB,\capC$}, edge label={node[midway,left]{$W$}}]
-            [{$\capB,\capC$}, edge label={node[midway,left]{$S$}}]
+            [{$\capC,\capB$}, edge label={node[midway,left]{$W$}}]
+            [{$\capC,\capB$}, edge label={node[midway,left]{$S$}}]
             [{$\capD,\capD$}, edge label={node[midway,right]{$M$}}]
         ]
     ]
