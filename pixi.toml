@@ -16,6 +16,7 @@ plotly = ">=6.5.2,<7"
 pytask = ">=0.5.8,<0.6"
 pytask-latex = ">=0.4.3,<0.5"
 matplotlib = ">=3.10.8,<4"
+sympy = ">=1.14.0,<2"
 
 [pypi-dependencies]
 pdbp = "*"
